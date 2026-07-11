@@ -31,7 +31,7 @@ driver output by default:
 - `depth_image`: `/aurora/depth/image_raw`, 16-bit depth, limited to 5Hz;
 - `ir_image`: `/aurora/ir/image_raw`, 8-bit grayscale, limited to 5Hz;
 - `pointcloud`: `/he/aurora/points2_sampled`, serialized-throttled from raw
-  `/aurora/points2` at 1Hz, then stride-downsampled by 8;
+  `/aurora/points2` at 1.2Hz, guarded at 1.3Hz, then stride-downsampled by 8;
 - `camera_info`: `/aurora/rgb/camera_info`;
 - `depth_camera_info`: `/aurora/ir/camera_info`, whose driver frame is
   `depth_camera_link` and supplies the depth/IR intrinsics;

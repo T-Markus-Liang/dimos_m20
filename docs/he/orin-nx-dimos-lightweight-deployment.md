@@ -1685,7 +1685,7 @@ valid 25.8%，点云 256000 点，两路 CameraInfo 存在，导航发布者为�
 ```text
 /aurora/points2 raw 13-15Hz
   |-- 本机算法/诊断（保持 raw）
-  `-- he-pointcloud-throttle 1Hz serialized
+  `-- he-pointcloud-throttle 1.2Hz serialized
       -> /he/aurora/points2_sampled
       -> HESensorBridge typed conversion + stride 8
       -> latest-only Rerun
@@ -1697,12 +1697,12 @@ valid 25.8%，点云 256000 点，两路 CameraInfo 存在，导航发布者为�
 服务。两套只读门严格检查 raw topic 仅由 Aurora 发布、仅由 throttle 订阅；sampled
 topic 仅由 throttle 发布、仅由 `dimos_he_sensors` 订阅。
 
-HESensorBridge 默认 point-cloud topic 改为 sampled，内部 guard 设为 1.1Hz，避免
-1Hz 上游轻微调度误差触发二次隔帧；实际上限仍由 native throttle 固定为 1Hz。RGB-D
+HESensorBridge 默认 point-cloud topic 改为 sampled，内部 guard 设为 1.3Hz，避免
+1.2Hz 上游轻微调度误差触发二次隔帧；实际上限仍由 native throttle 固定为 1.2Hz。RGB-D
 SLAM 继续直接使用 raw depth，不得使用 sampled point cloud 替代全帧率算法输入。
 
 临时原型成功保留 frame、256000 点和 4096000-byte payload，native 进程 CPU 很低；
-5 个样本中出现一次 2 秒间隔，因此不能仅凭原型保留。VM 60 项 HE unittest、Ruff、
-shell、systemd 和 diff 检查通过。Orin 必须完成同口径 timing、sampled output、资源、
-service stop/no-residue 和 shadow 往返 A/B，失败则恢复 raw HESensorBridge topic 并停用
-该服务。
+1.0Hz 标准服务的配对 75 秒测试实际为 0.863Hz、最长间隔 3.057 秒；1.2Hz 临时服务
+实际为 0.993Hz、最长间隔 2.652 秒。因此正式值采用 1.2Hz，但 Rerun 目标仍为约 1Hz，
+不提高 SLAM 原始输入或远端可视化带宽目标。完整 120 秒 timing、资源、service
+stop/no-residue 和 shadow 往返仍作为部署验收项。

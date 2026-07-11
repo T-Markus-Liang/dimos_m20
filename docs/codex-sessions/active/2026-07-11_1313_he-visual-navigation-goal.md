@@ -744,6 +744,14 @@ health while keeping real motion disconnected.
   fast-forwarded cleanly and the macOS deployment mirror was synchronized.
   The final repository-version read-only gate passed at about 1001MiB sensor
   bridge memory and 3.3GiB available memory with zero navigation publishers.
+- Deployed native serialized pre-throttling candidate `0a4db838`. A canonical
+  1.0Hz 75-second sample reproduced 0.863Hz effective output with a 3.057s
+  maximum interval; an adjacent temporary 1.2Hz sample produced 0.993Hz with a
+  2.652s maximum interval. Selected 1.2Hz upstream with a 1.3Hz Python guard so
+  Rerun receives about 1Hz despite raw USB/driver gaps. VM validation passed all
+  60 HE tests, Ruff, blueprint registry, shell syntax, systemd verification and
+  diff checks. Final Orin 120-second timing/resource and shadow round trip remain
+  pending; Sense is active and the canonical 1.0Hz service was restored meanwhile.
 
 ## Decisions
 

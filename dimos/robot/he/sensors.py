@@ -41,7 +41,7 @@ class HESensorBridgeConfig(ModuleConfig):
     color_image_max_hz: float = Field(default=5.0, ge=0.0)
     depth_image_max_hz: float = Field(default=5.0, ge=0.0)
     ir_image_max_hz: float = Field(default=5.0, ge=0.0)
-    pointcloud_max_hz: float = Field(default=1.1, ge=0.0)
+    pointcloud_max_hz: float = Field(default=1.3, ge=0.0)
     camera_info_max_hz: float = Field(default=1.0, ge=0.0)
     pointcloud_stride: int = Field(default=8, ge=1)
     enable_color_image: bool = True

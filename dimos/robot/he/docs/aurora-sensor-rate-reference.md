@@ -29,14 +29,15 @@ valid embedded default.
 `HESensorBridge` receives all six Aurora modalities by default. Images and
 CameraInfo use the raw driver topics. Raw point cloud stays on
 `/aurora/points2`; the C++ serialized throttle publishes
-`/he/aurora/points2_sampled` at 1Hz for the Python bridge:
+`/he/aurora/points2_sampled` at 1.2Hz for the Python bridge. This produces
+about 1Hz effective output under the observed USB/driver gaps:
 
 | DimOS output | Configuration | Default | Observed output |
 | --- | --- | ---: | ---: |
 | `color_image` | `color_image_max_hz` | 5Hz | about 4.4Hz |
 | `depth_image` | `depth_image_max_hz` | 5Hz | about 4.4Hz |
 | `ir_image` | `ir_image_max_hz` | 5Hz | about 4.4Hz |
-| `pointcloud` | serialized throttle + `pointcloud_max_hz` guard | 1Hz + 1.1Hz | 1Hz |
+| `pointcloud` | serialized throttle + `pointcloud_max_hz` guard | 1.2Hz + 1.3Hz | about 1Hz |
 | `pointcloud` | `pointcloud_stride` | 8 | one of every 8 points |
 | `camera_info` | `camera_info_max_hz` | 1Hz | 1Hz |
 | `depth_camera_info` | `camera_info_max_hz` | 1Hz | 1Hz |
@@ -62,7 +63,7 @@ Keep the current bounded path for visualization and operational monitoring:
 
 ```text
 Aurora raw images/info -> HESensorBridge -> bounded DimOS streams -> Rerun
-Aurora raw pointcloud -> serialized throttle 1Hz -> HESensorBridge -> Rerun
+Aurora raw pointcloud -> serialized throttle 1.2Hz -> HESensorBridge -> Rerun
 ```
 
 For visual SLAM or another algorithm that needs full temporal resolution, do
