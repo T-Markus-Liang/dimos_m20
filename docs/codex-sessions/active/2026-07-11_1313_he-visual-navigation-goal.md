@@ -527,7 +527,11 @@ health while keeping real motion disconnected.
   outputs must be null. Fixed failed-getter serialization, moved SDK logs with
   serial data to exit-cleaned temporary files, and increased DDS convergence
   wait from five to ten seconds after the first final gate saw a stale endpoint.
-  The EXIT-trap gate passed; a clean main-path rerun is pending.
+  The EXIT-trap gate passed.
+- The second run proved null serialization and temporary-log cleanup, but a
+  fixed ten-second wait still saw a stale DDS publisher before the trap's later
+  gate passed. Replaced fixed timing with up to six complete read-only-gate
+  attempts at three-second intervals; a clean main-path rerun is pending.
 
 ## Decisions
 

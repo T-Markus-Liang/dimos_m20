@@ -1426,3 +1426,9 @@ ASCII `0.3~1m`（hex `30 2e 33 7e 31 6d`）、`running_7x24_hours=1`、
 `null`，不再序列化未初始化字段，并将含设备 serial 的 SDK stdout/stderr 限制在临时
 文件且退出时删除。首轮最终 read-only gate 还观察到旧 DDS publisher 短暂残留，EXIT
 trap 的下一轮 gate 已通过；恢复等待从 5 秒增至 10 秒。修复版 Orin rerun 待完成。
+
+修复版 rerun 的结构化 JSON 已正确将两项失败 getter 及其字段输出为 `null`，临时 SDK
+日志也在退出后清除；但固定 10 秒后仍可能观察到旧 DDS publisher，而 EXIT trap
+稍后的完整 gate 再次通过。固定 sleep 因此改为最多 6 次、间隔 3 秒的完整 read-only
+gate 有界重试；只有整套 gate 成功才结束，18 秒内仍不收敛则保留最后错误并失败。
+第三次主路径验证待完成。

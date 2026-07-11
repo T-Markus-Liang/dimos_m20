@@ -19,6 +19,19 @@ source /opt/ros/humble/setup.bash
 source /home/ubuntu/third_party/aurora_ws/install/setup.bash
 set -u
 
+verify_readonly_converged() {
+  local gate_log=
+  for _ in {1..6}; do
+    if gate_log=$(bash dimos/robot/he/deployment/verify-he-readonly.sh 2>&1); then
+      printf '%s\n' "$gate_log"
+      return 0
+    fi
+    sleep 3
+  done
+  printf '%s\n' "$gate_log" >&2
+  return 1
+}
+
 restore_service() {
   [[ $restored == true ]] && return
   sudo systemctl start aurora930.service
@@ -38,7 +51,7 @@ on_exit() {
   cd "$repo"
   .venv/bin/python dimos/robot/he/deployment/verify-he-sensors.py \
     --image-samples 5 --pointcloud-samples 2 --timeout 15 || status=$?
-  bash dimos/robot/he/deployment/verify-he-readonly.sh || status=$?
+  verify_readonly_converged || status=$?
   rm -f "$binary" "$sdk_stdout" "$sdk_stderr"
   exit "$status"
 }
@@ -80,7 +93,7 @@ PY
 restore_service
 .venv/bin/python dimos/robot/he/deployment/verify-he-sensors.py \
   --image-samples 5 --pointcloud-samples 2 --timeout 15
-bash dimos/robot/he/deployment/verify-he-readonly.sh
+verify_readonly_converged
 
 trap - EXIT INT TERM
 rm -f "$binary" "$sdk_stdout" "$sdk_stderr"
