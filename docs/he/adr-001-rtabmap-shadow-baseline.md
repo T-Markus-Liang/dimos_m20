@@ -1,0 +1,70 @@
+# ADR-001: HE RTAB-Map Shadow Baseline
+
+Date: 2026-07-11
+
+Status: accepted for shadow evaluation; explicitly not approved for navigation
+
+## Context
+
+HE has one Aurora RGB-D/IR camera and a control-board IMU on Jetson Orin NX
+8GB. LD19 is retired, `/odom_raw` is command-integrated and untrusted, and the
+current Jammy/Humble platform cannot use the RGB-D mode added in Isaac ROS 4.4
+without a full Noble/Jazzy migration. Aurora depth is sparse and uneven: about
+20.5% valid globally, 15.8% in the center 40%, and roughly 5% in lower tiles.
+
+The evaluated alternatives and source evidence are recorded in
+`visual-navigation-candidate-evaluation.md`. Public benchmark results are not
+treated as HE results because inputs, hardware and alignment rules differ.
+
+## Decision
+
+Use the official ROS 2 Humble arm64 RTAB-Map 0.23.7 packages as the current HE
+shadow baseline. Run bounded RGB-D odometry and mapping locally on Orin, adapt
+their ROS outputs through `HEVisualSlamBridge`, evaluate them with
+`HELocalizationHealth`, and expose a planner map only through
+`HEVisualMapAdapter` after quality gates pass.
+
+`he-visual-slam-shadow` contains no `MovementManager`, `HEConnection` or
+velocity output. `HEConnection.enabled=False` and zero `/he/nav_cmd_vel`
+publishers remain hard gates.
+
+This decision is not approval for real navigation. The current static map is
+82x59 at 0.05m but only 2.52% known, with 21 free and 101 occupied cells. It is
+not a navigation map. The default 10% known-space gate therefore keeps
+localization unhealthy and withholds `global_costmap` from planners.
+
+## Evidence
+
+- Static odometry: 6.31Hz, zero losses, 79/63 median/minimum inliers,
+  0.48/2.58mm final/maximum position drift and 108/137ms median/P95 latency.
+- Odometry peak RSS: about 214MiB and about 58% of one CPU core.
+- Mapping process short-run RSS: about 255MiB.
+- Dynamic `he_map -> he_visual_odom -> base_link` TF was observed without
+  missing-TF or bad-sync warnings after tuning synchronization to 20ms.
+- Raw evidence is under `docs/he/evidence/2026-07-11_1418_rtabmap-*` and
+  `docs/he/evidence/2026-07-11_1430_rtabmap-static-map.json`.
+
+## Alternatives
+
+- Isaac ROS Visual SLAM remains the preferred accelerated platform-upgrade
+  candidate, but RGB-D requires release 4.4+ on Noble/Jazzy. Humble-compatible
+  release 3.2 does not provide equivalent RGB-D support.
+- OpenVINS remains the lightweight VIO fallback after camera/IMU calibration
+  and timing qualification. It does not directly solve occupancy mapping.
+- ORB-SLAM3 remains an offline comparator due to GPL-3.0, old ROS integration,
+  an incomplete DimOS wrapper and a known transform defect.
+- DPVO is an offline learned comparator. DROID-SLAM exceeds the 8GB target's
+  published memory requirement. MASt3R-SLAM and DINOv3 retain model/license and
+  resource risks; DINOv3 is place-recognition or relocalization enhancement,
+  not geometric SLAM.
+
+## Consequences And Exit Gates
+
+RTAB-Map is the only heavy SLAM runtime installed and must remain bounded. A
+different baseline requires equivalent HE data, Orin resource evidence, an ADR
+update and a rollback path.
+
+Real navigation remains prohibited until moving ATE/RPE, loop closure,
+relocalization, map quality, camera extrinsics, tracking-loss detection,
+resource soak and control safety gates pass after a new vehicle-down safety
+confirmation.

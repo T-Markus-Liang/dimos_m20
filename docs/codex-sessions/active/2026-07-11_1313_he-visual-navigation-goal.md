@@ -7,7 +7,7 @@
 - Project: dimos-wd-m20
 - Workspace: VM `/home/markus/work/dimos_wd_m20`; Orin `/home/ubuntu/he/dimos_wd_m20`
 - Task: research, benchmark, select and integrate a visual SLAM navigation foundation for HE
-- Status: active - sensor admission tooling and candidate matrix implementation in progress
+- Status: active - DimOS shadow integration implemented; Orin soak pending
 - Branch if relevant: `codex/he-orin` from `e495dadb`
 
 ## User Request Summary
@@ -91,6 +91,21 @@ health while keeping real motion disconnected.
   removed both native processes before the final read-only gate.
 - Added a bounded map/TF benchmark to count known/free/occupied cells, map
   update rate, lookup failures, TF latency and static transform drift.
+- Preserved the map benchmark as
+  `docs/he/evidence/2026-07-11_1430_rtabmap-static-map.json`. It found only
+  2.52% known cells (21 free, 101 occupied), so the map is not navigation-usable.
+- Added `HEVisualSlamBridge`, `HELocalizationHealth` and `HEVisualMapAdapter`.
+  The bridge converts ROS odometry, occupancy, trajectory, tracking and TF;
+  health is fail-closed; and the adapter withholds low-quality maps from the
+  planner-facing `global_costmap`.
+- Added a process-group-owning RTAB-Map runner and registered the motion-free
+  `he-visual-slam-shadow` blueprint. It contains no `MovementManager`,
+  `HEConnection` or velocity output.
+- Added ten visual SLAM conversion/health/map/blueprint tests. All 27 HE unittest cases
+  pass, Ruff passes, the generated blueprint registry passes in CI mode, and
+  `dimos list` exposes `he-visual-slam-shadow`.
+- Created ADR-001 selecting RTAB-Map only as the current shadow baseline. Real
+  navigation approval is explicitly withheld.
 
 ## Decisions
 
@@ -105,27 +120,31 @@ health while keeping real motion disconnected.
   test order, not final selection; HE/Orin evidence and the ADR gate remain.
 - Exclude DROID-SLAM from Orin deployment because its current official README
   requires at least 11GB GPU memory for inference.
+- Require at least 10% known map cells and 10% free cells among known cells
+  before exposing a visual map to planners. The current 2.52% result must stay
+  unhealthy rather than being hidden by parameter relaxation.
 
 ## Current State
 
-- Static safety and sensor service baseline are re-verified.
-- Candidate matrix and visual data tools are committed and synchronized; the
-  corrected live timing rerun is in progress. No visual SLAM package has been
-  installed or selected yet.
-- Aurora depth coverage and spatial-temporal qualification remain open gates.
-- The first static raw dataset and diagnostic evidence are preserved; moving
-  trajectory data remains gated on a new vehicle-down confirmation.
+- VM and Orin were clean and synchronized at `d3483cbb` before the current
+  integration edits. RTAB-Map runtime packages are installed only on Orin.
+- DimOS shadow modules, tests, blueprint, ADR and map evidence are implemented
+  in the VM worktree but not yet committed or deployed to Orin.
+- Aurora depth coverage, camera extrinsics, moving accuracy, loop closure and
+  relocalization remain open gates. Real motion remains prohibited.
 
 ## Resume Instructions
 
-1. Read this log and the active plan.
-2. Validate and commit the staged visual data tools and candidate ledger.
-3. Run the diagnostic and bounded static recorder on Orin, preserving JSON and
-   dataset manifest evidence.
-4. Do not enable motion or restore LD19.
+1. Review and commit the shadow integration, ADR and map evidence.
+2. Push `codex/he-orin`, fast-forward Orin and run `he-visual-slam-shadow`.
+3. Execute a bounded Orin soak, preserving health, resources, restart, database
+   growth and process-cleanup evidence.
+4. Re-run read-only gates and confirm zero `/he/nav_cmd_vel` publishers.
+5. Do not enable motion or restore LD19.
 
 ## Open Questions
 
 - Can Aurora depth coverage and synchronization meet RGB-D/VIO prerequisites?
-- Can RTAB-Map RGB-D produce stable stationary pose/map output despite the
-  current sparse and spatially uneven Aurora depth?
+- Can RTAB-Map produce navigation-usable map coverage after the camera can move?
+- Will the full DimOS shadow stack preserve at least 1GiB available memory in
+  an extended Orin soak?

@@ -1,0 +1,32 @@
+{
+  "captured_at": "2026-07-11T14:30:05+0800",
+  "map": {
+    "area_m2": 12.095000360459093,
+    "cells": 4838,
+    "free_cells": 21,
+    "height": 59,
+    "known_ratio": 0.025217031831335262,
+    "occupied_cells": 101,
+    "occupied_ratio_of_known": 0.8278688524590164,
+    "resolution_m": 0.05000000074505806,
+    "unknown_cells": 4716,
+    "width": 82
+  },
+  "map_frame": "he_map",
+  "maps_received": 1,
+  "requested_duration_seconds": 15.0,
+  "tf_chain": {
+    "accumulated_position_motion_m": 0.05105872512125329,
+    "duration_seconds": 13.590999841690063,
+    "final_position_drift_m": 0.0010286821550857573,
+    "final_rotation_drift_deg": 0.02666800310538344,
+    "latency_max_ms": 168.06721687316895,
+    "latency_median_ms": 92.7741527557373,
+    "latency_p95_ms": 110.31908988952634,
+    "max_position_drift_m": 0.0011488742315537979,
+    "max_rotation_drift_deg": 0.08203740915084967,
+    "output_rate_hz": 7.210654193327806,
+    "samples": 99
+  },
+  "tf_lookup_failures": 24
+}

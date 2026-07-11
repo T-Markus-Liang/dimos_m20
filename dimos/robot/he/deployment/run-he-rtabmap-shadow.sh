@@ -49,6 +49,7 @@ odom_pid=$!
   -r odom:=/he/visual_odom \
   -r odom_info:=/he/visual_odom_info \
   -r map:=/he/visual_occupancy \
+  -r mapPath:=/he/visual_path \
   -r mapData:=/he/visual_map_data \
   -r info:=/he/visual_slam_info \
   -r cloud_map:=/he/visual_cloud_map &

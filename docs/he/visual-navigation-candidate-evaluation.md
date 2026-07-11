@@ -1,6 +1,6 @@
 # HE Visual Navigation Candidate Evaluation
 
-Updated: 2026-07-11 14:00 CST
+Updated: 2026-07-11 15:10 CST
 
 ## Decision Status
 
@@ -162,7 +162,14 @@ latency was 108/137ms. Odometry RSS peaked near 214MiB; adding the map process
 used about 255MiB more in a short run. Occupancy, cloud, MapData, SLAM Info,
 database persistence and the isolated dynamic TF chain were observed.
 
-This does not complete selection: the static trajectory accumulated 0.236m of
-small jitter, map content still needs quantitative validation, depth coverage
-is poor, and no moving/loop/relocalization data is authorized yet. Full raw
-evidence is under `docs/he/evidence/2026-07-11_1418_rtabmap-*`.
+The static map benchmark then found only 2.52% known cells in an 82x59 map:
+21 free and 101 occupied cells. This is an output-contract success but a
+navigation-quality failure. The default HE health gate requires at least 10%
+known space, so this result remains unhealthy and is withheld from planners.
+
+ADR-001 selects RTAB-Map as the current shadow baseline, not as an approved
+real-navigation stack. The static trajectory accumulated 0.236m of small
+jitter, depth coverage is poor, and no moving/loop/relocalization data is
+authorized yet. Full raw evidence is under
+`docs/he/evidence/2026-07-11_1418_rtabmap-*` and
+`docs/he/evidence/2026-07-11_1430_rtabmap-static-map.json`.

@@ -17,6 +17,8 @@ Jetson Orin NX Ackermann platform.
 
 - `he-sense-headless`: ROS sensor bridge plus bounded headless Rerun output.
 - `he-teleop-headless`: sensor and movement wiring with real motion disabled.
+- `he-visual-slam-shadow`: RTAB-Map, ROS-to-DimOS pose/map adapters,
+  fail-closed localization health and bounded Rerun, with no motion modules.
 - `he-nav-headless`: intentionally absent until trusted localization and the
   vehicle-down navigation gates pass.
 
@@ -54,7 +56,7 @@ Run the bridge conversion tests with:
 ```bash
 .venv/bin/python -m unittest -v \
   dimos.robot.he.test_connection dimos.robot.he.test_sensors \
-  dimos.robot.he.test_visual_data
+  dimos.robot.he.test_visual_data dimos.robot.he.test_visual_slam
 ```
 
 Collect a bounded SLAM-input diagnostic without enabling motion:
@@ -90,8 +92,9 @@ bash dimos/robot/he/deployment/run-he-rtabmap-shadow.sh
 
 It publishes only `/he/visual_*` pose/map/status topics plus the isolated
 `he_map -> he_visual_odom -> base_link` TF chain, and refuses to start if
-`/he/nav_cmd_vel` has publishers. It is not yet the final
-`he-visual-slam-shadow` DimOS blueprint.
+`/he/nav_cmd_vel` has publishers. The integrated shadow stack can be started
+with `dimos run he-visual-slam-shadow`; it remains unhealthy while the map
+known-space ratio is below 10% and never includes a motion-output module.
 
 See [Chassis characterization](docs/chassis-characterization-2026-07-11.md) for
 the measured command-chain limits, latency, precision, and feedback gaps.

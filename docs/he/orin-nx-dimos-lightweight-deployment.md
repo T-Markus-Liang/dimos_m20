@@ -937,3 +937,30 @@ Aurora `rgbd_enable` 隔离 A/B 已完成。开启后全局深度有效率只从
 P95 从 51.45ms 恶化到 125.20ms。因此保持部署默认 `rgbd_enable=false`，算法侧
 必须按 header 做显式配对并监控丢帧。临时 launch 不响应单次 SIGINT，清理后已
 恢复原 systemd 服务；最终 sensor gate 和只读门 PASS，未修改持久配置。
+
+## 15. RTAB-Map 视觉 SLAM shadow 集成（2026-07-11）
+
+当前采用官方 ROS 2 Humble arm64 RTAB-Map 0.23.7 作为 HE 第一条可部署的
+shadow baseline，但不代表真实导航获批。架构决策和替代方案记录于
+`docs/he/adr-001-rtabmap-shadow-baseline.md`。
+
+静态实测中 RGB-D odometry 为 6.31Hz，零 tracking loss，inliers 中位/最小
+79/63，消息延迟中位/P95 约 108/137ms。odometry RSS 峰值约 214MiB，mapping
+短测约 255MiB，CPU 约占一个核心 58%，GPU 为 0%。动态
+`he_map -> he_visual_odom -> base_link` 已验证。
+
+地图输出接口成立，但质量未通过：82x59、0.05m 的地图只有 2.52% cells known，
+其中 free 21、occupied 101。`HELocalizationHealth` 默认要求至少 10% known，
+因此返回 `map_known_ratio_low`；`HEVisualMapAdapter` 不会把该地图发布为规划器的
+`global_costmap`。
+
+新增 `he-visual-slam-shadow` 蓝图包含：
+
+- `HERTABMapShadowRunner`：管理 native RTAB-Map 进程组并在退出时清理；
+- `HEVisualSlamBridge`：转换 ROS odometry、occupancy、trajectory、TF 和 tracking；
+- `HELocalizationHealth`：对时效、tracking、inliers、TF 跳变和地图覆盖 fail-closed；
+- `HEVisualMapAdapter`：只有地图质量门通过时才输出 DimOS `global_costmap`；
+- 256MB、latest-only Rerun shadow 可视化。
+
+该蓝图没有 `MovementManager`、`HEConnection` 或速度输出。车辆真实移动、ATE/RPE、
+回环、重定位、地图可通行性和自动探索仍等待新的车辆落地安全确认。

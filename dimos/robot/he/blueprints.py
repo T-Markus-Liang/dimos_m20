@@ -4,12 +4,16 @@ from __future__ import annotations
 
 from dimos.core.coordination.blueprints import autoconnect
 from dimos.navigation.movement_manager.movement_manager import MovementManager
-from dimos.visualization.rerun.bridge import RerunBridgeModule
-from dimos.visualization.rerun.websocket_server import RerunWebSocketServer
-
 from dimos.robot.he.connection import HEConnection
 from dimos.robot.he.sensors import HESensorBridge
-
+from dimos.robot.he.visual_slam import (
+    HELocalizationHealth,
+    HERTABMapShadowRunner,
+    HEVisualMapAdapter,
+    HEVisualSlamBridge,
+)
+from dimos.visualization.rerun.bridge import RerunBridgeModule
+from dimos.visualization.rerun.websocket_server import RerunWebSocketServer
 
 he_sense_headless = autoconnect(
     HESensorBridge.blueprint(),
@@ -50,3 +54,23 @@ he_teleop_headless = autoconnect(
     ),
     RerunWebSocketServer.blueprint(),
 ).global_config(n_workers=3)
+
+
+he_visual_slam_shadow = autoconnect(
+    HERTABMapShadowRunner.blueprint(),
+    HEVisualSlamBridge.blueprint(),
+    HELocalizationHealth.blueprint(),
+    HEVisualMapAdapter.blueprint(),
+    RerunBridgeModule.blueprint(
+        rerun_open="none",
+        memory_limit="256MB",
+        latest_only_entities=[
+            "world/visual_odom",
+            "world/visual_map",
+            "world/visual_path",
+            "world/visual_status",
+            "world/localization_health",
+            "world/global_costmap",
+        ],
+    ),
+).global_config(n_workers=4)
