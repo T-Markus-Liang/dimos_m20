@@ -60,6 +60,14 @@ health while keeping real motion disconnected.
   after capture.
 - Found and fixed a recorder integrity bug where `SHA256SUMS` included itself.
   Regenerated the existing list; bag, manifest and metadata all verify.
+- Completed an isolated Aurora `rgbd_enable` A/B. It did not improve camera
+  pairing or depth coverage and reduced point-cloud rate to 12.2Hz with worse
+  timestamp gaps. Restored the unchanged systemd default (`false`) and passed
+  live sensor/read-only gates.
+- Verified Isaac ROS compatibility boundaries from official release trees and
+  apt repositories: RGB-D starts in 4.4 on Noble/Jazzy; Jammy/Humble 3.2 lacks
+  RGB-D. Confirmed official RTAB-Map 0.23.7 Humble arm64 packages are available
+  on Orin without installing them yet.
 
 ## Decisions
 
@@ -68,9 +76,10 @@ health while keeping real motion disconnected.
 - Treat public leaderboard scores as supporting evidence only; HE data and Orin
   runtime evidence decide the final selection.
 - Keep full-rate local algorithm inputs separate from bounded latest-only Rerun.
-- Pilot Isaac ROS Visual SLAM RGB-D first, with RTAB-Map as fallback/map
-  candidate. This is a test order, not final selection; HE/Orin evidence and
-  the ADR gate remain mandatory.
+- Pilot RTAB-Map 0.23.7 RGB-D first because an official Humble/Jammy arm64
+  package exists. Defer Isaac ROS RGB-D: it starts in release 4.4 on
+  Noble/Jazzy, while HE-compatible release 3.2 lacks that mode. This is still a
+  test order, not final selection; HE/Orin evidence and the ADR gate remain.
 - Exclude DROID-SLAM from Orin deployment because its current official README
   requires at least 11GB GPU memory for inference.
 
@@ -95,5 +104,5 @@ health while keeping real motion disconnected.
 ## Open Questions
 
 - Can Aurora depth coverage and synchronization meet RGB-D/VIO prerequisites?
-- Does Isaac ROS RGB-D mode accept Aurora calibration/topics without a stereo
-  pair, and what is its measured NX 8GB resource cost?
+- Can RTAB-Map RGB-D produce stable stationary pose/map output despite the
+  current sparse and spatially uneven Aurora depth?

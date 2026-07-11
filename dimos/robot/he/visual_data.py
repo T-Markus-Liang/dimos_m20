@@ -47,6 +47,8 @@ def timestamp_alignment(reference: list[float], candidate: list[float]) -> dict[
         "absolute_median_ms": float(np.median(absolute_ms)),
         "absolute_p95_ms": float(np.percentile(absolute_ms, 95)),
         "absolute_max_ms": float(np.max(absolute_ms)),
+        "within_1ms_ratio": float(np.mean(absolute_ms <= 1.0)),
+        "within_10ms_ratio": float(np.mean(absolute_ms <= 10.0)),
     }
 
 

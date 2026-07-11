@@ -5,11 +5,12 @@ Updated: 2026-07-11 14:00 CST
 ## Decision Status
 
 This is the evidence ledger and test plan, not the final ADR. No candidate is
-approved for navigation yet. The first hardware pilot is NVIDIA Isaac ROS
-Visual SLAM in RGB-D mode because it has the strongest Orin/ROS 2 fit. RTAB-Map
-RGB-D is the fallback and map-backend candidate. Selection remains gated by
-Aurora depth, synchronization, HE recordings, Orin resource measurements and
-repeatable trajectory results.
+approved for navigation yet. The first deployable pilot is RTAB-Map 0.23.7
+RGB-D because an official ROS 2 Humble/Jammy arm64 package exists for the HE
+baseline. Isaac ROS remains a future platform-upgrade candidate: the RGB-D
+mode only appears in release 4.4+, whose apt repository is Noble/Jazzy, while
+the compatible release 3.2 lacks RGB-D. Selection remains gated by Aurora
+depth, synchronization, HE recordings, Orin resources and repeatable results.
 
 Real motion remains disconnected: `HEConnection.enabled=False`, LD19 stays
 retired, and `/odom_raw` is excluded as SLAM truth.
@@ -34,8 +35,9 @@ offset was 5.81ms median and 10.29ms P95. Camera streams often shared exact
 timestamps, but occasional one-frame gaps raised RGB-depth P95 to 68.35ms.
 The driver was `align_mode=true`, `depth_correction=true`, but
 `rgbd_enable=false`; driver documentation says RGB-D mode obtains RGB, depth,
-IR and point cloud from one RGB-D frame. That mode must be tested in isolation
-before declaring hardware synchronization.
+IR and point cloud from one RGB-D frame. The isolated A/B did not improve image
+pairing or depth validity and reduced point-cloud rate, so the default remains
+off. This sensor is not treated as hardware-synchronized.
 
 Depth was 20.51% valid globally and 15.76% in the center 40%. The latest lower
 third tiles were only 4.93-5.72% valid, while upper corners were about 45%.
@@ -72,8 +74,8 @@ better estimator.
 
 | Candidate | Inputs / outputs | Platform and maintenance evidence | License | HE assessment |
 | --- | --- | --- | --- | --- |
-| Isaac ROS Visual SLAM / cuVSLAM | Official tree contains stereo, single-camera+IMU and RGB-D tests/launch. Publishes odometry/SLAM pose, status and pose graph; exposes reset, save/load map, set pose and localize-in-map services. | Main pushed 2026-07-07; Isaac ROS 4.4 update dated 2026-04-30; ROS 2 and Jetson/aarch64 are first-class. | Apache-2.0 wrapper; NVIDIA binary terms must be reviewed for deployment. | **First pilot.** Best Orin acceleration and health/map API fit. Aurora topic/calibration adaptation and RGB-D mode behavior must be proven. Do not assume RGB-D consumes the chassis IMU. |
-| RTAB-Map + `rtabmap_ros` | RGB-D/stereo/3D lidar examples; RGB-D odometry, graph SLAM, loop closure, database persistence, point cloud and occupancy outputs. | Core pushed 2026-07-11; ROS 2 branch pushed 2026-06-25; ROS 2 Humble minimum and aarch64 binary evidence are documented. | BSD-3-Clause ROS package; audit linked libraries. | **Fallback / map candidate.** Strongest direct depth-to-navigation-map path and mature debugging. CPU/RAM/database growth on NX 8GB must be bounded. |
+| Isaac ROS Visual SLAM / cuVSLAM | Release 4.4+ contains RGB-D tests/launch and map/status services. Release 3.2 supports stereo and single-camera+IMU but not RGB-D. | Latest v4.5-0 released 2026-07-07. Release-4 apt exists for Noble arm64 but not Jammy; current docs install ROS Jazzy packages. Compatible Jammy/Humble v3.2 has no RGB-D tree artifacts. | Apache-2.0 wrapper; NVIDIA binary terms must be reviewed. | **Deferred.** Strong Orin acceleration, but its usable RGB-D version is incompatible with the current OS/ROS baseline. Do not force an OS migration or pretend release 3.2 has the needed mode. |
+| RTAB-Map + `rtabmap_ros` | RGB-D odometry, graph SLAM, loop closure, database persistence, cloud and occupancy outputs. | Core pushed 2026-07-11; ROS 2 pushed 2026-06-25. Orin apt offers 0.23.7 Jammy/Humble arm64 packages built 2026-06-22. | BSD-3-Clause ROS package; audit linked libraries. | **First pilot.** Strongest directly deployable depth-to-navigation-map path. CPU/RAM/database growth and poor depth coverage must be bounded and measured. |
 | ORB-SLAM3 | Mono, stereo, RGB-D; monocular/stereo visual-inertial; sparse map, multi-map and relocalization. | Official release v1.0 is from 2021; last source push 2024-07-24; official ROS example is ROS 1 Melodic/Ubuntu 18.04. | GPL-3.0. | Algorithmically relevant but engineering and license risk are high. The DimOS wrapper is incomplete and has a known transform defect. Keep as offline comparator only unless those are resolved. |
 | OpenVINS | Mono/stereo + IMU MSCKF VIO, online camera/IMU spatial-temporal calibration, covariance and ROS 2 workflow. | Pushed 2025-11-30; official ROS 2 Ubuntu 22.04 Docker/build files exist. | GPL-3.0. | Lightweight VIO fallback when depth is unusable, but requires reliable camera/IMU timing and does not directly provide a navigation occupancy map or tightly coupled loop closure. |
 | VINS-Fusion | Mono/stereo + IMU VIO and loop closure. | Last source push 2024-05-23; upstream integration is primarily older ROS/Ceres tooling. | GPL-3.0. | Lower priority than OpenVINS due maintenance/integration risk. Same synchronization and map-output gaps apply. |
@@ -135,9 +137,11 @@ Every runnable candidate receives the same artifact set:
 2. Record bounded raw HE datasets with `record-he-visual-dataset.sh`. Static
    recording is allowed now; motion datasets wait for a new vehicle-down
    safety confirmation.
-3. Test Isaac ROS Visual SLAM RGB-D in an isolated ROS workspace. Record package
-   version, launch configuration, pose/status/map services and resources.
-4. Test official `rtabmap_ros` RGB-D odometry + mapping against the same bag.
+3. Install only the minimal official RTAB-Map 0.23.7 odometry and SLAM packages,
+   then test RGB-D odometry + mapping against the static bag and live shadow
+   input. Record launch configuration, pose/status/map outputs and resources.
+4. Keep Isaac ROS RGB-D deferred unless HE deliberately migrates to a supported
+   Noble/Jazzy Jetson baseline; release 3.2 is not an equivalent RGB-D test.
 5. Run OpenVINS only if camera/IMU timing passes and RGB-D tracking is not
    reliable. Run DPVO only offline as a learned comparator.
 6. Produce the ADR only after repeatable HE trajectory and Orin measurements.

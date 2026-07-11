@@ -10,10 +10,12 @@ from dimos.robot.he.visual_data import depth_array, depth_quality, timestamp_ali
 
 class TestHEVisualData(unittest.TestCase):
     def test_timestamp_alignment_uses_nearest_samples(self) -> None:
-        metrics = timestamp_alignment([1.0, 2.0, 3.0], [0.99, 2.02, 3.01])
+        metrics = timestamp_alignment([1.0, 2.0, 3.0], [0.995, 2.02, 3.005])
         self.assertEqual(metrics["pairs"], 3)
         self.assertEqual(metrics["reference_samples"], 3)
-        self.assertAlmostEqual(metrics["absolute_median_ms"], 10.0)
+        self.assertAlmostEqual(metrics["absolute_median_ms"], 5.0)
+        self.assertEqual(metrics["within_1ms_ratio"], 0.0)
+        self.assertAlmostEqual(metrics["within_10ms_ratio"], 2.0 / 3.0)
         self.assertAlmostEqual(topic_rate([0.0, 0.1, 0.2]), 10.0)
 
     def test_timestamp_alignment_ignores_non_overlapping_edges(self) -> None:

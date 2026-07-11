@@ -1,0 +1,90 @@
+{
+  "captured_at": "2026-07-11T13:46:19+0800",
+  "depth": {
+    "center_40_percent_valid_ratio_median": 0.161474609375,
+    "latest": {
+      "center_40_percent_valid_ratio": 0.1583984375,
+      "grid_3x3_valid_ratio": [
+        [
+          0.4611881817219104,
+          0.20353701154294185,
+          0.45411425760663343
+        ],
+        [
+          0.3839881393624907,
+          0.15094073211197007,
+          0.06278546834375659
+        ],
+        [
+          0.058370121224861606,
+          0.06194380211617966,
+          0.04114939322081183
+        ]
+      ],
+      "height": 400,
+      "valid_depth_mm_percentiles": {
+        "5": 324.0,
+        "50": 1222.0,
+        "95": 2848.5
+      },
+      "valid_ratio": 0.20824609375,
+      "width": 640
+    },
+    "valid_ratio_median": 0.21012890625
+  },
+  "frames": {
+    "depth": "depth_camera_link",
+    "imu": "imu_link",
+    "ir": "depth_camera_link",
+    "pointcloud": "depth_camera_link",
+    "rgb": "rgb_camera_link"
+  },
+  "rates_hz": {
+    "depth": 14.492752421330513,
+    "imu": 46.844627609969116,
+    "ir": 14.492752421330513,
+    "pointcloud": 12.195154856192504,
+    "rgb": 14.705917002089674
+  },
+  "rgb_nearest_timestamp_alignment": {
+    "depth": {
+      "absolute_max_ms": 83.00018310546875,
+      "absolute_median_ms": 0.0,
+      "absolute_p95_ms": 65.10004997253418,
+      "pairs": 99,
+      "reference_samples": 100,
+      "signed_median_ms": 0.0
+    },
+    "imu": {
+      "absolute_max_ms": 10.714292526245117,
+      "absolute_median_ms": 5.283594131469727,
+      "absolute_p95_ms": 10.149908065795898,
+      "pairs": 89,
+      "reference_samples": 100,
+      "signed_median_ms": -0.6711483001708984
+    },
+    "ir": {
+      "absolute_max_ms": 83.00018310546875,
+      "absolute_median_ms": 0.0,
+      "absolute_p95_ms": 69.0000057220459,
+      "pairs": 99,
+      "reference_samples": 100,
+      "signed_median_ms": 0.0
+    },
+    "pointcloud": {
+      "absolute_max_ms": 266.9999599456787,
+      "absolute_median_ms": 0.0,
+      "absolute_p95_ms": 125.20000934600829,
+      "pairs": 99,
+      "reference_samples": 100,
+      "signed_median_ms": 0.0
+    }
+  },
+  "samples": {
+    "depth": 89,
+    "imu": 285,
+    "ir": 89,
+    "pointcloud": 60,
+    "rgb": 100
+  }
+}

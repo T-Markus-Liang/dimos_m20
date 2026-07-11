@@ -899,9 +899,11 @@ HE 实测混为同一评分。
 
 1. 先解决 Aurora 深度空间覆盖、RGB/depth/IR/point cloud/IMU 时间关系、内参、
    camera-to-base 和 camera-to-IMU 外参；
-2. 第一硬件候选为 Isaac ROS Visual SLAM 的 RGB-D 模式，因为官方当前版本具备
-   Orin/ROS 2、RGB-D 测试、状态、地图保存/加载和重定位接口；
-3. RTAB-Map ROS 2 RGB-D 作为定位/稠密地图备选，并评估与首选位姿前端组合；
+2. 第一可部署候选调整为 RTAB-Map 0.23.7 RGB-D；官方仓库已经提供与当前
+   Ubuntu Jammy、ROS 2 Humble、arm64 匹配的二进制包；
+3. Isaac ROS RGB-D 从 4.4 才出现，而 release-4 apt 仅提供 Noble/Jazzy，当前
+   Jammy/Humble 可用的 release-3.2 没有 RGB-D。除非后续明确升级整套系统，
+   不在当前 Orin 上强行安装或把 3.2 当作等价候选；
 4. OpenVINS 仅在相机/IMU 同步通过后作为轻量 VIO 备选；DPVO 作为离线 learned
    comparator；DROID-SLAM 因官方要求至少 11GB GPU 内存不进入 NX 8GB 部署；
 5. DINOv3 只能作为地点识别、回环或重定位增强，不能代替几何位姿估计。
@@ -929,3 +931,9 @@ HE 实测混为同一评分。
 `docs/he/evidence/`。静态 bag 实际 3.541s、280MiB、669 条消息，六路 Aurora
 各 52 帧、IMU 171 帧，控制命令为 0 条；修复自包含 checksum 清单后所有文件
 通过 SHA-256 校验，录制前后只读安全门均 PASS。
+
+Aurora `rgbd_enable` 隔离 A/B 已完成。开启后全局深度有效率只从 20.75% 变为
+21.01%，RGB-depth P95 仍约 65ms；点云从 14.49Hz 降到 12.20Hz，RGB-pointcloud
+P95 从 51.45ms 恶化到 125.20ms。因此保持部署默认 `rgbd_enable=false`，算法侧
+必须按 header 做显式配对并监控丢帧。临时 launch 不响应单次 SIGINT，清理后已
+恢复原 systemd 服务；最终 sensor gate 和只读门 PASS，未修改持久配置。

@@ -132,7 +132,10 @@ nearest offset at 5.81ms median and 10.29ms P95. Camera streams often had equal
 timestamps, but occasional one-frame gaps put RGB-depth P95 at 68.35ms. The
 driver was `align_mode=true`, `depth_correction=true` and `rgbd_enable=false`.
 Its own documentation states that RGB-D mode obtains all four camera outputs
-from one RGB-D frame, so that mode requires an isolated A/B test.
+from one RGB-D frame. The isolated A/B test did not improve camera pairing:
+RGB-depth P95 remained about 65ms, point-cloud rate fell from 14.49Hz to
+12.20Hz and point-cloud P95 grew from 51.45ms to 125.20ms. Keep
+`rgbd_enable=false`; see `docs/he/evidence/2026-07-11_1346_aurora-rgbd-ab.md`.
 
 Depth validity was 20.51% globally, 15.76% in the center 40%, and only about
 4.9-5.7% in the lower-third tiles. This spatial distribution does not yet pass
