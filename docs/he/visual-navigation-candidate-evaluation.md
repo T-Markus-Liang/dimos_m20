@@ -239,3 +239,9 @@ An isolated RGB CameraInfo-only loss kept RGB/depth images fresh and withheld
 42 calibration messages. Pose/TF freshness failed closed and recovered to the
 baseline in 0.244s after CameraInfo resumed. It did not produce explicit lost
 status. See `evidence/2026-07-12_0052_camera-info-fault.md`.
+
+Direct calibration validation now adds explicit missing/invalid/stale reasons.
+Zero-focal-length CameraInfo was rejected in 0.363s and valid calibration
+restored the reason in 0.009s. See
+`evidence/2026-07-12_0107_camera-info-health-gate.md`. Plausible-but-wrong
+intrinsics and physical extrinsics remain calibration gates.

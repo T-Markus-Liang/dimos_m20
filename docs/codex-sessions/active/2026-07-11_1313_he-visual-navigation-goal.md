@@ -448,7 +448,15 @@ health while keeping real motion disconnected.
 - Added direct RGB CameraInfo validation to the visual bridge and explicit
   missing/invalid/stale localization-health reasons. Added a
   `corrupt-camera-info` proxy mode that keeps publishing K/P with zero focal
-  lengths. All 48 HE tests and Ruff pass on the VM; live Orin proof is pending.
+  lengths. All 48 HE tests and Ruff pass on the VM.
+- On Orin, 41 zero-focal CameraInfo messages triggered `camera_info_invalid` in
+  0.363s; the reason cleared 0.009s after recovery and the original baseline
+  returned in 0.209s. The updated drop test triggered `camera_info_stale` in
+  0.946s and cleared it 0.103s after recovery.
+- Preserved four raw JSON files and
+  `docs/he/evidence/2026-07-12_0107_camera-info-health-gate.md`. Both database
+  hashes were unchanged. Final sensor/read-only gates passed at about 866MiB
+  bridge memory, services had zero restarts and navigation publishers were zero.
 
 ## Decisions
 
@@ -515,13 +523,14 @@ health while keeping real motion disconnected.
   the static admission gate, so the shadow chain remains RGB-D-only.
 - Static bad-but-fresh RGB/depth transitions and recovery are proven on Orin.
   Static CameraInfo-only synchronization loss is also proven. Moving tracking
-  loss, malformed calibration and dynamic scenes remain open.
+  Structural malformed/missing CameraInfo is also proven. Plausible-but-wrong
+  calibration, moving tracking loss and dynamic scenes remain open.
 
 ## Resume Instructions
 
 1. Read this log, ADR-001 and the final shadow soak evidence.
-- Preserve the CameraInfo-only evidence distinction: pose/TF freshness catches
-  missing calibration, while malformed-but-present calibration remains open.
+- Preserve the CameraInfo evidence boundary: missing and structurally invalid
+  calibration are covered; plausible-but-wrong values require physical baseline.
 - Read the fresh-content fault evidence before changing health thresholds; do
   not treat blank-depth freshness fallback as explicit tracking-loss status.
 - Read the static IMU evidence before changing RTAB-Map inputs. Do not run an

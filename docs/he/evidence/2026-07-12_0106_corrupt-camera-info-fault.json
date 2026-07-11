@@ -1,0 +1,54 @@
+{
+  "camera_info_corrupted_counts": {
+    "fault.rgb": 41
+  },
+  "camera_info_published_counts": {
+    "baseline.depth": 162,
+    "baseline.rgb": 161,
+    "fault.depth": 41,
+    "fault.rgb": 41,
+    "recovery.depth": 186,
+    "recovery.rgb": 186
+  },
+  "camera_info_received_counts": {
+    "baseline.depth": 162,
+    "baseline.rgb": 161,
+    "fault.depth": 41,
+    "fault.rgb": 41,
+    "recovery.depth": 186,
+    "recovery.rgb": 186
+  },
+  "captured_at": "2026-07-12T01:06:24+0800",
+  "durations_seconds": {
+    "baseline": 12.0,
+    "fault": 8.0,
+    "recovery": 12.0
+  },
+  "events": [
+    {
+      "at": 1783789552.8568594,
+      "phase": "baseline"
+    },
+    {
+      "at": 1783789564.908345,
+      "phase": "fault"
+    },
+    {
+      "at": 1783789572.8624446,
+      "phase": "recovery"
+    },
+    {
+      "at": 1783789584.8569746,
+      "phase": "complete"
+    }
+  ],
+  "image_counts": {
+    "baseline.depth": 162,
+    "baseline.rgb": 158,
+    "fault.depth": 41,
+    "fault.rgb": 43,
+    "recovery.depth": 186,
+    "recovery.rgb": 181
+  },
+  "mode": "corrupt-camera-info"
+}

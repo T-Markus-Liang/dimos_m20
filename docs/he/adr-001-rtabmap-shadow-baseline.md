@@ -103,6 +103,12 @@ Withholding only RGB CameraInfo while RGB/depth images stayed fresh added
 the synchronization failure is contained by pose/TF freshness. This does not
 qualify malformed-but-present calibration or moving synchronization.
 
+The bridge now validates the exact RTAB-Map CameraInfo directly. Zero focal
+lengths triggered `camera_info_invalid` in 0.363s and the reason cleared 0.009s
+after valid calibration resumed. A missing calibration re-test triggered
+`camera_info_stale` in 0.946s and recovered in 0.103s. Structurally valid but
+physically wrong calibration remains outside this static gate.
+
 A later 600-second stationary soak exposed a separate active-database growth
 failure: 0.480m of accumulated frame jitter grew one database from 16.7MiB to
 126.7MiB despite only 4.72mm final drift. A first 0.02m/0.01rad threshold test
