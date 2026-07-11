@@ -502,6 +502,11 @@ health while keeping real motion disconnected.
   physical camera-IMU calibration remain open.
 - Evidence closeout passed all 50 HE unit tests, focused Ruff, JSON parsing and
   exact sample/duration/window/bias/hash assertions, plus `git diff --check`.
+- Pushed the diagnostic implementation as `09efdd23` and the live evidence as
+  `f760cc62`, fast-forwarded Orin after each, and synchronized the canonical
+  deployment guide to the macOS Downloads mirror. The final Orin read-only gate
+  passed at about 1005MiB sensor-bridge memory and 3.3GiB available memory with
+  zero navigation publishers.
 
 ## Decisions
 
