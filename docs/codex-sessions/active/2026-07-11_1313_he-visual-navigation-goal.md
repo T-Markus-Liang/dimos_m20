@@ -303,6 +303,15 @@ health while keeping real motion disconnected.
   thread a bounded 100ms join. Forty-nine related core tests, 39 HE tests,
   Ruff and `git diff --check` pass on the VM; clean Orin lifecycle proof is
   pending.
+- The fourth Orin attempt removed the assertion and started visual odometry
+  with zero navigation publishers, but normal stop took 7111ms and escalated.
+  Logs prove the first full stop completed in about 2.45 seconds; a pre-exit
+  tagged-process sweep then waited two seconds on multiprocessing helpers, and
+  loop unwinding invoked coordinator stop a second time.
+- Removed only the redundant signal-handler sweep because the independent
+  post-exit watchdog retains orphan cleanup. Made coordinator stop lock-protected
+  and idempotent. Fifty related core tests, 39 HE tests and static checks pass
+  on VM; the fifth clean Orin lifecycle attempt is pending.
 
 ## Decisions
 
@@ -351,9 +360,9 @@ health while keeping real motion disconnected.
   first threshold-only deployment failed, while the corrected unlinked-node
   persistence setting passed a full 600-second Orin soak with about 99.0%
   lower database growth. The 256MiB hard watchdog remains enabled.
-- Native child cleanup, lifecycle order and host RPC-client cleanup are fixed.
-  The third Orin attempt stopped normally but exposed daemon/non-parent worker
-  joins. The parent-aware wait is tested on VM and needs final clean Orin proof.
+- Native child cleanup, lifecycle order, host RPC-client cleanup and non-parent
+  worker waits are fixed. The fourth Orin attempt exposed a redundant pre-exit
+  sweep and duplicate coordinator stop; its correction needs final Orin proof.
 
 ## Resume Instructions
 

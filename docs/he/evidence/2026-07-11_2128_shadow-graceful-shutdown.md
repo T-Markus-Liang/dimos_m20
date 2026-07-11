@@ -115,9 +115,35 @@ LCM backend. The focused parent/non-parent, zombie registry and RPC tests raise
 the related core selection to 49 passing tests; all 39 HE tests, Ruff and
 `git diff --check` also pass on the VM.
 
+## Fourth Live Attempt And Duplicate Coordinator Stop
+
+Commit `7dae71b6` removed the non-parent assertion and passed focused checks on
+Orin. The motion-free shadow stack started correctly, `/he/visual_odom` emitted,
+and `/he/nav_cmd_vel` retained zero publishers. Normal stop still escalated:
+
+- CLI elapsed time was 7111ms and reported SIGKILL escalation;
+- no process or port remained afterward;
+- no child-process assertion or worker-shutdown error was logged.
+
+Timestamped logs show the first shutdown was healthy. All module stop RPCs and
+all six workers completed from `14:06:08.520Z` through `14:06:10.968Z`, about
+2.45 seconds. The signal handler then called the tagged-process sweep before
+the daemon could exit. Python's multiprocessing `resource_tracker` ignores
+SIGTERM and normally exits when the parent closes its pipe, so that pre-exit
+sweep consumed its full two-second grace. `sys.exit()` then unwound through
+`ModuleCoordinator.loop()` and its `finally` called `stop()` a second time.
+
+The correction removes the redundant pre-exit sweep from the signal handler.
+The already-running independent watchdog waits for the main PID to disappear
+and retains the tagged-process sweep for genuine orphans. Coordinator stop is
+now lock-protected and idempotent, so signal shutdown and loop unwinding cannot
+repeat module or manager cleanup. A focused idempotence test raises the related
+core selection to 50 passing tests; all 39 HE tests and static checks pass on
+the VM. Final Orin verification remains required.
+
 ## Required Orin Evidence
 
-After the daemon/non-parent worker commit and fast-forward sync, start the
+After the idempotent coordinator commit and fast-forward sync, start the
 motion-free shadow blueprint, wait for both native processes and
 `/he/visual_odom`, then use normal
 `dimos stop` without `--force`. Record elapsed time and require:

@@ -14,6 +14,7 @@
 
 from types import MappingProxyType
 from typing import Protocol
+from unittest.mock import Mock
 
 import pytest
 
@@ -47,6 +48,20 @@ _BUILD_WITHOUT_RERUN = MappingProxyType(
         "g": {"viewer": "none"},
     }
 )
+
+
+def test_stop_is_idempotent() -> None:
+    coordinator = ModuleCoordinator(g=GlobalConfig(n_workers=0, viewer="none"))
+    manager = Mock()
+    module = Mock()
+    coordinator._managers = {"python": manager}
+    coordinator._deployed_modules = {type("TestModule", (), {}): module}
+
+    coordinator.stop()
+    coordinator.stop()
+
+    module.stop.assert_called_once_with()
+    manager.stop.assert_called_once_with()
 
 
 class Data1:

@@ -78,6 +78,8 @@ class ModuleCoordinator(Resource):
         self._class_aliases: dict[type[ModuleBase], type[ModuleBase]] = {}
         self._module_transports: dict[type[ModuleBase], dict[str, Transport[Any]]] = {}
         self._started = False
+        self._stopped = False
+        self._stop_lock = threading.Lock()
         self._modules_lock = threading.RLock()
         self._coordinator_rpc: CoordinatorRPC | None = None
 
@@ -90,6 +92,11 @@ class ModuleCoordinator(Resource):
         self._started = True
 
     def stop(self) -> None:
+        with self._stop_lock:
+            if self._stopped:
+                return
+            self._stopped = True
+
         if self._coordinator_rpc is not None:
             self._coordinator_rpc.stop()
             self._coordinator_rpc = None

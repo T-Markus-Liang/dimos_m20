@@ -1017,6 +1017,18 @@ zombie PID 视为已退出，避免残留状态误报。RPC cleanup thread 增�
 测试、39 项 HE 测试、Ruff 和 diff 检查已在 VM 通过；最终 Orin 无异常日志普通 stop
 复测仍待执行。
 
+第四轮在 `7dae71b6` 上验证 non-parent assertion 已消失，视觉里程计正常输出且导航
+发布者仍为 0，但普通 stop 用时 7111ms 并再次升级 SIGKILL。时间戳证明第一次完整
+停机其实在约 2.45 秒内完成；随后 signal handler 在主进程退出前执行通用 tagged
+process sweep。Python `resource_tracker` 会忽略 SIGTERM，通常要等父进程关闭 pipe
+才退出，因此该 sweep 等满两秒；之后 `sys.exit()` 展开到 `ModuleCoordinator.loop()`
+的 finally，又重复调用一次 coordinator stop。
+
+修复移除 signal handler 中冗余的预退出 sweep；独立 watchdog 仍会在主 PID 消失后
+执行同一清理，异常退出和孤儿进程保护不变。`ModuleCoordinator.stop()` 增加锁保护
+的幂等状态，signal shutdown 与 loop finally 不会再重复停模块和 manager。50 项相关
+core 测试、39 项 HE 测试及静态检查已在 VM 通过，待第五轮 Orin 普通 stop 实测。
+
 ## 16. 公开基准与视觉外参准入复核（2026-07-11）
 
 公开数值基准已从官方论文补齐到
