@@ -5,6 +5,7 @@ from __future__ import annotations
 import os
 from pathlib import Path
 import signal
+import sqlite3
 import subprocess
 import sys
 import tempfile
@@ -259,7 +260,23 @@ class TestHERTABMapRuntimeBounds(unittest.TestCase):
             )
             self.assertEqual(empty_localization.returncode, 2)
 
-            database.write_bytes(b"database")
+            database.write_bytes(b"not sqlite")
+            malformed_localization = self.mode_check(
+                {"HE_RTABMAP_MODE": "localization", "HE_RTABMAP_DB": str(database)}
+            )
+            self.assertEqual(malformed_localization.returncode, 2)
+
+            database.unlink()
+            with sqlite3.connect(database) as sqlite_database:
+                sqlite_database.execute('CREATE TABLE "Node" (id INTEGER)')
+            missing_schema = self.mode_check(
+                {"HE_RTABMAP_MODE": "localization", "HE_RTABMAP_DB": str(database)}
+            )
+            self.assertEqual(missing_schema.returncode, 2)
+
+            with sqlite3.connect(database) as sqlite_database:
+                for table in ("Admin", "Data", "Info"):
+                    sqlite_database.execute(f'CREATE TABLE "{table}" (id INTEGER)')
             localization = self.mode_check(
                 {"HE_RTABMAP_MODE": "localization", "HE_RTABMAP_DB": str(database)}
             )

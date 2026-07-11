@@ -978,7 +978,9 @@ shadow baseline，但不代表真实导航获批。架构决策和替代方案�
 已存在、非空且可读的 `HE_RTABMAP_DB`，并强制
 `Mem/IncrementalMemory=false`、`Mem/InitWMWithAllNodes=true`、
 `Mem/LocalizationReadOnly=true` 和 `Mem/LocalizationDataSaved=false`。这只建立安全的
-地图加载链路；静止同场景重载、异地启动和移动重定位必须分别验证。
+地图加载链路。启动前还会用 Python SQLite read-only URI 核对 `Admin/Data/Info/Node`
+核心表，非 SQLite 或错误 schema 会在 RTAB-Map 启动前拒绝；静止同场景重载、异地
+启动和移动重定位必须分别验证。
 
 ```bash
 # 新建 mapping database，目标路径必须不存在
@@ -995,6 +997,14 @@ HE_RTABMAP_MODE=localization HE_RTABMAP_DB=/var/tmp/he-rtabmap/he-map.db \
 `InvalidParameterTypeException` 并在创建地图前退出。runner 已改为传递显式 YAML
 字符串标量（例如 `Mem/IncrementalMemory:='true'`）。原生 0.23.7 探针确认该形式被
 解析为 RTAB-Map 字符串参数并正常进入 SLAM mode；失败尝试没有生成可复用数据库。
+
+修正后的静止实测已完成 mapping -> localization-only 重载。mapping DB 最终为
+659456 bytes、1 个 Node、SQLite integrity `ok`；localization 加载后输出相同的
+83x60 occupancy、pose 和动态 TF，零 tracking loss，并恢复 saved map correction。
+RTAB-Map 报告一次 good localization candidate。运行前、中、后数据库 size、mtime 和
+SHA-256 `144b31d0...0cd7e7f` 完全不变，证明 read-only 生效。地图 known ratio 仍只有
+2.851%，所以 planner map 继续被门禁阻断。完整证据见
+`docs/he/evidence/2026-07-11_2237_static-map-reload.md`。
 
 OccupancyGrid 是 latched/event-driven，静止时不重发不代表地图失效。因此 map age
 默认作为诊断值，不直接阻断 health；需要该门时可显式设置 `max_map_age_s`。pose、

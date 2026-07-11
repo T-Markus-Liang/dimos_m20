@@ -216,3 +216,9 @@ RTAB-Map. The default runner starts a fresh bounded database. Explicit
 incremental memory disabled, all saved nodes initialized and the database
 opened read-only. Static same-scene reload and later moving/displaced-start
 relocalization evidence must remain separate.
+
+Static Orin evidence now confirms the read-only path loads a one-node database,
+restores map correction, reports a good same-scene localization candidate and
+re-emits the identical occupancy map without changing the database hash. This
+is map-load feasibility, not a moving or displaced-start relocalization score.
+See `evidence/2026-07-11_2237_static-map-reload.md`.

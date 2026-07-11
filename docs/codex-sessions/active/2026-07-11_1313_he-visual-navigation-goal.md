@@ -348,6 +348,25 @@ health while keeping real motion disconnected.
   string scalars are accepted and enter SLAM mode. Updated all mode overrides
   and tests to preserve the quotes. All 40 HE tests and static checks pass again;
   clean Orin mapping/localization rerun is pending.
+- The corrected mapping run created a 659456-byte RTAB-Map 0.23.7 database with
+  one Node, 149 Statistics rows and `integrity_check=ok`. Thirty-second odometry
+  ran at 5.65Hz with zero losses; the 83x60 map remained unhealthy at 2.851%
+  known space.
+- Loaded the same database in read-only localization mode. RTAB-Map restored
+  saved map correction against node 1, reported a good localization candidate,
+  emitted the identical map plus pose/TF, and had zero tracking loss over the
+  30-second benchmark.
+- Database size, mtime and SHA-256 stayed identical before, during and after
+  localization and normal shutdown. No graph fatal, process or port remained.
+  Restored `he-dimos-sense` active with zero restarts; live sensor and read-only
+  gates passed with zero navigation publishers.
+- Preserved four benchmark JSON files and the qualification report under
+  `docs/he/evidence/2026-07-11_2237_*`. Same-scene map loading is proven;
+  moving/displaced-start relocalization remains gated.
+- Tightened localization admission after review: non-empty was too weak because
+  any file could reach RTAB-Map. The runner now opens SQLite read-only and
+  requires the core `Admin/Data/Info/Node` schema before launch. Tests cover
+  malformed SQLite and missing-schema files; all 40 HE tests still pass.
 
 ## Decisions
 
@@ -399,31 +418,29 @@ health while keeping real motion disconnected.
 - Native child cleanup, lifecycle order, host RPC-client cleanup and non-parent
   worker waits are fixed and verified on Orin. Normal stop completes inside the
   CLI SIGTERM grace with one shutdown round, no error and no residue.
-- The map-load contract is implemented and VM-tested. It is not yet promoted
-  to proven relocalization; Orin same-scene static reload is the next gate.
+- The map-load contract and static same-scene read-only reload are verified on
+  Orin. Moving/displaced-start relocalization and loop closure remain open.
 
 ## Resume Instructions
 
 1. Read this log, ADR-001 and the final shadow soak evidence.
-2. Deploy and run the mapping-to-read-only-localization static reload test on
-   Orin, preserving database hash/size, node counts, output and failure logs.
-3. Run a static matte-target and camera pitch/height experiment to separate
+2. Run a static matte-target and camera pitch/height experiment to separate
    floor reflectivity/grazing-angle effects from sensor defects.
-4. Evaluate a controlled move from the shared USB 2.0 hub to the available
+3. Evaluate a controlled move from the shared USB 2.0 hub to the available
    10Gbps root port if physical access is approved.
-5. Escalate firmware 2.0.8/SDK 1.1.22 evidence to the vendor if target coverage
+4. Escalate firmware 2.0.8/SDK 1.1.22 evidence to the vendor if target coverage
    remains abnormal, requesting optical specifications and the documented
    `SupportedInfo.depth_range` interpretation.
-6. Use the new nominal-extrinsics audit to plan physical camera-to-base and
+5. Use the new nominal-extrinsics audit to plan physical camera-to-base and
    camera-to-IMU calibration; do not promote the nominal values to calibrated.
-7. Keep public benchmark tables source-scoped and update them only when a new
+6. Keep public benchmark tables source-scoped and update them only when a new
    candidate has code, license, runtime and deployability evidence.
-8. After a new vehicle-down confirmation, record moving, loop-closure and
+7. After a new vehicle-down confirmation, record moving, loop-closure and
    relocalization datasets and decide whether RTAB-Map can graduate beyond the
    shadow baseline.
-9. Preserve the verified normal shadow shutdown path; do not replace it with
+8. Preserve the verified normal shadow shutdown path; do not replace it with
    `--force` in deployment procedures.
-10. Do not enable motion or restore LD19.
+9. Do not enable motion or restore LD19.
 
 ## Open Questions
 

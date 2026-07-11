@@ -69,9 +69,18 @@ visual odometry resets on each shadow start. Reusing a mapping database without
 an explicit localization/resume transform caused a verified RTAB-Map graph
 fatal. The runner now has a fail-closed mode contract: `mapping` refuses any
 existing explicit database, while `localization` requires an existing non-empty
-database and forces non-incremental, read-only operation with all saved nodes
-initialized in working memory. This provides a safe map-load path but does not
-prove displaced-start or moving relocalization.
+database, verifies the core RTAB-Map SQLite schema, and forces non-incremental,
+read-only operation with all saved nodes initialized in working memory. This
+provides a safe map-load path but does not prove displaced-start or moving
+relocalization.
+
+The first static Orin qualification now proves the mode contract end to end. A
+one-node mapping database passed SQLite integrity, then produced the identical
+83x60 occupancy map in read-only localization mode. RTAB-Map restored the saved
+map correction, reported a good localization candidate, emitted pose/map/TF
+without tracking loss, and left database size, mtime and SHA-256 unchanged.
+This closes same-scene map loading only; moving and displaced-start
+relocalization remain exit gates.
 
 A later 600-second stationary soak exposed a separate active-database growth
 failure: 0.480m of accumulated frame jitter grew one database from 16.7MiB to

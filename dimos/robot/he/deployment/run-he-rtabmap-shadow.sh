@@ -25,6 +25,24 @@ validate_mode() {
         echo "Localization database must be an existing, non-empty readable file" >&2
         return 2
       fi
+      if ! python3 -c '
+import sqlite3
+import sys
+
+required = {"Admin", "Data", "Info", "Node"}
+with sqlite3.connect(f"file:{sys.argv[1]}?mode=ro", uri=True) as database:
+    tables = {
+        row[0]
+        for row in database.execute(
+            "select name from sqlite_master where type=?", ("table",)
+        )
+    }
+if not required.issubset(tables):
+    raise SystemExit(1)
+' "$database" 2>/dev/null; then
+        echo "Localization database is not a valid RTAB-Map SQLite database" >&2
+        return 2
+      fi
       ;;
     *)
       echo "HE_RTABMAP_MODE must be mapping or localization" >&2
