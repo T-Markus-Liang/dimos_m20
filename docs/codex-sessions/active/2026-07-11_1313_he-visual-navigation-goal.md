@@ -372,6 +372,20 @@ health while keeping real motion disconnected.
   Added a pure summary test covering baseline -> stale-input fault -> baseline
   recovery. All 41 HE tests, Ruff and `git diff --check` pass on the VM; live
   Aurora outage/recovery fault injection is pending.
+- Deployed the health observer on Orin. The independent eight-second baseline
+  captured 135 samples with only `map_known_ratio_low`, maximum 0.368s pose age
+  and 0.510s TF age.
+- Injected a 7.014s Aurora service outage under a restore trap. `pose_stale`
+  appeared 0.459s after inactive, `tf_stale` at 1.032s and `tf_unavailable` at
+  5.031s. The original baseline returned 3.994s after service activation.
+- A separate five-second recovery run captured 84 baseline-only samples.
+  After startup convergence, Aurora returned to about 14Hz with valid point
+  cloud and 28.1% depth coverage. Shadow stopped normally; both services,
+  sensor quality, read-only safety and zero navigation publishers were restored.
+- Preserved bounded baseline, event, fault/recovery and post-recovery JSON plus
+  `docs/he/evidence/2026-07-11_2345_visual-input-outage.md`. Total input-loss
+  freshness detection is proven; partial/bad-but-fresh and moving tracking loss
+  remain open.
 
 ## Decisions
 
@@ -425,31 +439,29 @@ health while keeping real motion disconnected.
   CLI SIGTERM grace with one shutdown round, no error and no residue.
 - The map-load contract and static same-scene read-only reload are verified on
   Orin. Moving/displaced-start relocalization and loop closure remain open.
-- Real health-transition instrumentation is VM-tested and awaits the bounded
-  Aurora input outage/recovery run on Orin.
+- Real health-transition instrumentation and total Aurora input outage/recovery
+  are verified on Orin. Partial and bad-but-fresh input faults remain open.
 
 ## Resume Instructions
 
 1. Read this log, ADR-001 and the final shadow soak evidence.
-2. Deploy the health benchmark and run a bounded Aurora input outage/recovery
-   fault injection while shadow SLAM remains motion-disconnected.
-3. Run a static matte-target and camera pitch/height experiment to separate
+2. Run a static matte-target and camera pitch/height experiment to separate
    floor reflectivity/grazing-angle effects from sensor defects.
-4. Evaluate a controlled move from the shared USB 2.0 hub to the available
+3. Evaluate a controlled move from the shared USB 2.0 hub to the available
    10Gbps root port if physical access is approved.
-5. Escalate firmware 2.0.8/SDK 1.1.22 evidence to the vendor if target coverage
+4. Escalate firmware 2.0.8/SDK 1.1.22 evidence to the vendor if target coverage
    remains abnormal, requesting optical specifications and the documented
    `SupportedInfo.depth_range` interpretation.
-6. Use the new nominal-extrinsics audit to plan physical camera-to-base and
+5. Use the new nominal-extrinsics audit to plan physical camera-to-base and
    camera-to-IMU calibration; do not promote the nominal values to calibrated.
-7. Keep public benchmark tables source-scoped and update them only when a new
+6. Keep public benchmark tables source-scoped and update them only when a new
    candidate has code, license, runtime and deployability evidence.
-8. After a new vehicle-down confirmation, record moving, loop-closure and
+7. After a new vehicle-down confirmation, record moving, loop-closure and
    relocalization datasets and decide whether RTAB-Map can graduate beyond the
    shadow baseline.
-9. Preserve the verified normal shadow shutdown path; do not replace it with
+8. Preserve the verified normal shadow shutdown path; do not replace it with
    `--force` in deployment procedures.
-10. Do not enable motion or restore LD19.
+9. Do not enable motion or restore LD19.
 
 ## Open Questions
 

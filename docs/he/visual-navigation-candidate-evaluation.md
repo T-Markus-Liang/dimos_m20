@@ -222,3 +222,8 @@ restores map correction, reports a good same-scene localization candidate and
 re-emits the identical occupancy map without changing the database hash. This
 is map-load feasibility, not a moving or displaced-start relocalization score.
 See `evidence/2026-07-11_2237_static-map-reload.md`.
+
+The integrated health gate has separate static fault evidence. A seven-second
+Aurora outage added `pose_stale` in 0.459s and `tf_stale` in 1.032s, then
+returned to the original baseline in 3.994s after service activation. This is
+an input-freshness result, not a visual tracking-loss benchmark.

@@ -1090,6 +1090,17 @@ age 以及 `(healthy, reasons)` 状态转换。当前地图覆盖不足会让正
   --duration 30 --output /tmp/he-localization-health.json
 ```
 
+静止真实故障注入已验证完整 Aurora 输入中断。8 秒基线 135 个样本始终只有
+`map_known_ratio_low`。Aurora inactive 后 0.459 秒新增 `pose_stale`，1.032 秒新增
+`tf_stale`，5.031 秒后变为 `tf_unavailable`；服务 active 后 3.947 秒移除
+`pose_stale`，3.994 秒完全恢复原基线。恢复后的独立 5 秒样本 84 条，仍只有原基线
+原因。首次短帧率检查处于启动收敛期，额外等待后 RGB/IR 约 14.29Hz、depth
+13.89Hz、有效深度 28.1%，点云正常。完整证据见
+`docs/he/evidence/2026-07-11_2345_visual-input-outage.md`。
+
+该结果关闭“完整相机输入消失”的 freshness 检测，但不关闭坏图像仍持续到达、单个
+模态丢失或运动中 tracking loss；这些必须分别注入和验证。
+
 ## 16. 公开基准与视觉外参准入复核（2026-07-11）
 
 公开数值基准已从官方论文补齐到

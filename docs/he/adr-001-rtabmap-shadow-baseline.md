@@ -82,6 +82,12 @@ without tracking loss, and left database size, mtime and SHA-256 unchanged.
 This closes same-scene map loading only; moving and displaced-start
 relocalization remain exit gates.
 
+A static Aurora service outage also verified the fail-closed freshness path.
+`pose_stale` appeared 0.459s after input became inactive, `tf_stale` at 1.032s,
+and the state returned to the original poor-map baseline 3.994s after service
+activation. This proves total visual-input loss detection, not bad-but-fresh
+image or moving tracking-loss detection.
+
 A later 600-second stationary soak exposed a separate active-database growth
 failure: 0.480m of accumulated frame jitter grew one database from 16.7MiB to
 126.7MiB despite only 4.72mm final drift. A first 0.02m/0.01rad threshold test
