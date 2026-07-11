@@ -1724,3 +1724,8 @@ Sense 后无 RTAB-Map 或临时 throttle 残留。第一次 shadow admission 曾
 0，root 在 12 秒后返回 124。根因是运行态 ROS 2/DDS 订阅身份不一致，不是 RTAB-Map
 停发。模式切换继续由 root 管理 systemd，但 readiness gate 现在通过 `runuser` 固定以
 `ubuntu` 运行；QoS、超时和准入条件均未放宽。
+
+部署 `6a9f01db` 后，标准 wrapper 在 40 秒内完成 shadow admission 并返回 0；准入
+gate 和 30 秒后的独立 gate 分别在 1196MiB、1402MiB cgroup memory 下通过。返回
+Sense 后，Sense/throttle enabled+active、shadow static+inactive、服务零重启，无
+RTAB-Map 或临时 throttle 残留，部署完整性和最终只读门通过。

@@ -78,6 +78,13 @@ seconds with status 124. Mode switching still runs as root, but readiness gates
 now run as the `ubuntu` runtime user through `runuser`. No gate, QoS, or timeout
 was weakened.
 
+After deploying `6a9f01db`, the normal wrapper completed shadow admission in
+40 seconds and returned status 0. Its admission gate passed at 1196MiB cgroup
+memory and an independent gate passed 30 seconds later at 1402MiB. The wrapper
+then restored Sense normally. Sense and throttle were enabled/active, shadow
+was static/inactive, all services had zero restarts, and no RTAB-Map or temporary
+throttle process remained. Deployment-integrity and final read-only gates passed.
+
 ## Result
 
 Accept native serialized pre-throttling at 1.2Hz for the sampled visualization

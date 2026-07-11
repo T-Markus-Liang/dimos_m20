@@ -769,8 +769,13 @@ health while keeping real motion disconnected.
   disabled: `ubuntu` received `/he/visual_odom` with status 0 while root timed
   out after 12 seconds with status 124. The publisher remained best-effort at
   about 8.6Hz. Changed only gate execution to `runuser -u ubuntu`; root retains
-  systemd ownership and all readiness thresholds remain unchanged. Final VM
-  validation and Orin wrapper round trip remain pending.
+  systemd ownership and all readiness thresholds remain unchanged.
+- Deployed `6a9f01db`; the standard wrapper completed shadow admission in 40
+  seconds with status 0. Admission and 30-second independent gates passed at
+  1196/1402MiB cgroup memory. The wrapper restored Sense normally; Sense and
+  throttle are enabled/active, shadow is static/inactive, all services have zero
+  restarts, no RTAB-Map or temporary throttle residue remains, and deployment
+  integrity plus the final read-only gate passed.
 
 ## Decisions
 
@@ -824,8 +829,9 @@ health while keeping real motion disconnected.
   gaps remain; hardware synchronization remains unclaimed.
 - Serialized point-cloud pre-throttling at 1.2Hz with a 1.3Hz Python guard is
   accepted for the sampled visualization branch after Orin timing, resource and
-  direct shadow qualification. The mode-switch failure-code fix still requires
-  deployment and one final wrapper round trip.
+  service-level shadow qualification. Mode-switch status preservation and
+  runtime-user gate execution are deployed and verified in a complete wrapper
+  round trip.
 - The enhanced diagnostic and effective-parameter A/B are complete. No tested
   setting resolves the stable spatial defect, so the canonical configuration is
   restored and RGB-D navigation admission remains failed. The SDK support-range
