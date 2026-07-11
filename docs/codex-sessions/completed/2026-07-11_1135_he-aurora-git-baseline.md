@@ -2,7 +2,7 @@
 
 ## Metadata
 
-- Date: 2026-07-11 12:35 CST
+- Date: 2026-07-11 12:40 CST
 - Session id: current Codex desktop thread
 - Project: dimos-wd-m20
 - Workspace: VM `/home/markus/work/dimos_wd_m20`; runtime target `/home/ubuntu/he/dimos_wd_m20`
@@ -64,6 +64,13 @@ Aurora output available through `HESensorBridge` by default.
 - Made the deployment plan version-controlled at
   `docs/he/orin-nx-dimos-lightweight-deployment.md`; the macOS Downloads copy is
   now a convenience mirror rather than the canonical source.
+- Converted the Orin runtime checkout from `feat/wd/m20` plus copied files to a
+  clean `codex/he-orin` checkout. Before changing HEAD, `git write-tree` exactly
+  matched the remote implementation commit tree; afterward the worktree was
+  clean and tracked `origin/codex/he-orin` at `968207d5...1aef`.
+- Standardized VM and Orin remotes: personal fork as `origin`, public MeloLong
+  repository as `upstream`. Final Orin deployment-integrity and read-only gates
+  passed again with motion closed and about 1020MiB sensor cgroup memory.
 
 ## Decisions
 

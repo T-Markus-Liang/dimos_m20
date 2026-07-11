@@ -1,6 +1,6 @@
 # HE Orin NX 8GB DimOS 轻量化部署方案
 
-更新日期：2026-07-11 12:33 CST
+更新日期：2026-07-11 12:40 CST
 
 目标：将 `MeloLong/dimos` 的 `feat/wd/m20` 分支作为 DimOS 开发基线，部署到 HE 机器人平台的 Jetson Orin NX 8GB 上，复用现有前转后驱阿克曼底盘和 Aurora 930 RGB-D/IR 深度相机。LD19 单线激光雷达从 HE 默认架构中弃用。Orin 只承担实机闭环，开发、仿真、回放和重型可视化留在外部电脑。
 
@@ -843,6 +843,11 @@ fork 工作流：
 `fcfb09c6369427e88398ff0ed0e468d52b005b6d`，包含此前通过验证的 HE 模块、
 控制安全链、部署脚本、测试和文档。Aurora 迁移作为后续独立提交，不与该稳定点
 混合，便于回滚和审查。
+
+Aurora 迁移 commit 为 `968207d5633839d3f46db1934be33526b8cd1aef`。Orin
+运行目录已在核对 `git write-tree` 与该远端 commit tree 完全一致后，切换为干净的
+`codex/he-orin` checkout，并跟踪 `origin/codex/he-orin`。因此 VM 开发目录、GitHub
+远端和 Orin 运行目录现在共享同一版本链，不再依赖无法审计的手工散落文件。
 
 LD19 已从 HE 默认架构完全退出：`he-ld19.service` 停止、disable 后从 `/etc`
 和仓库部署目录删除，`/scan` 不再存在，`HESensorBridge`、只读门和部署完整性门
