@@ -1779,3 +1779,10 @@ shadow cgroup 约 1408MiB，available 约 2.78GiB，swap 在切换阶段增加 8
 Sense，最终部署完整性和只读门通过。完整证据见
 `docs/he/evidence/2026-07-12_0728_depth-quality-localization-health.md`。当前 bottom
 coverage 仍不通过，不得据此开放导航或降低阈值。
+
+shadow readiness gate 同步增强：3 秒 health 窗口现在拒绝
+`depth_quality_missing/invalid/stale`，并逐样本检查指标年龄为有限的 0-1 秒、三个
+ratio 为有限的 `[0,1]`。`depth_bottom_coverage_low` 不阻止 shadow 启动，因为 shadow
+需要保留失败状态供研发观察；但 health 仍为 unhealthy、planner map 仍被扣留。VM
+shell、结构测试、64 项 HE unittest、聚焦 Ruff、blueprint registry 和 diff 检查通过；
+Orin 正常 admission、停流拒绝和恢复仍待验证。

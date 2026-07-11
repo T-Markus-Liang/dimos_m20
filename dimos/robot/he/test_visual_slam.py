@@ -586,6 +586,12 @@ class TestHERTABMapRuntimeBounds(unittest.TestCase):
         self.assertIn("verify-he-shadow-readonly.sh", switch)
         self.assertIn("Publisher count: 0", shadow_gate)
         self.assertIn("swap_growth_high", shadow_gate)
+        self.assertIn("depth_quality_missing", shadow_gate)
+        self.assertIn("depth_quality_invalid", shadow_gate)
+        self.assertIn("depth_quality_stale", shadow_gate)
+        self.assertIn('sample["depth_quality_age_s"]', shadow_gate)
+        self.assertIn('"depth_bottom_valid_ratio"', shadow_gate)
+        self.assertNotIn('"depth_bottom_coverage_low",', shadow_gate)
 
     def test_watchdog_default_and_configuration_boundaries(self) -> None:
         result = self.watchdog("--check")

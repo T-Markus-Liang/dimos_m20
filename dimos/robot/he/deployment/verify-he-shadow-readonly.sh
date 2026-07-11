@@ -105,11 +105,13 @@ trap 'rm -f "$health_file"' EXIT
   --duration 3 --output "$health_file" >/dev/null
 python3 - "$health_file" <<'PY'
 import json
+import math
 import sys
 
 with open(sys.argv[1], encoding="utf-8") as stream:
-    reasons = json.load(stream)["summary"]["reason_counts"]
-resource_reasons = {
+    report = json.load(stream)
+reasons = report["summary"]["reason_counts"]
+admission_reasons = {
     "runtime_status_missing",
     "runtime_status_invalid",
     "runtime_status_stale",
@@ -121,10 +123,32 @@ resource_reasons = {
     "swap_usage_invalid",
     "swap_growth_invalid",
     "swap_growth_high",
+    "depth_quality_missing",
+    "depth_quality_invalid",
+    "depth_quality_stale",
 }
-unexpected = resource_reasons.intersection(reasons)
+unexpected = admission_reasons.intersection(reasons)
 if unexpected:
-    raise SystemExit(f"shadow resource health failed: {sorted(unexpected)}")
+    raise SystemExit(f"shadow admission health failed: {sorted(unexpected)}")
+
+for sample in report["samples"]:
+    details = sample.get("details", {})
+    try:
+        age = float(sample["depth_quality_age_s"])
+        ratios = [
+            float(details[name])
+            for name in (
+                "depth_valid_ratio",
+                "depth_center_valid_ratio",
+                "depth_bottom_valid_ratio",
+            )
+        ]
+    except (KeyError, TypeError, ValueError):
+        raise SystemExit("shadow depth-quality evidence is incomplete") from None
+    if not math.isfinite(age) or age < 0.0 or age > 1.0:
+        raise SystemExit(f"shadow depth-quality age is invalid: {age}")
+    if any(not math.isfinite(value) or not 0.0 <= value <= 1.0 for value in ratios):
+        raise SystemExit(f"shadow depth-quality ratios are invalid: {ratios}")
 PY
 
 printf 'HE integrated shadow read-only gate: PASS\n'

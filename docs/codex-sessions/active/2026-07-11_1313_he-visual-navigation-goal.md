@@ -811,6 +811,14 @@ health while keeping real motion disconnected.
   0.022s. Shadow peaked near 1408MiB, available memory stayed near 2.78GiB,
   tegrastats swap was flat, services did not restart and all motion gates stayed
   closed. Both runs restored Sense and passed deployment/read-only gates.
+- Audited the shadow readiness gate and found it only rejected resource reasons;
+  missing, invalid or stale depth-quality evidence could leave admission green.
+  Extended its three-second health check to reject those reasons and validate
+  every sample's finite 0-1s age and three finite `[0,1]` ratios. Known low
+  bottom coverage remains allowed for shadow observation but keeps health
+  unhealthy and planner output withheld. Shell, structural, 64 HE unittest,
+  focused Ruff, registry and diff checks pass; Orin positive/negative admission
+  evidence remains pending.
 
 ## Decisions
 
