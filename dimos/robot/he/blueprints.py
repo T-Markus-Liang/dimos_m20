@@ -57,10 +57,19 @@ he_teleop_headless = autoconnect(
 
 
 he_visual_slam_shadow = autoconnect(
+    HESensorBridge.blueprint(),
     RerunBridgeModule.blueprint(
         rerun_open="none",
         memory_limit="256MB",
         latest_only_entities=[
+            "world/color_image",
+            "world/depth_image",
+            "world/ir_image",
+            "world/pointcloud",
+            "world/camera_info",
+            "world/depth_camera_info",
+            "world/odom",
+            "world/imu",
             "world/visual_odom",
             "world/visual_map",
             "world/visual_path",

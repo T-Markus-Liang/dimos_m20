@@ -1537,3 +1537,28 @@ Orin 静态验证使用真实 runner 字段，并仅通过配置把 available �
 fail-fast。验证流程必须停 Sense 并用 EXIT trap 恢复。目标中的“本机 full-rate SLAM +
 sampled Aurora Rerun 两条路径同时常驻且独立限资源”仍是未关闭的架构门，不能用本轮
 顺序运行结果代替并发验收。
+
+## 26. 单 Coordinator 双路径 shadow（2026-07-12）
+
+针对 host-global Coordinator 限制，采用最小 HE 局部修复，不修改 DimOS 全局 RPC：
+`he_visual_slam_shadow` 直接加入 `HESensorBridge`。运行 shadow 时仍先停止独立 Sense
+service，但同一个 shadow coordinator 内同时存在两条功能路径：
+
+```text
+Aurora raw ROS 13-15Hz -> native RTAB-Map odom/mapping
+
+Aurora raw ROS -> HESensorBridge sampled outputs
+               -> bounded latest-only Rerun
+```
+
+Rerun 的 256MB window 现在锁定 14 个 latest-only entity：原有 color/depth/IR/
+pointcloud、两路 CameraInfo、odom、IMU，加 visual odom/map/path/status、localization
+health 和受门禁的 global costmap。原始高带宽图像和点云仍不通过 Rerun 提升到全帧率；
+SLAM 继续直接订阅本机原始 ROS。
+
+蓝图仍无 `MovementManager`、`HEConnection`、follower 或速度输出。结构测试锁定
+`HESensorBridge` 存在、14 个 entity 完整、Rerun 256MB 不变和 runner 保持最后启动。
+VM 上 24 项 visual-SLAM、全部 56 项 HE unittest、Ruff、blueprint registry 和 diff
+检查通过。组合后 dedicated modules 从 3 增至 4，worker policy 预计将保持相同数量的
+non-dedicated worker，因此 Orin 必须重新测量完整进程树、available memory、swap、CPU、
+温度和全部 sampled modality；VM 结构通过不能替代实机资源准入。

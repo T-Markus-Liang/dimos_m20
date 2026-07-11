@@ -19,6 +19,7 @@ import numpy as np
 from dimos.msgs.nav_msgs.OccupancyGrid import OccupancyGrid
 from dimos.msgs.nav_msgs.Odometry import Odometry
 from dimos.robot.he.blueprints import he_visual_slam_shadow
+from dimos.robot.he.sensors import HESensorBridge
 from dimos.robot.he.visual_slam import (
     HELocalizationHealth,
     HERTABMapShadowRunner,
@@ -27,6 +28,7 @@ from dimos.robot.he.visual_slam import (
     summarize_localization_health,
     system_memory_status,
 )
+from dimos.visualization.rerun.bridge import RerunBridgeModule
 
 DEPLOYMENT_DIR = Path(__file__).parent / "deployment"
 
@@ -173,11 +175,35 @@ class TestHEVisualSlamBridge(unittest.TestCase):
                 "HEVisualSlamBridge",
                 "HELocalizationHealth",
                 "HEVisualMapAdapter",
+                "HESensorBridge",
                 "RerunBridgeModule",
             },
         )
-        self.assertEqual(ordered_module_names[0], "RerunBridgeModule")
+        self.assertEqual(ordered_module_names[0], "HESensorBridge")
         self.assertEqual(ordered_module_names[-1], "HERTABMapShadowRunner")
+
+        atoms = {atom.module: atom for atom in he_visual_slam_shadow.blueprints}
+        self.assertEqual(atoms[HESensorBridge].kwargs, {})
+        self.assertEqual(atoms[RerunBridgeModule].kwargs["memory_limit"], "256MB")
+        self.assertEqual(
+            atoms[RerunBridgeModule].kwargs["latest_only_entities"],
+            [
+                "world/color_image",
+                "world/depth_image",
+                "world/ir_image",
+                "world/pointcloud",
+                "world/camera_info",
+                "world/depth_camera_info",
+                "world/odom",
+                "world/imu",
+                "world/visual_odom",
+                "world/visual_map",
+                "world/visual_path",
+                "world/visual_status",
+                "world/localization_health",
+                "world/global_costmap",
+            ],
+        )
 
 
 class TestHELocalizationHealth(unittest.TestCase):

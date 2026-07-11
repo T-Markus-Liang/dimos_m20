@@ -163,11 +163,13 @@ age about 1.08s. Both runs stopped with ordinary SIGTERM and the final sensor
 and read-only gates passed. See
 `evidence/2026-07-12_0325_slam-resource-health.md`.
 
-The same test exposed a remaining service architecture gate: Coordinator RPC
-is host-global, so `he-dimos-sense` and the complete shadow blueprint cannot run
-as concurrent DimOS coordinators. Sense was stopped under an EXIT restore trap
-for this test. Simultaneous sampled-sensor visualization and full-rate local
-SLAM with independent resource limits remains unqualified.
+The same test exposed a host-global Coordinator RPC constraint:
+`he-dimos-sense` and the complete shadow blueprint cannot run as concurrent
+DimOS coordinators. The shadow blueprint therefore includes `HESensorBridge`
+directly. During shadow operation, one coordinator provides both the native
+full-rate ROS SLAM path and the sampled latest-only Rerun sensor path; Sense is
+stopped and later restored under an EXIT trap. The combined runtime resource
+budget still requires Orin qualification before this architecture gate closes.
 
 Real navigation remains prohibited until moving ATE/RPE, loop closure,
 relocalization, map quality, camera extrinsics, tracking-loss detection,

@@ -631,6 +631,16 @@ health while keeping real motion disconnected.
 - The restore trap restarted `he-dimos-sense`; final RGB/depth/IR were
   15.50/10.26/15.62Hz, point cloud had 256000 points, calibrations were present,
   service restarts remained zero and the independent read-only gate passed.
+- Chose a scoped response to the host-global Coordinator constraint instead of
+  changing core RPC behavior: add `HESensorBridge` directly to
+  `he_visual_slam_shadow`. One coordinator can then run native full-rate ROS
+  SLAM and sampled latest-only Rerun sensor visualization simultaneously while
+  the standalone Sense service is stopped under the existing restore trap.
+- Expanded the shadow Rerun surface from six visual entities to fourteen total
+  sensor and visual entities, retaining the 256MB bound. Structural tests lock
+  HESensorBridge presence, exact entity order and absence of all motion modules.
+  All 24 visual-SLAM and 56 HE tests, Ruff, blueprint registry and diff checks
+  pass on VM; combined Orin resource qualification is pending.
 - Pushed the probe, failed-getter fix, bounded DDS convergence and final
   evidence as `1655079a`, `b7b56853`, `a4af65e6` and `64cfeb4c`; Orin
   fast-forwarded cleanly and the macOS deployment mirror was synchronized.
@@ -714,9 +724,9 @@ health while keeping real motion disconnected.
   control modules remain unchanged; moving and physical-calibration gates are
   still open.
 - Shadow resource-health hardening is deployed and statically qualified. The
-  newly proven host-global Coordinator restriction means full-rate SLAM and the
-  complete sampled Sense/Rerun blueprint are not yet concurrent. Resolving that
-  dual-path architecture is the next non-motion integration task.
+  dual-path shadow blueprint is implemented and VM-verified but not yet
+  deployed. Its larger worker/process and Rerun footprint must pass Orin static
+  function, resource and safety soak before the architecture gate can close.
 
 ## Resume Instructions
 
