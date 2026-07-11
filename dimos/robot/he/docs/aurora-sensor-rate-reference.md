@@ -115,7 +115,8 @@ SLAM admission diagnostic and bounded recording:
 
 ```bash
 .venv/bin/python dimos/robot/he/deployment/diagnose-he-aurora.py \
-  --samples 30 --timeout 15 --output /tmp/he-aurora-diagnostic.json
+  --samples 30 --timeout 15 --output /tmp/he-aurora-diagnostic.json \
+  --snapshot-dir /tmp/he-aurora-snapshot
 bash dimos/robot/he/deployment/record-he-visual-dataset.sh --dry-run
 ```
 
@@ -147,6 +148,11 @@ The Aurora-specific source audit is recorded in
 as `slam_mode`, `mtof_crop_*` and fusion/scatter filter thresholds are declared
 by the shared driver base but are not applied by the Aurora930 device path.
 Do not use their presence in `ros2 param list` as an A/B test rationale.
+
+`--snapshot-dir` is opt-in and writes the nearest RGB/IR frame, raw 16-bit
+millimetre depth, a display-only depth color map, a binary valid mask and
+`snapshot.json`. It is intended for installation/occlusion inspection and is
+not a recording mode; the default diagnostic writes no images.
 
 The corrected 2026-07-11 run is stored at
 `docs/he/evidence/2026-07-11_1338_aurora-diagnostic.json`. It measured IMU-to-RGB

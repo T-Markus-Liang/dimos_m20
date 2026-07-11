@@ -1,11 +1,15 @@
 """Unit tests for HE visual sensor qualification helpers."""
 
+from pathlib import Path
+import tempfile
 import types
 import unittest
 
+import cv2
 import numpy as np
 
 from dimos.robot.he.visual_data import (
+    bgr8_array,
     depth_array,
     depth_ir_quality,
     depth_quality,
@@ -17,6 +21,7 @@ from dimos.robot.he.visual_data import (
     stationary_trajectory_metrics,
     timestamp_alignment,
     topic_rate,
+    write_visual_snapshot,
 )
 
 
@@ -92,6 +97,37 @@ class TestHEVisualData(unittest.TestCase):
         self.assertEqual(metrics["valid_depth_pixels"], 2)
         self.assertAlmostEqual(metrics["ir_mean_at_valid_depth"], 3.0)
         self.assertAlmostEqual(metrics["ir_mean_at_invalid_depth"], 2.0)
+
+    def test_bgr8_array_handles_padding(self) -> None:
+        message = types.SimpleNamespace(
+            encoding="bgr8",
+            width=2,
+            height=1,
+            step=8,
+            data=bytes([1, 2, 3, 4, 5, 6, 99, 99]),
+        )
+        np.testing.assert_array_equal(
+            bgr8_array(message), np.array([[[1, 2, 3], [4, 5, 6]]], dtype=np.uint8)
+        )
+
+    def test_write_visual_snapshot_preserves_depth_and_metadata(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            directory = Path(temp)
+            metadata = write_visual_snapshot(
+                directory,
+                depth_stamp=10.0,
+                depth=np.array([[0, 150], [4000, 4001]], dtype=np.uint16),
+                rgb_stamp=10.001,
+                rgb=np.zeros((2, 2, 3), dtype=np.uint8),
+                ir_stamp=9.998,
+                ir=np.ones((2, 2), dtype=np.uint8),
+            )
+            saved_depth = cv2.imread(str(directory / "depth-mm.png"), cv2.IMREAD_UNCHANGED)
+            saved_mask = cv2.imread(str(directory / "valid-mask.png"), cv2.IMREAD_UNCHANGED)
+            self.assertEqual(saved_depth.dtype, np.uint16)
+            self.assertEqual(saved_mask.tolist(), [[0, 255], [255, 0]])
+            self.assertEqual(metadata["valid_ratio"], 0.5)
+            self.assertAlmostEqual(metadata["rgb_absolute_offset_ms"], 1.0)
 
     def test_pointcloud_xyz_quality(self) -> None:
         points = np.array(

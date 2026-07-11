@@ -1086,3 +1086,8 @@ zero XYZ 与 depth zero 精确对应，说明当前无效编码为零值。
 `docs/he/evidence/2026-07-11_1831_aurora-depth-parameter-ab.md`。当前稳定 mask 最大
 连通区域仍低于整图 8%，RGB-D 导航准入继续失败；下一步应转向安装遮挡/场景几何、
 USB 拓扑和厂商固件/SDK 支持调查，而不是继续随机调公共 ROS 参数。
+
+诊断工具新增显式 `--snapshot-dir`，仅在指定时保存最近 RGB、IR、原始 16-bit mm
+depth、显示用 depth colormap、valid mask 和时间偏差元数据。默认运行仍不写图片，
+不会变成无界 recording。该快照用于直接检查固定 mask 是否对应车体、支架、地面、
+近距离盲区或场景无反射区域，不用 Web viewer 的采样画面替代原始证据。

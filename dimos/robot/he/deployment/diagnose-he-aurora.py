@@ -16,6 +16,7 @@ from rclpy.qos import qos_profile_sensor_data
 from sensor_msgs.msg import Image, Imu, PointCloud2
 
 from dimos.robot.he.visual_data import (
+    bgr8_array,
     depth_array,
     depth_ir_quality,
     depth_quality,
@@ -25,6 +26,7 @@ from dimos.robot.he.visual_data import (
     stamp_seconds,
     timestamp_alignment,
     topic_rate,
+    write_visual_snapshot,
 )
 
 TOPICS = {
@@ -42,6 +44,7 @@ class AuroraDiagnostic(Node):
         self.samples = samples
         self.stamps: dict[str, list[float]] = {name: [] for name in TOPICS}
         self.depth_frames: list[np.ndarray] = []
+        self.rgb_frames: list[tuple[float, np.ndarray]] = []
         self.ir_frames: list[tuple[float, np.ndarray]] = []
         self.pointcloud_frames: list[PointCloud2] = []
         self.frames: dict[str, str] = {}
@@ -56,7 +59,9 @@ class AuroraDiagnostic(Node):
     def _on_message(self, stream: str, message: Any) -> None:
         self.stamps[stream].append(stamp_seconds(message))
         self.frames[stream] = message.header.frame_id
-        if stream == "depth":
+        if stream == "rgb":
+            self.rgb_frames.append((stamp_seconds(message), bgr8_array(message)))
+        elif stream == "depth":
             self.depth_frames.append(depth_array(message))
         elif stream == "ir":
             self.ir_frames.append((stamp_seconds(message), mono8_array(message)))
@@ -100,11 +105,28 @@ def summarize(node: AuroraDiagnostic) -> dict[str, Any]:
     }
 
 
+def write_snapshot(node: AuroraDiagnostic, directory: Path) -> dict[str, Any]:
+    depth_stamp = node.stamps["depth"][-1]
+    depth = node.depth_frames[-1]
+    rgb_stamp, rgb = min(node.rgb_frames, key=lambda item: abs(item[0] - depth_stamp))
+    ir_stamp, ir = min(node.ir_frames, key=lambda item: abs(item[0] - depth_stamp))
+    return write_visual_snapshot(
+        directory,
+        depth_stamp=depth_stamp,
+        depth=depth,
+        rgb_stamp=rgb_stamp,
+        rgb=rgb,
+        ir_stamp=ir_stamp,
+        ir=ir,
+    )
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--samples", type=int, default=30)
     parser.add_argument("--timeout", type=float, default=15.0)
     parser.add_argument("--output", type=Path)
+    parser.add_argument("--snapshot-dir", type=Path)
     args = parser.parse_args()
     if args.samples < 2:
         parser.error("--samples must be at least 2")
@@ -119,6 +141,8 @@ def main() -> None:
         if missing:
             raise RuntimeError(f"insufficient sensor samples: {missing}")
         report = summarize(node)
+        if args.snapshot_dir:
+            report["snapshot"] = write_snapshot(node, args.snapshot_dir)
     finally:
         node.destroy_node()
         rclpy.shutdown()

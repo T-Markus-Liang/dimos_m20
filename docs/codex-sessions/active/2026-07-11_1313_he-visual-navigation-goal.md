@@ -214,6 +214,13 @@ health while keeping real motion disconnected.
 - Reconfirmed every canonical runtime parameter, both services active with zero
   restarts, the live sensor gate and read-only gate. No tested setting was
   persisted and `/he/nav_cmd_vel` remained at zero publishers.
+- Confirmed Aurora is on USB path `1-2.4`, a 480Mbps USB 2.0 hub shared with
+  serial, audio and other devices; the 10Gbps root hub has no child. Kernel logs
+  contain no reset, stall, overflow or bandwidth error and runtime power is
+  active. This is a throughput risk but does not by itself explain a fixed mask.
+- Added opt-in bounded RGB/IR/depth/valid-mask snapshot output to the diagnostic.
+  The pure writer preserves uint16 millimetre depth and is covered by focused
+  shape, padding, mask and metadata tests; default runs still write no images.
 
 ## Decisions
 
@@ -262,18 +269,20 @@ health while keeping real motion disconnected.
 ## Resume Instructions
 
 1. Read this log, ADR-001 and the final shadow soak evidence.
-2. Read the completed Aurora parameter A/B evidence. Investigate physical
-   mounting/occlusion, scene geometry, USB topology and vendor firmware/SDK
-   support rather than trying shared ROS parameters that Aurora does not apply.
-3. Use the new nominal-extrinsics audit to plan physical camera-to-base and
+2. Capture and inspect the new raw Aurora snapshot for physical mounting,
+   occlusion and scene geometry. Then evaluate a controlled move from the shared
+   USB 2.0 hub to the available 10Gbps root port if physical access is approved.
+3. Escalate the stable mask and firmware 2.0.8/SDK 1.1.22 evidence to the vendor
+   if snapshots do not reveal a physical cause.
+4. Use the new nominal-extrinsics audit to plan physical camera-to-base and
    camera-to-IMU calibration; do not promote the nominal values to calibrated.
-4. Keep public benchmark tables source-scoped and update them only when a new
+5. Keep public benchmark tables source-scoped and update them only when a new
    candidate has code, license, runtime and deployability evidence.
-5. After a new vehicle-down confirmation, record moving, loop-closure and
+6. After a new vehicle-down confirmation, record moving, loop-closure and
    relocalization datasets and decide whether RTAB-Map can graduate beyond the
    shadow baseline.
-6. Address the existing Rerun coordinator graceful-stop timeout separately.
-7. Do not enable motion or restore LD19.
+7. Address the existing Rerun coordinator graceful-stop timeout separately.
+8. Do not enable motion or restore LD19.
 
 ## Open Questions
 

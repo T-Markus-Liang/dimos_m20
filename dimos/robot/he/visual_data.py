@@ -4,9 +4,13 @@ from __future__ import annotations
 
 from collections import deque
 from itertools import pairwise
+import json
+from pathlib import Path
 import statistics
+import time
 from typing import Any
 
+import cv2
 import numpy as np
 
 
@@ -83,6 +87,74 @@ def mono8_array(message: Any) -> np.ndarray:
     return np.ascontiguousarray(
         raw[:required].reshape(message.height, message.step)[:, :row_bytes]
     )
+
+
+def bgr8_array(message: Any) -> np.ndarray:
+    if message.encoding.lower() != "bgr8":
+        raise ValueError(f"unsupported BGR encoding: {message.encoding}")
+    row_bytes = int(message.width) * 3
+    if message.step < row_bytes:
+        raise ValueError("BGR row step is shorter than the pixel payload")
+    raw = np.frombuffer(message.data, dtype=np.uint8)
+    required = int(message.height) * int(message.step)
+    if raw.size < required:
+        raise ValueError("BGR payload is truncated")
+    return np.ascontiguousarray(
+        raw[:required].reshape(message.height, message.step)[:, :row_bytes]
+    ).reshape(message.height, message.width, 3)
+
+
+def write_visual_snapshot(
+    directory: Path,
+    *,
+    depth_stamp: float,
+    depth: np.ndarray,
+    rgb_stamp: float,
+    rgb: np.ndarray,
+    ir_stamp: float,
+    ir: np.ndarray,
+    min_depth_mm: int = 150,
+    max_depth_mm: int = 4000,
+) -> dict[str, Any]:
+    if depth.ndim != 2 or ir.shape != depth.shape or rgb.shape != (*depth.shape, 3):
+        raise ValueError("RGB, IR and depth snapshot arrays must have matching image dimensions")
+    directory.mkdir(parents=True, exist_ok=True)
+    valid = (depth >= min_depth_mm) & (depth <= max_depth_mm)
+    scale = 255.0 / max_depth_mm if max_depth_mm > 0 else 0.0
+    depth_visual = np.clip(depth.astype(np.float32) * scale, 0, 255).astype(np.uint8)
+    depth_visual = cv2.applyColorMap(depth_visual, cv2.COLORMAP_TURBO)
+    depth_visual[~valid] = 0
+    files = {
+        "rgb": "rgb.png",
+        "ir": "ir.png",
+        "depth_mm": "depth-mm.png",
+        "depth_visual": "depth-visual.png",
+        "valid_mask": "valid-mask.png",
+    }
+    images = {
+        "rgb": rgb,
+        "ir": ir,
+        "depth_mm": depth,
+        "depth_visual": depth_visual,
+        "valid_mask": valid.astype(np.uint8) * 255,
+    }
+    for name, image in images.items():
+        if not cv2.imwrite(str(directory / files[name]), image):
+            raise RuntimeError(f"failed to write snapshot image: {files[name]}")
+    metadata = {
+        "captured_at": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
+        "depth_stamp": depth_stamp,
+        "rgb_absolute_offset_ms": abs(rgb_stamp - depth_stamp) * 1000.0,
+        "ir_absolute_offset_ms": abs(ir_stamp - depth_stamp) * 1000.0,
+        "min_depth_mm": min_depth_mm,
+        "max_depth_mm": max_depth_mm,
+        "valid_ratio": float(np.mean(valid)),
+        "files": files,
+    }
+    (directory / "snapshot.json").write_text(
+        json.dumps(metadata, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
+    return metadata
 
 
 def _mask_bbox(mask: np.ndarray) -> dict[str, int | float] | None:
