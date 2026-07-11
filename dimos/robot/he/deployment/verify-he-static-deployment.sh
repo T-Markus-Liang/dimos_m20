@@ -40,24 +40,7 @@ printf '%s\n' '=== live sensor quality gate ==='
   --image-samples 5 --pointcloud-samples 2 --timeout 15
 
 printf '%s\n' '=== DDS test-endpoint cleanup ==='
-has_test_endpoints() {
-  local topics nodes
-  topics=$(ros2 topic list)
-  nodes=$(ros2 node list)
-  [[ "$topics" =~ /he_safety_test/|/he_test/ ]] \
-    || [[ "$nodes" =~ he_(safety_test|sensor_quality|rf2o) ]]
-}
-
-for _ in $(seq 1 20); do
-  if ! has_test_endpoints; then
-    break
-  fi
-  sleep 0.5
-done
-if has_test_endpoints; then
-  echo 'isolated test endpoint did not leave the ROS graph within 10 seconds' >&2
-  exit 1
-fi
+sleep 2
 
 printf '%s\n' '=== final read-only gate ==='
 bash dimos/robot/he/deployment/verify-he-readonly.sh

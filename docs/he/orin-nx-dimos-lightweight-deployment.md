@@ -1018,4 +1018,10 @@ camera-IMU 空间/时间标定、IMU 轴向与噪声标定。RTAB-Map 可以继�
 调查确认 Aurora 最新帧仍在发布，误报来自验证器收集期间保存全部 callback，却截取
 最早 N 帧执行 freshness 检查；等待较慢点云或 DDS 发现时，最早 RGB 可能已经超过
 2 秒。验证器已改为检查最后 N 帧。真实停流仍会因为“最新帧”过期而失败，不会
-降低传感准入标准。修复后完整静态封板及最终只读门均以返回码 0 通过。
+降低传感准入标准。
+
+封板脚本原本还在传感验证后反复调用 `ros2 topic list` 和 `ros2 node list` 轮询临时
+DDS endpoint；临时节点已退出时，该重复 ROS CLI 会话仍可能中断整个封板进程。
+现改为等待 2 秒后直接执行权威 final read-only gate。最终门本身已检查测试 topic、
+Aurora subscription count、导航进程、控制发布者和端口，因此删除重复轮询没有降低
+准入标准。

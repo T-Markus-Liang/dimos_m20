@@ -68,6 +68,12 @@ RGB samples past two seconds even while newer images were arriving.
 
 `verify-he-sensors.py` now evaluates the last requested samples for every
 camera stream. A genuinely stopped stream still fails because its newest
-sample remains stale. The corrected complete static closeout passed with an
-explicit zero return code; the final read-only gate again confirmed zero
-navigation publishers and no localization process.
+sample remains stale.
+
+The next closeout exposed a second verifier-only issue: its DDS cleanup loop
+repeated `ros2 topic list` and `ros2 node list` after the temporary rclpy nodes
+had already shut down, and the ROS CLI session terminated before the final
+gate. The duplicate polling was removed in favor of a two-second DDS settle.
+The authoritative final read-only gate already rejects test topics, unexpected
+Aurora subscription counts, navigation processes, unsafe command publishers
+and unexpected ports. This reduces the checker without weakening any gate.
