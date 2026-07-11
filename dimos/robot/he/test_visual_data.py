@@ -7,8 +7,12 @@ import numpy as np
 
 from dimos.robot.he.visual_data import (
     depth_array,
+    depth_ir_quality,
     depth_quality,
+    depth_temporal_quality,
+    mono8_array,
     occupancy_grid_metrics,
+    pointcloud_xyz_quality,
     quaternion_distance_degrees,
     stationary_trajectory_metrics,
     timestamp_alignment,
@@ -52,6 +56,65 @@ class TestHEVisualData(unittest.TestCase):
         self.assertAlmostEqual(metrics["center_40_percent_valid_ratio"], 1.0)
         self.assertEqual(metrics["valid_depth_mm_percentiles"]["50"], 1000.0)
         self.assertEqual(len(metrics["grid_3x3_valid_ratio"]), 3)
+        self.assertAlmostEqual(metrics["zero_ratio"], 0.84)
+        self.assertEqual(metrics["valid_bbox"]["x_min"], 3)
+        self.assertEqual(len(metrics["valid_ratio_by_row"]), 10)
+        self.assertEqual(len(metrics["valid_ratio_by_column"]), 10)
+
+    def test_depth_quality_classifies_filtered_values(self) -> None:
+        metrics = depth_quality(np.array([[0, 149, 150, 4000, 4001, 65535]], dtype=np.uint16))
+        self.assertAlmostEqual(metrics["zero_ratio"], 1.0 / 6.0)
+        self.assertAlmostEqual(metrics["below_minimum_nonzero_ratio"], 1.0 / 6.0)
+        self.assertAlmostEqual(metrics["valid_ratio"], 2.0 / 6.0)
+        self.assertAlmostEqual(metrics["above_maximum_ratio"], 2.0 / 6.0)
+        self.assertAlmostEqual(metrics["uint16_max_ratio"], 1.0 / 6.0)
+
+    def test_depth_temporal_quality_reports_stable_component(self) -> None:
+        first = np.zeros((4, 5), dtype=np.uint16)
+        second = np.zeros((4, 5), dtype=np.uint16)
+        first[0:2, 0:2] = 1000
+        second[0:2, 0:2] = 1000
+        second[3, 4] = 1000
+        metrics = depth_temporal_quality([first, second], stable_ratio=1.0)
+        self.assertAlmostEqual(metrics["always_valid_ratio"], 4.0 / 20.0)
+        self.assertAlmostEqual(metrics["intermittent_valid_ratio"], 1.0 / 20.0)
+        self.assertEqual(metrics["largest_stable_component"]["pixels"], 4)
+        self.assertEqual(metrics["stable_valid_bbox"]["width"], 2)
+
+    def test_depth_ir_quality_and_mono8_padding(self) -> None:
+        message = types.SimpleNamespace(
+            encoding="mono8", width=2, height=2, step=3, data=bytes([1, 2, 99, 3, 4, 99])
+        )
+        ir = mono8_array(message)
+        np.testing.assert_array_equal(ir, [[1, 2], [3, 4]])
+        depth = np.array([[0, 1000], [0, 2000]], dtype=np.uint16)
+        metrics = depth_ir_quality(depth, ir)
+        self.assertEqual(metrics["valid_depth_pixels"], 2)
+        self.assertAlmostEqual(metrics["ir_mean_at_valid_depth"], 3.0)
+        self.assertAlmostEqual(metrics["ir_mean_at_invalid_depth"], 2.0)
+
+    def test_pointcloud_xyz_quality(self) -> None:
+        points = np.array(
+            [(0.0, 0.0, 0.0), (1.0, 2.0, 2.0), (np.nan, 0.0, 1.0)], dtype="<f4"
+        )
+        fields = [
+            types.SimpleNamespace(name=name, offset=offset, datatype=7, count=1)
+            for name, offset in (("x", 0), ("y", 4), ("z", 8))
+        ]
+        message = types.SimpleNamespace(
+            fields=fields,
+            height=1,
+            width=3,
+            point_step=12,
+            row_step=36,
+            is_bigendian=False,
+            data=points.tobytes(),
+        )
+        metrics = pointcloud_xyz_quality(message)
+        self.assertAlmostEqual(metrics["zero_xyz_ratio"], 1.0 / 3.0)
+        self.assertAlmostEqual(metrics["usable_xyz_ratio"], 1.0 / 3.0)
+        self.assertAlmostEqual(metrics["nonfinite_xyz_ratio"], 1.0 / 3.0)
+        self.assertEqual(metrics["usable_range_m_percentiles"]["50"], 3.0)
 
     def test_stationary_trajectory_metrics(self) -> None:
         metrics = stationary_trajectory_metrics(

@@ -1034,3 +1034,24 @@ Aurora subscription count、导航进程、控制发布者和端口，因此删�
 脚本，再独立查询 `he-static-final-1635.service`，结果为 `Result=success`、
 `ExecMainCode=0`、`ExecMainStatus=0`。封板后传感服务 active、零重启、约 1005MiB，
 工作区干净，`/he/nav_cmd_vel` 仍为 0 个发布者。
+
+## 17. Aurora 深度空间覆盖诊断升级（2026-07-11）
+
+Aurora930 0.2.11 驱动源码审计确认，公共参数表混合了 Aurora、Nebula 和 Stellar
+产品参数。`slam_mode`、`mtof_crop_up/down`、mToF/sToF filter level、frequency
+fusion、scatter threshold 和 `filter_type` 没有在 Aurora930 设备初始化路径调用，
+即使能从 `/aurora/aurora` 参数服务器读到，也不会改变当前相机输出。Aurora930
+实际应用的是 remove-filter threshold、深度上下限、alignment、depth correction、
+laser mode、resolution mode 和 RGB-D stream selection。完整调用链证据见
+`docs/he/evidence/2026-07-11_1644_aurora-depth-driver-audit.md`。
+
+`diagnose-he-aurora.py` 已升级为有界空间和时间诊断：区分零值、非零低于下限、
+有效、超过上限和 `65535`；输出逐行、逐列、bounding box、90% 稳定 mask、最大
+稳定连通区域；同时比较 depth/IR 强度关系，并统计点云 finite/zero/usable XYZ。
+这些指标用于判断当前约 20% 覆盖究竟是稳定设备 mask、滤波结果还是随机丢失，
+不能把全局有效率轻微变化误判为导航可用。
+
+新增聚焦测试后 HE unittest 从 29 项增加到 33 项，全部通过；Ruff 和
+`git diff --check` 通过。代码同步到 Orin 后先采集默认基线，再只对 Aurora 真正
+生效的参数做单变量、无运动 A/B。任何实验后都必须恢复 systemd 默认值并重新
+通过 sensor/read-only gates。

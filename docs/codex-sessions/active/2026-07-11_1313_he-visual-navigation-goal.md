@@ -162,6 +162,19 @@ health while keeping real motion disconnected.
   artifact. The exact repository script completed in non-piped transient unit
   `he-static-final-1635` with `Result=success`, `ExecMainCode=0` and
   `ExecMainStatus=0`; final motion and service gates remained closed/healthy.
+- Audited the live Aurora930 0.2.11 driver and SDK 1.1.22 source. Confirmed that
+  `slam_mode`, mToF/sToF crop/filter and fusion/scatter settings are shared
+  declarations but are not applied by the Aurora930 device path.
+- Identified the Aurora-effective controls: remove-filter threshold, depth
+  range, alignment, depth correction, laser mode, resolution and RGB-D stream
+  selection. The driver reads them at construction and has no dynamic parameter
+  callback, so future A/B tests require an isolated restart rather than
+  `ros2 param set` alone.
+- Extended the bounded Aurora diagnostic with depth value classes, per-row and
+  per-column coverage, validity bounding boxes, temporal stability, the largest
+  stable connected region, depth/IR correlation and point-cloud XYZ quality.
+- Added four focused tests. All 33 HE unit tests pass, including under
+  `-W error`; Ruff and `git diff --check` pass on the modified files.
 
 ## Decisions
 
@@ -182,6 +195,9 @@ health while keeping real motion disconnected.
 - Treat a latched occupancy map's age as diagnostic by default. Pose and TF
   remain freshness-gated; map age can be explicitly enabled because a static
   map is allowed not to republish while the robot is stationary.
+- Do not test shared Nebula/Stellar parameters against Aurora930 merely because
+  the ROS node declares them. Limit controlled depth A/B tests to settings that
+  the Aurora930 configure path actually applies.
 
 ## Current State
 
@@ -191,7 +207,8 @@ health while keeping real motion disconnected.
 - The final current-script static closeout passed under systemd with status 0.
   `he-dimos-sense` is active with zero restarts, memory is about 1005MiB,
   no visual SLAM node is running and `/he/nav_cmd_vel` has zero publishers.
-- The final static closeout passed all 29 HE tests, blueprint discovery,
+- The final static closeout passed all 29 pre-diagnostic HE tests, blueprint
+  discovery,
   deployment integrity, isolated control dry-run, Aurora live quality and both
   read-only gates. `he-dimos-sense` is active with zero restarts.
 - DimOS visual shadow modules, lifecycle controls, ADR and evidence are
@@ -199,19 +216,25 @@ health while keeping real motion disconnected.
   unhealthy and no planner costmap or motion command is released.
 - Aurora depth coverage, camera extrinsics, moving accuracy, loop closure and
   relocalization remain open gates. Real motion remains prohibited.
+- The enhanced diagnostic and 33-test VM regression are ready for Git-based
+  Orin synchronization. Live enhanced baseline and parameter A/B evidence are
+  the next task; no persistent Aurora setting has changed.
 
 ## Resume Instructions
 
 1. Read this log, ADR-001 and the final shadow soak evidence.
-2. Use the new nominal-extrinsics audit to plan physical camera-to-base and
+2. Push and fast-forward the enhanced Aurora diagnostic to Orin, then capture a
+   bounded default baseline and run only Aurora-effective single-variable A/B
+   tests. Restore systemd defaults and both read-only gates after every test.
+3. Use the new nominal-extrinsics audit to plan physical camera-to-base and
    camera-to-IMU calibration; do not promote the nominal values to calibrated.
-3. Keep public benchmark tables source-scoped and update them only when a new
+4. Keep public benchmark tables source-scoped and update them only when a new
    candidate has code, license, runtime and deployability evidence.
-4. After a new vehicle-down confirmation, record moving, loop-closure and
+5. After a new vehicle-down confirmation, record moving, loop-closure and
    relocalization datasets and decide whether RTAB-Map can graduate beyond the
    shadow baseline.
-5. Address the existing Rerun coordinator graceful-stop timeout separately.
-6. Do not enable motion or restore LD19.
+6. Address the existing Rerun coordinator graceful-stop timeout separately.
+7. Do not enable motion or restore LD19.
 
 ## Open Questions
 

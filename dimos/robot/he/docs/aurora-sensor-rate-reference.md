@@ -119,12 +119,21 @@ SLAM admission diagnostic and bounded recording:
 bash dimos/robot/he/deployment/record-he-visual-dataset.sh --dry-run
 ```
 
-The diagnostic reports per-topic rate, RGB-nearest timestamp offset for depth,
-IR, point cloud and IMU, depth center coverage, a 3x3 valid-depth grid and valid
-range percentiles. It does not label the sensor as synchronized merely because
-messages arrived at similar rates. Timestamp statistics use only the overlap
-between streams, so a faster stream ending before the reference window cannot
-inflate the reported edge offset.
+The diagnostic reports per-topic rate and RGB-nearest timestamp offset for
+depth, IR, point cloud and IMU. Depth output now separates zero, non-zero below
+minimum, valid, above maximum and `65535` pixels; reports center/3x3/row/column
+coverage and a validity bounding box; and measures the stable validity mask and
+largest stable connected region over the bounded sample window. It also reports
+depth/IR correlation and finite, zero and usable XYZ point-cloud ratios. It does
+not label the sensor as synchronized merely because messages arrived at similar
+rates. Timestamp statistics use only overlapping streams, so a faster stream
+ending before the reference window cannot inflate the reported edge offset.
+
+The Aurora-specific source audit is recorded in
+`docs/he/evidence/2026-07-11_1644_aurora-depth-driver-audit.md`. Parameters such
+as `slam_mode`, `mtof_crop_*` and fusion/scatter filter thresholds are declared
+by the shared driver base but are not applied by the Aurora930 device path.
+Do not use their presence in `ros2 param list` as an A/B test rationale.
 
 The corrected 2026-07-11 run is stored at
 `docs/he/evidence/2026-07-11_1338_aurora-diagnostic.json`. It measured IMU-to-RGB
