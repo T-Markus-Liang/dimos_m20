@@ -1331,5 +1331,15 @@ canonical `/aurora/*`，不会发布任何 command topic。runner 默认输入�
 显式设置 `HE_RTABMAP_RGB_TOPIC`、`HE_RTABMAP_DEPTH_TOPIC` 和
 `HE_RTABMAP_CAMERA_INFO_TOPIC` 才会使用隔离输入，且非法 ROS topic 在启动前拒绝。
 
-该工具目前只建立可复现测试能力。`blank-rgb`、`blank-depth` 的 live tracking-loss
-状态转换与恢复必须在 Orin 实测并保存证据后，才能关闭 bad-but-fresh 准入缺口。
+Orin 已完成 `blank-rgb` 和 `blank-depth` 三阶段实测。blank RGB 后 0.248 秒出现
+`pose_stale`、0.694 秒出现 `tracking_lost/inliers_low`、0.853 秒出现 `tf_stale`；
+恢复后 0.451 秒回到原有 `map_known_ratio_low` 基线。blank depth 没有新的
+`OdomInfo.lost=true`，但 0.477 秒出现 `pose_stale`、1.012 秒出现 `tf_stale`，并在
+恢复后 0.440 秒回到原基线。这证明 RGB 内容失效由 tracking/inlier + freshness
+共同检测，depth 内容失效由 pose/TF freshness fail-closed 兜底，不能声称 depth 有
+独立 tracking-loss reason。
+
+两个测试的只读数据库 hash 均不变，结束后 live sensor/read-only gates 通过，服务
+active/零重启、导航发布者为零。完整时间线、代理吞吐限制和原始 JSON 见
+`docs/he/evidence/2026-07-12_0041_fresh-visual-faults.md`。静态 bad-but-fresh
+RGB/depth 检查关闭；移动 tracking loss、CameraInfo 单独失效和动态场景仍未关闭。

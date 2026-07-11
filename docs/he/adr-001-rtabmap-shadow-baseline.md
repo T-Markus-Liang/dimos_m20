@@ -88,6 +88,15 @@ and the state returned to the original poor-map baseline 3.994s after service
 activation. This proves total visual-input loss detection, not bad-but-fresh
 image or moving tracking-loss detection.
 
+Isolated fresh-content faults now provide the static bad-image evidence. Blank
+RGB added `pose_stale` in 0.248s, `tracking_lost/inliers_low` in 0.694s and
+`tf_stale` in 0.853s; pass-through recovery restored the original baseline in
+0.451s. Blank depth added `pose_stale` in 0.477s and `tf_stale` in 1.012s, then
+recovered in 0.440s. RTAB-Map emitted no new explicit lost/inlier status for
+blank depth, so that mode is protected by pose/TF freshness rather than an
+independent depth-validity reason. Moving and dynamic-scene failures remain
+unqualified.
+
 A later 600-second stationary soak exposed a separate active-database growth
 failure: 0.480m of accumulated frame jitter grew one database from 16.7MiB to
 126.7MiB despite only 4.72mm final drift. A first 0.02m/0.01rad threshold test

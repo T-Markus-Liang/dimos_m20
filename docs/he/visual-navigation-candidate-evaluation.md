@@ -227,3 +227,10 @@ The integrated health gate has separate static fault evidence. A seven-second
 Aurora outage added `pose_stale` in 0.459s and `tf_stale` in 1.032s, then
 returned to the original baseline in 3.994s after service activation. This is
 an input-freshness result, not a visual tracking-loss benchmark.
+
+Fresh-content fault evidence extends that result. Blank RGB produced explicit
+RTAB-Map `tracking_lost` and low-inlier status in 0.694s plus pose/TF freshness
+failures, then recovered in 0.451s. Blank depth produced pose/TF freshness
+failures without a new explicit lost status and recovered in 0.440s. These are
+stationary synthetic content faults, not moving tracking or dynamic-object
+benchmarks. See `evidence/2026-07-12_0041_fresh-visual-faults.md`.

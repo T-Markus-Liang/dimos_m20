@@ -420,7 +420,19 @@ health while keeping real motion disconnected.
 - Started the next motion-free gap: bad-but-fresh visual input faults. Added
   fail-closed RTAB-Map input topic overrides and a bounded proxy that publishes
   baseline, blank fault and recovery phases only on isolated `/he/fault/*`
-  topics. Default Aurora inputs remain unchanged; live Orin proof is pending.
+  topics. Default Aurora inputs remain unchanged.
+- Deployed the proxy at `0e3ef1bc` and ran read-only blank RGB and blank depth
+  localization faults. Blank RGB added pose stale in 0.248s, tracking lost/low
+  inliers in 0.694s and TF stale in 0.853s; recovery restored the original
+  map-quality-only baseline in 0.451s.
+- Blank depth added pose stale in 0.477s and TF stale in 1.012s, then restored
+  the baseline in 0.440s. RTAB-Map did not emit a new explicit lost/inlier
+  status, so depth failure is caught by pose/TF freshness. Both database hashes
+  remained unchanged.
+- Preserved four raw JSON files and
+  `docs/he/evidence/2026-07-12_0041_fresh-visual-faults.md`. Final live sensor
+  and read-only gates passed at about 980MiB bridge memory; services were active
+  with zero restarts and navigation publishers remained zero.
 
 ## Decisions
 
@@ -485,14 +497,14 @@ health while keeping real motion disconnected.
   are verified on Orin. Partial and bad-but-fresh input faults remain open.
 - Raw IMU orientation is unusable as published. Madgwick is runnable but failed
   the static admission gate, so the shadow chain remains RGB-D-only.
-- Bad-but-fresh fault tooling is implemented on the VM; blank RGB/depth health
-  transitions and recovery are not yet proven on Orin.
+- Static bad-but-fresh RGB/depth transitions and recovery are proven on Orin.
+  Moving tracking loss, CameraInfo-only loss and dynamic scenes remain open.
 
 ## Resume Instructions
 
 1. Read this log, ADR-001 and the final shadow soak evidence.
-- Deploy and run isolated `blank-rgb`, then `blank-depth`, while recording
-  localization-health transitions. Restore services and safety gates after each.
+- Read the fresh-content fault evidence before changing health thresholds; do
+  not treat blank-depth freshness fallback as explicit tracking-loss status.
 - Read the static IMU evidence before changing RTAB-Map inputs. Do not run an
   IMU-prior A/B until bias/noise/axis and camera-IMU calibration are available.
 2. Run a static matte-target and camera pitch/height experiment to separate
