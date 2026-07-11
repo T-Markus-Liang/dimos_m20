@@ -7,8 +7,8 @@
 - Project: dimos-wd-m20
 - Workspace: VM `/home/markus/work/dimos_wd_m20`; Orin `/home/ubuntu/he/dimos_wd_m20`
 - Task: research, benchmark, select and integrate a visual SLAM navigation foundation for HE
-- Status: active - shadow integrated; benchmark/extrinsics audit complete;
-  IMU qualification in progress; physical calibration and moving gates pending
+- Status: active - shadow integrated; static IMU qualification complete;
+  physical calibration and moving gates pending
 - Branch if relevant: `codex/he-orin`; documentation update based on `87549530`
 
 ## User Request Summary
@@ -405,7 +405,18 @@ health while keeping real motion disconnected.
   The exit trap removed the probe and all safety checks remained closed/healthy.
   Explicitly normalized count fields to Python `int` and added a NumPy-backed
   `json.dumps` regression test. All 44 HE tests and Ruff pass on the VM; the
-  corrected Orin evidence run is pending.
+  corrected Orin evidence run was then completed.
+- The corrected 30-second static comparison measured raw/filtered rates near
+  46.56Hz. Filtered orientation was normalized but drifted 1.207deg final and
+  1.218deg maximum; yaw changed -1.187deg. Static gyro x mean was 0.03327rad/s,
+  acceleration norm median was 9.9910m/s2, and all 1394 filtered orientation
+  covariance samples were zero.
+- Preserved the raw JSON and qualification report under
+  `docs/he/evidence/2026-07-12_0024_imu-qualification.*`. The immediate cleanup
+  check observed the native process during its SIGTERM exit race; the next
+  bounded check confirmed no process/topic remained. Live sensor and read-only
+  gates passed, services remained active with zero restarts, and navigation
+  publishers remained zero.
 
 ## Decisions
 
@@ -433,6 +444,9 @@ health while keeping real motion disconnected.
   bounded stationary raw/filtered comparison. Any later use is limited to an
   explicit optional RTAB-Map shadow orientation prior until physical
   camera-to-IMU spatial/time and noise calibration is complete.
+- The static comparison failed admission, so do not add Madgwick to the runner
+  or set RTAB-Map `wait_imu_to_init=true`. Preserve RGB-D-only shadow until IMU
+  bias/noise/axis and physical camera-IMU space/time calibration are available.
 
 ## Current State
 
@@ -465,17 +479,14 @@ health while keeping real motion disconnected.
   Orin. Moving/displaced-start relocalization and loop closure remain open.
 - Real health-transition instrumentation and total Aurora input outage/recovery
   are verified on Orin. Partial and bad-but-fresh input faults remain open.
-- Raw IMU orientation is unusable as published. Madgwick is runnable but not yet
-  admitted into the shadow chain; the version-controlled bounded diagnostic is
-  awaiting Orin synchronization and a 30-second evidence run.
+- Raw IMU orientation is unusable as published. Madgwick is runnable but failed
+  the static admission gate, so the shadow chain remains RGB-D-only.
 
 ## Resume Instructions
 
 1. Read this log, ADR-001 and the final shadow soak evidence.
-- Push and fast-forward the bounded IMU diagnostic to Orin, then collect a
-  30-second raw/Madgwick comparison with no TF or motion output.
-- Decide from drift, covariance and timing evidence whether to run an optional
-  RGB-D-only versus IMU-prior static shadow A/B; do not claim calibrated VIO.
+- Read the static IMU evidence before changing RTAB-Map inputs. Do not run an
+  IMU-prior A/B until bias/noise/axis and camera-IMU calibration are available.
 2. Run a static matte-target and camera pitch/height experiment to separate
    floor reflectivity/grazing-angle effects from sensor defects.
 3. Evaluate a controlled move from the shared USB 2.0 hub to the available

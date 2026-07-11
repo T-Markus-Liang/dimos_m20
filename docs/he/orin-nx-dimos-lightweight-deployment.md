@@ -1309,3 +1309,15 @@ acceleration 输出约 46.7Hz 的单位四元数，并保留角速度、加速�
 filtered 对照；只有数值稳定且安全门保持关闭时，才允许把 Madgwick 作为可选的
 RTAB-Map shadow orientation prior 做 A/B。任何 camera-IMU 紧耦合、移动精度或导航
 放行仍必须等待物理空间/时间标定和新的车辆落地安全确认。
+
+30 秒静止对照已完成。raw/filtered 实测速率均约 46.56Hz；raw 1269/1269 个
+orientation 全为零，filtered 1394 个四元数全部归一化。但 filtered 最终/最大姿态
+漂移为 1.207/1.218deg，yaw 变化 -1.187deg；静态 gyro x 均值约 0.03327rad/s，
+acceleration 模长中位数 9.9910m/s2，filtered orientation covariance 1394/1394
+全零。该结果没有通过 IMU prior 准入。
+
+因此保持 RGB-D RTAB-Map shadow 配置不变，不设置 `wait_imu_to_init=true`，也不将
+Madgwick 作为常驻子进程。下一步必须先完成 IMU bias/noise/axis、camera-to-IMU
+空间外参和时间偏移标定，再重新做静止/移动 A/B。完整证据见
+`docs/he/evidence/2026-07-12_0024_imu-qualification.md` 和同名 JSON。采样后的 live
+sensor/read-only gates 均通过，两服务 active/零重启，导航发布者为零。

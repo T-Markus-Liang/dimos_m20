@@ -1,0 +1,140 @@
+{
+  "captured_at": "2026-07-12T00:24:21+0800",
+  "requested_duration_seconds": 30.0,
+  "streams": {
+    "filtered": {
+      "angular_velocity_rad_s": {
+        "mean": [
+          0.033296675504250514,
+          -0.0017930677709503372,
+          -0.0017666333180298146
+        ],
+        "norm_median": 0.03343977344843441,
+        "norm_p95": 0.03495515394048115,
+        "samples": 1394,
+        "stddev": [
+          0.0009627747373673359,
+          0.0009955121659541435,
+          0.0007356508275172695
+        ]
+      },
+      "duration_seconds": 29.92207384109497,
+      "frame_ids": [
+        "imu_link"
+      ],
+      "interval_ms": {
+        "max": 28.668880462646484,
+        "median": 21.31199836730957,
+        "nonpositive_count": 0,
+        "p95": 22.683143615722656
+      },
+      "linear_acceleration_m_s2": {
+        "mean": [
+          0.3284873875315596,
+          0.11293796166922132,
+          9.984935583452309
+        ],
+        "norm_median": 9.991037736801498,
+        "norm_p95": 9.994640425866118,
+        "samples": 1394,
+        "stddev": [
+          0.0015757189058471593,
+          0.0016941989823174488,
+          0.0022286164897297985
+        ]
+      },
+      "orientation": {
+        "final_rotation_from_first_deg": 1.206863867798469,
+        "final_rpy_deg": [
+          0.8370605317137151,
+          -1.8235935817837166,
+          17.371520660282993
+        ],
+        "first_rpy_deg": [
+          0.5920386212337498,
+          -1.903399314980642,
+          18.558547998039863
+        ],
+        "max_rotation_from_first_deg": 1.217555946271441,
+        "norm_max_error_from_one": 3.3306690738754696e-16,
+        "norm_median": 1.0,
+        "rpy_delta_deg": [
+          0.24502191047996524,
+          0.07980573319692552,
+          -1.18702733775687
+        ],
+        "zero_norm_count": 0
+      },
+      "orientation_covariance": {
+        "all_zero_count": 1394,
+        "nonfinite_count": 0,
+        "unknown_count": 0
+      },
+      "rate_hz": 46.55425982161885,
+      "samples": 1394
+    },
+    "raw": {
+      "angular_velocity_rad_s": {
+        "mean": [
+          0.033271225327327444,
+          -0.001780658759607099,
+          -0.0017670126298418261
+        ],
+        "norm_median": 0.03340691881013038,
+        "norm_p95": 0.03492713526538015,
+        "samples": 1269,
+        "stddev": [
+          0.0009508041700068804,
+          0.000995437786676176,
+          0.0007432654484970729
+        ]
+      },
+      "duration_seconds": 27.233416318893433,
+      "frame_ids": [
+        "imu_link"
+      ],
+      "interval_ms": {
+        "max": 26.522397994995117,
+        "median": 21.311283111572266,
+        "nonpositive_count": 0,
+        "p95": 22.649288177490234
+      },
+      "linear_acceleration_m_s2": {
+        "mean": [
+          0.3284820150845815,
+          0.11305008942203507,
+          9.984769924770442
+        ],
+        "norm_median": 9.991025760089665,
+        "norm_p95": 9.994587661192671,
+        "samples": 1269,
+        "stddev": [
+          0.001561817490702644,
+          0.0016769190616893834,
+          0.0021169604611980335
+        ]
+      },
+      "orientation": {
+        "final_rotation_from_first_deg": null,
+        "final_rpy_deg": [],
+        "first_rpy_deg": [],
+        "max_rotation_from_first_deg": null,
+        "norm_max_error_from_one": 1.0,
+        "norm_median": 0.0,
+        "rpy_delta_deg": [],
+        "zero_norm_count": 1269
+      },
+      "orientation_covariance": {
+        "all_zero_count": 0,
+        "nonfinite_count": 0,
+        "unknown_count": 0
+      },
+      "rate_hz": 46.560445636059015,
+      "samples": 1269
+    }
+  },
+  "topics": {
+    "filtered": "/he/imu/orientation_probe",
+    "raw": "/ros_robot_controller/imu_raw"
+  }
+}
