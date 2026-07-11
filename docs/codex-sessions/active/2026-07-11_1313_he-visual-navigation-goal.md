@@ -185,7 +185,9 @@ health while keeping real motion disconnected.
 
 ## Current State
 
-- VM, origin and Orin are synchronized at `87d804c5`; all worktrees are clean.
+- VM, origin and Orin are synchronized on `codex/he-orin`; all worktrees are
+  clean. Use `git rev-parse HEAD` for the current evidence commit rather than
+  embedding a self-invalidating session-log commit here.
 - The final current-script static closeout passed under systemd with status 0.
   `he-dimos-sense` is active with zero restarts, memory is about 1005MiB,
   no visual SLAM node is running and `/he/nav_cmd_vel` has zero publishers.
