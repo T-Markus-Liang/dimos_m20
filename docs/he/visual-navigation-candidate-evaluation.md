@@ -234,3 +234,8 @@ failures, then recovered in 0.451s. Blank depth produced pose/TF freshness
 failures without a new explicit lost status and recovered in 0.440s. These are
 stationary synthetic content faults, not moving tracking or dynamic-object
 benchmarks. See `evidence/2026-07-12_0041_fresh-visual-faults.md`.
+
+An isolated RGB CameraInfo-only loss kept RGB/depth images fresh and withheld
+42 calibration messages. Pose/TF freshness failed closed and recovered to the
+baseline in 0.244s after CameraInfo resumed. It did not produce explicit lost
+status. See `evidence/2026-07-12_0052_camera-info-fault.md`.

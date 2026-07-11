@@ -1344,6 +1344,13 @@ active/零重启、导航发布者为零。完整时间线、代理吞吐限制�
 `docs/he/evidence/2026-07-12_0041_fresh-visual-faults.md`。静态 bad-but-fresh
 RGB/depth 检查关闭；移动 tracking loss、CameraInfo 单独失效和动态场景仍未关闭。
 
-代理已扩展 `drop-camera-info`：RGB/depth payload 与 timestamp 全程透传，只在 fault
-阶段停止隔离 RGB CameraInfo 发布，并分别记录 received/published 计数。该模式仍需
-Orin live 验证后才能关闭 CameraInfo-only 缺口。
+代理已扩展并验证 `drop-camera-info`：RGB/depth payload 与 timestamp 全程透传，只在
+fault 阶段停止隔离 RGB CameraInfo 发布。实测 fault 阶段 RGB/depth 各发布 43 帧，
+RGB CameraInfo 收到 42 帧但发布 0，depth CameraInfo 收发各 42 帧。0.316 秒后出现
+`pose_stale`、0.719 秒出现 `tf_stale`、4.771 秒变为 `tf_unavailable`；恢复
+CameraInfo 后 0.244 秒回到原基线。该模式没有新的 tracking/inlier reason，证明
+CameraInfo 同步缺失由 pose/TF freshness fail-closed 兜底。
+
+数据库 hash 不变，最终 sensor/read-only gates 通过、服务零重启、导航发布者为零。
+完整证据见 `docs/he/evidence/2026-07-12_0052_camera-info-fault.md`。静态
+CameraInfo-only 缺口关闭；malformed-but-present calibration 和移动同步仍未关闭。

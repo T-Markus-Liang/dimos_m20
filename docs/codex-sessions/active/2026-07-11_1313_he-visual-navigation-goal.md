@@ -435,7 +435,16 @@ health while keeping real motion disconnected.
   with zero restarts and navigation publishers remained zero.
 - Extended the isolated proxy with `drop-camera-info`: RGB/depth remain fresh,
   only RGB CameraInfo is withheld in the fault phase, and received/published
-  calibration counts are recorded. VM tests pass; Orin proof is pending.
+  calibration counts are recorded.
+- Deployed CameraInfo-only fault injection at `7c56a2e2`. During the fault,
+  RGB/depth each published 43 images, RGB CameraInfo received 42 but published
+  zero, and depth CameraInfo received/published 42. Pose stale appeared in
+  0.316s, TF stale in 0.719s and the original baseline returned 0.244s after
+  recovery. No explicit tracking/inlier reason appeared.
+- Preserved the full health and proxy JSON plus
+  `docs/he/evidence/2026-07-12_0052_camera-info-fault.md`. Database hash was
+  unchanged; repeated sensor/read-only gates passed, services stayed at zero
+  restarts and navigation publishers remained zero.
 
 ## Decisions
 
@@ -501,14 +510,14 @@ health while keeping real motion disconnected.
 - Raw IMU orientation is unusable as published. Madgwick is runnable but failed
   the static admission gate, so the shadow chain remains RGB-D-only.
 - Static bad-but-fresh RGB/depth transitions and recovery are proven on Orin.
-  CameraInfo-only tooling is ready but not yet live-proven; moving tracking loss
-  and dynamic scenes remain open.
+  Static CameraInfo-only synchronization loss is also proven. Moving tracking
+  loss, malformed calibration and dynamic scenes remain open.
 
 ## Resume Instructions
 
 1. Read this log, ADR-001 and the final shadow soak evidence.
-- Run isolated `drop-camera-info`, verify image freshness plus zero fault-phase
-  RGB CameraInfo publishes, and record health recovery before restoring services.
+- Preserve the CameraInfo-only evidence distinction: pose/TF freshness catches
+  missing calibration, while malformed-but-present calibration remains open.
 - Read the fresh-content fault evidence before changing health thresholds; do
   not treat blank-depth freshness fallback as explicit tracking-loss status.
 - Read the static IMU evidence before changing RTAB-Map inputs. Do not run an

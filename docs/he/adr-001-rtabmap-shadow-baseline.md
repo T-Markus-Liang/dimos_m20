@@ -97,6 +97,12 @@ blank depth, so that mode is protected by pose/TF freshness rather than an
 independent depth-validity reason. Moving and dynamic-scene failures remain
 unqualified.
 
+Withholding only RGB CameraInfo while RGB/depth images stayed fresh added
+`pose_stale` in 0.316s and `tf_stale` in 0.719s, then restored the baseline
+0.244s after calibration resumed. No explicit tracking/inlier reason appeared;
+the synchronization failure is contained by pose/TF freshness. This does not
+qualify malformed-but-present calibration or moving synchronization.
+
 A later 600-second stationary soak exposed a separate active-database growth
 failure: 0.480m of accumulated frame jitter grew one database from 16.7MiB to
 126.7MiB despite only 4.72mm final drift. A first 0.02m/0.01rad threshold test
