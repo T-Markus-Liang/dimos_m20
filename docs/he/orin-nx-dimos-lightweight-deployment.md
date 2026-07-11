@@ -1127,9 +1127,16 @@ memory 最低约 3.11GiB，swap 仅增加 3.75MiB，没有 OOM 或服务重启�
 逐帧抖动。RTAB-Map 因而持续提交静止节点，数据库在 590 秒内从 16.7MiB 增长到
 126.7MiB，约 11.2MiB/min；该行为不能部署到长期运行的 NX 8GB。
 
-第一层修复使用 RTAB-Map 原生 `RGBD/LinearUpdate=0.02m` 和
-`RGBD/AngularUpdate=0.01rad`，阈值高于本轮静止净漂移，用于抑制无意义节点提交。
-第二层是独立 active-database watchdog：默认 256MiB，每两秒检查一次，触限后让
+第一版曾将 RTAB-Map 的 `RGBD/LinearUpdate/AngularUpdate` 设为 0.02m/0.01rad，
+Orin 实测 121 秒数据库已经达到 33.1MiB，未抑制增长。复核 0.23.7 源码后确认这两个
+参数默认均为 0.1，且 rehearsal 发生在运动门之前；默认
+`Mem/NotLinkedNodesKept=true` 仍会把未链接、被 rehearsal 合并或删除的节点写入库。
+降低阈值反而增加了提交频率。
+
+修正版显式恢复 `RGBD/LinearUpdate=0.1m`、`RGBD/AngularUpdate=0.1rad`，并设置
+`Mem/NotLinkedNodesKept=false`。已链接地图节点和 RGB-D binary data 仍保留，只取消
+从未进入图的 rehearsal/deleted node 持久化。第二层是独立 active-database
+watchdog：默认 256MiB，每两秒检查一次，触限后让
 runner 联动停止并回收 odometry 与 SLAM，不能继续无界写盘。可配置范围为：
 
 - `HE_RTABMAP_MAX_DB_MIB=1..4096`，默认 256；

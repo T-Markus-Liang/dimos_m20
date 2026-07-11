@@ -255,6 +255,11 @@ health while keeping real motion disconnected.
 - Preserved the primary/supplement TSV and 90-second odometry JSON under
   `docs/he/evidence/2026-07-11_20*`. All 38 HE tests, Ruff, Bash syntax and
   `git diff --check` pass on the VM; Orin post-deployment soak is pending.
+- The first deployed threshold test failed its slope objective: the database
+  reached 33.1MiB at 121 seconds. RTAB-Map 0.23.7 source confirms rehearsal
+  precedes its default 0.1m/0.1rad motion gate and unlinked nodes are persisted
+  by default. Restore 0.1/0.1 and set `Mem/NotLinkedNodesKept=false`; the hard
+  watchdog remains unchanged. A detached rerun is pending.
 
 ## Decisions
 
@@ -300,9 +305,10 @@ health while keeping real motion disconnected.
 - The enhanced diagnostic and effective-parameter A/B are complete. No tested
   setting resolves the stable spatial defect, so the canonical configuration is
   restored and RGB-D navigation admission remains failed.
-- The extended static soak is complete and exposed active-database growth as a
-  real defect. The boundedness patch is implemented and unit-tested on the VM,
-  but remains pending deployment and a second 600-second Orin soak.
+- The extended static soak exposed active-database growth as a real defect. The
+  first threshold-only deployment failed. The corrected unlinked-node
+  persistence setting is implemented on the VM and remains pending deployment,
+  a short slope check and a detached 600-second Orin soak.
 
 ## Resume Instructions
 

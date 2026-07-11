@@ -72,11 +72,15 @@ separate relocalization procedure.
 
 A later 600-second stationary soak exposed a separate active-database growth
 failure: 0.480m of accumulated frame jitter grew one database from 16.7MiB to
-126.7MiB despite only 4.72mm final drift. The baseline now gates graph commits
-at 0.02m translation and 0.01rad rotation. An independent watchdog defaults to
-a 256MiB hard active-database limit and stops the complete shadow stack at the
-limit. File retention and this active-file cap solve different failure modes;
-neither is permission to discard map state during real navigation.
+126.7MiB despite only 4.72mm final drift. A first 0.02m/0.01rad threshold test
+made growth worse because RTAB-Map rehearses observations before the motion
+gate and retained unlinked nodes by default. The corrected baseline restores
+the 0.1m/0.1rad defaults and disables persistence of rehearsed/deleted nodes
+that never join the graph. An independent watchdog defaults to a 256MiB hard
+active-database limit and stops the complete shadow stack at the limit. Linked
+map nodes and RGB-D data remain retained. File retention and this active-file
+cap solve different failure modes; neither is permission to discard linked map
+state during real navigation.
 
 Real navigation remains prohibited until moving ATE/RPE, loop closure,
 relocalization, map quality, camera extrinsics, tracking-loss detection,

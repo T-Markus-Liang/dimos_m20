@@ -2,7 +2,7 @@
 
 Date: 2026-07-11 20:27-20:37 CST
 
-Status: baseline defect reproduced; boundedness fix pending post-deployment soak
+Status: baseline defect reproduced; corrected boundedness fix pending soak
 
 ## Safety And Scope
 
@@ -47,10 +47,10 @@ count between runs, not the size of the active database.
 
 ## Corrective Design
 
-The first boundedness patch adds two independent controls:
+The first boundedness patch added two independent controls:
 
-- `RGBD/LinearUpdate=0.02m` and `RGBD/AngularUpdate=0.01rad` use RTAB-Map's
-  native update gate to suppress node commits below observed stationary jitter;
+- `RGBD/LinearUpdate=0.02m` and `RGBD/AngularUpdate=0.01rad` attempted to use
+  RTAB-Map's native update gate to suppress stationary commits;
 - `he-rtabmap-db-watchdog.sh` limits the active database to 256MiB by default,
   polls every two seconds, and exits with status 42 at the limit so the parent
   runner stops and reaps both native processes.
@@ -60,6 +60,20 @@ The first boundedness patch adds two independent controls:
 before the shadow stack starts. The hard cap is a failure boundary, not a
 rolling map database; reaching it intentionally stops shadow SLAM rather than
 silently deleting graph state.
+
+The first Orin deployment disproved the threshold assumption. Both parameters
+were loaded, but the database reached 33.1MiB after 121 seconds. RTAB-Map 0.23.7
+source then showed that both defaults are already 0.1 and that rehearsal occurs
+before the movement gate. The default `Mem/NotLinkedNodesKept=true` persists
+rehearsed and deleted nodes, so lowering the motion thresholds increased update
+frequency without addressing the write source.
+
+The corrected patch explicitly restores 0.1m/0.1rad and sets
+`Mem/NotLinkedNodesKept=false`. Linked map nodes and their binary RGB-D data
+remain available; only nodes rejected or merged before graph linkage stop being
+retained. The independent 256MiB watchdog remains the final hard boundary.
+This corrected configuration requires a short slope check followed by the full
+600-second static soak.
 
 A second 600-second static soak is required after deployment. It must prove
 that stationary database growth is materially suppressed and that watchdog,

@@ -24,10 +24,11 @@ rtabmap:
     queue_size: 30
     qos: 2
     "Rtabmap/DetectionRate": "2.0"
-    "RGBD/LinearUpdate": "0.02"
-    "RGBD/AngularUpdate": "0.01"
+    "RGBD/LinearUpdate": "0.1"
+    "RGBD/AngularUpdate": "0.1"
     "Mem/IncrementalMemory": "true"
     "Mem/InitWMWithAllNodes": "false"
+    "Mem/NotLinkedNodesKept": "false"
     "Reg/Strategy": "0"
     "Grid/FromDepth": "true"
     "Grid/3D": "false"

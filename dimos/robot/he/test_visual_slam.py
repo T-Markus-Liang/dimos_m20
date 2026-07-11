@@ -229,8 +229,9 @@ class TestHERTABMapRuntimeBounds(unittest.TestCase):
 
     def test_shadow_uses_motion_commit_thresholds(self) -> None:
         config = (DEPLOYMENT_DIR / "he-rtabmap-shadow.yaml").read_text()
-        self.assertIn('"RGBD/LinearUpdate": "0.02"', config)
-        self.assertIn('"RGBD/AngularUpdate": "0.01"', config)
+        self.assertIn('"RGBD/LinearUpdate": "0.1"', config)
+        self.assertIn('"RGBD/AngularUpdate": "0.1"', config)
+        self.assertIn('"Mem/NotLinkedNodesKept": "false"', config)
 
     def test_watchdog_default_and_configuration_boundaries(self) -> None:
         result = self.watchdog("--check")
