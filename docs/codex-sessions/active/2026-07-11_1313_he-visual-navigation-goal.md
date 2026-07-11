@@ -272,6 +272,13 @@ health while keeping real motion disconnected.
 - Recorded two orchestration hazards and fixes: redirect native output for
   detached soaks to avoid SSH SIGPIPE 141, and require exactly one timer/restore
   owner so an old soak cannot stop a new run.
+- Re-audited timestamped worker shutdown logs and corrected the prior Rerun
+  attribution. Rerun stopped in about 73ms; the RTAB-Map shell cleanup could
+  spend about 7.5 seconds polling three unreaped zombies with `kill -0`.
+- Replaced serial zombie polling with a shared two-second signal escalation and
+  final `wait`, made external SIGINT/SIGTERM return success, and reduced the
+  Python process-group fallback to three seconds. A real process-group lifecycle
+  test raises the HE total to 39; all pass with Ruff and Bash checks on the VM.
 
 ## Decisions
 
@@ -320,6 +327,8 @@ health while keeping real motion disconnected.
   first threshold-only deployment failed, while the corrected unlinked-node
   persistence setting passed a full 600-second Orin soak with about 99.0%
   lower database growth. The 256MiB hard watchdog remains enabled.
+- Graceful shutdown root cause is fixed and unit-tested on the VM. The normal
+  non-force Orin `dimos stop` timing and cleanup verification remain pending.
 
 ## Resume Instructions
 
@@ -338,7 +347,8 @@ health while keeping real motion disconnected.
 7. After a new vehicle-down confirmation, record moving, loop-closure and
    relocalization datasets and decide whether RTAB-Map can graduate beyond the
    shadow baseline.
-8. Address the existing Rerun coordinator graceful-stop timeout separately.
+8. Deploy and verify the corrected normal shadow shutdown path on Orin without
+   `--force`, then preserve elapsed time and cleanup evidence.
 9. Do not enable motion or restore LD19.
 
 ## Open Questions

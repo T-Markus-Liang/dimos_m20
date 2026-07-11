@@ -92,25 +92,23 @@ slam_pid=$!
 "$watchdog_binary" "$database" &
 watchdog_pid=$!
 
-stop_process() {
-  local pid=$1
-  for _ in $(seq 1 10); do
-    kill -0 "$pid" 2>/dev/null || return
-    sleep 0.2
-  done
-  kill -TERM "$pid" 2>/dev/null || true
-  sleep 0.5
-  kill -KILL "$pid" 2>/dev/null || true
-}
-
 cleanup() {
   trap - EXIT INT TERM
   kill -INT "$watchdog_pid" "$slam_pid" "$odom_pid" 2>/dev/null || true
-  stop_process "$watchdog_pid"
-  stop_process "$slam_pid"
-  stop_process "$odom_pid"
+  sleep 1.5
+  kill -TERM "$watchdog_pid" "$slam_pid" "$odom_pid" 2>/dev/null || true
+  sleep 0.5
+  kill -KILL "$watchdog_pid" "$slam_pid" "$odom_pid" 2>/dev/null || true
+  wait "$watchdog_pid" "$slam_pid" "$odom_pid" 2>/dev/null || true
 }
-trap cleanup EXIT INT TERM
+
+shutdown() {
+  cleanup
+  exit 0
+}
+
+trap cleanup EXIT
+trap shutdown INT TERM
 
 set +e
 wait -n "$odom_pid" "$slam_pid" "$watchdog_pid"

@@ -67,13 +67,16 @@ Within six seconds:
 - runtime RSS in health dropped to zero;
 - `/he/nav_cmd_vel` remained at zero publishers.
 
-## Remaining Runtime Rough Edge
+## Shutdown Attribution Correction
 
-Normal `dimos stop` waits five seconds on `RerunBridgeModule` before worker
-shutdown begins, so the CLI escalated the main daemon to SIGKILL. Native SLAM
-children were still removed, and a forced stop after fault injection left no
-ports or processes. This is an existing DimOS/Rerun coordinator shutdown issue
-that should be fixed before production service activation.
+This run originally attributed the five-second stop timeout to
+`RerunBridgeModule`. A later timestamp audit disproved that conclusion: Rerun
+stopped in about 73ms, while the RTAB-Map runner did not complete before the
+parent grace expired. Its shell cleanup serially polled three exited-but-
+unreaped children with `kill -0`, which treats zombies as alive and could spend
+about 7.5 seconds before reaping them. The bounded parallel cleanup correction
+and live verification are tracked in
+`2026-07-11_2128_shadow-graceful-shutdown.md`.
 
 After testing, `he-dimos-sense.service` was restored active with zero restarts.
 Real motion remained disabled for the entire soak.

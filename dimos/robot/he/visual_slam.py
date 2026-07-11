@@ -550,7 +550,7 @@ class HERTABMapShadowRunner(Module):
             return
         os.killpg(process.pid, signal.SIGINT)
         try:
-            process.wait(timeout=7.0)
+            process.wait(timeout=3.0)
         except subprocess.TimeoutExpired:
             os.killpg(process.pid, signal.SIGKILL)
-            process.wait(timeout=2.0)
+            process.wait(timeout=1.0)

@@ -981,9 +981,12 @@ OccupancyGrid 是 latched/event-driven，静止时不重发不代表地图失效
 TF、tracking、inliers、latency、RSS 和地图质量仍为默认门禁。
 
 受控终止 SLAM 子进程后，odometry 在 6 秒检查前已同步清理，health 报告
-`slam_process_down`，无原生进程残留。当前剩余的运行粗糙点是 DimOS
-`RerunBridgeModule` 停止会占满 CLI 的 5 秒 grace period，使主 daemon 被升级为
-SIGKILL；原生 SLAM 清理通过，但后续应在 DimOS/Rerun 协调层修复优雅退出。
+`slam_process_down`，无原生进程残留。后续时间戳审计纠正了停止超时归因：
+`RerunBridgeModule` 约 73ms 已停止，真正超过 CLI 5 秒 grace period 的是 RTAB-Map
+shell runner 对三个 zombie 子进程串行执行 `kill -0` 轮询，最坏约 7.5 秒才回收。
+runner 已改为共享时间窗内并行 SIGINT -> SIGTERM -> SIGKILL，并最终统一 `wait`；
+完整设计和待执行 Orin 复测见
+`docs/he/evidence/2026-07-11_2128_shadow-graceful-shutdown.md`。
 
 ## 16. 公开基准与视觉外参准入复核（2026-07-11）
 

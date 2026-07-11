@@ -4,8 +4,10 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
+import signal
 import subprocess
 import tempfile
+import time
 import types
 import unittest
 
@@ -16,6 +18,7 @@ from dimos.msgs.nav_msgs.Odometry import Odometry
 from dimos.robot.he.blueprints import he_visual_slam_shadow
 from dimos.robot.he.visual_slam import (
     HELocalizationHealth,
+    HERTABMapShadowRunner,
     HEVisualMapAdapter,
     HEVisualSlamBridge,
 )
@@ -261,6 +264,25 @@ class TestHERTABMapRuntimeBounds(unittest.TestCase):
             )
         self.assertEqual(result.returncode, 42, result.stderr)
         self.assertIn("reached", result.stderr)
+
+    def test_shadow_runner_reaps_its_process_group_within_cli_grace(self) -> None:
+        process = subprocess.Popen(
+            ["bash", "-c", "trap 'exit 0' INT TERM; while true; do sleep 1; done"],
+            start_new_session=True,
+        )
+        runner = HERTABMapShadowRunner()
+        runner._process = process
+        started = time.monotonic()
+        try:
+            runner._stop_process_group()
+        finally:
+            if process.poll() is None:
+                os.killpg(process.pid, signal.SIGKILL)
+                process.wait(timeout=1.0)
+
+        self.assertLess(time.monotonic() - started, 4.5)
+        self.assertIsNotNone(process.returncode)
+        self.assertIsNone(runner._process)
 
 
 if __name__ == "__main__":
