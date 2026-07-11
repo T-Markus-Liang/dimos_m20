@@ -174,3 +174,11 @@ A/B are recorded in `docs/he/evidence/2026-07-11_1831_aurora-depth-parameter-ab.
 None of threshold 30, indoor laser mode, disabled alignment or disabled depth
 correction resolved the stable coverage gap. Keep the canonical values and do
 not approve RGB-D navigation from global validity alone.
+
+The bounded raw field-of-view and USB audit is in
+`docs/he/evidence/2026-07-11_1843_aurora-field-of-view-usb-audit.md`. The upper
+half was 48.69% valid and lower half 7.51%; RGB/IR were complete and no bracket
+occluded the image. The pattern follows the smooth floor at a grazing angle.
+Aurora is also on a shared 480Mbps hub, which remains a throughput qualification
+risk but has no observed reset/stall evidence and does not alone explain the
+stable geometric mask.

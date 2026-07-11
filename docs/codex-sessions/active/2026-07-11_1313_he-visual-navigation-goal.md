@@ -221,6 +221,19 @@ health while keeping real motion disconnected.
 - Added opt-in bounded RGB/IR/depth/valid-mask snapshot output to the diagnostic.
   The pure writer preserves uint16 millimetre depth and is covered by focused
   shape, padding, mask and metadata tests; default runs still write no images.
+- Deployed and ran the snapshot diagnostic between read-only gates. RGB/IR were
+  complete and no vehicle part or bracket occluded the lower frame. Upper-half
+  depth was 48.69% valid versus 7.51% lower-half and 6.73% bottom-third.
+- Visually, valid depth follows upright cabinets, doors, window structure and
+  table legs, while the missing region follows a smooth dark floor seen at a
+  grazing angle from the very low, near-level camera. Lower IR mean was higher,
+  not absent. Scene/material geometry is now the leading hypothesis.
+- Preserved only derived metrics and hashes in Git because RGB shows a private
+  indoor scene. Raw snapshots remain in Orin `/tmp/he-aurora-field-of-view` and
+  the host temporary evidence directory.
+- Confirmed the shared USB 2 topology has no kernel reset/stall/overflow errors.
+  Treat it as throughput risk requiring a paired USB 3 test, not as proof of the
+  stable mask's cause.
 
 ## Decisions
 
@@ -269,20 +282,21 @@ health while keeping real motion disconnected.
 ## Resume Instructions
 
 1. Read this log, ADR-001 and the final shadow soak evidence.
-2. Capture and inspect the new raw Aurora snapshot for physical mounting,
-   occlusion and scene geometry. Then evaluate a controlled move from the shared
-   USB 2.0 hub to the available 10Gbps root port if physical access is approved.
-3. Escalate the stable mask and firmware 2.0.8/SDK 1.1.22 evidence to the vendor
-   if snapshots do not reveal a physical cause.
-4. Use the new nominal-extrinsics audit to plan physical camera-to-base and
+2. Run a static matte-target and camera pitch/height experiment to separate
+   floor reflectivity/grazing-angle effects from sensor defects.
+3. Evaluate a controlled move from the shared USB 2.0 hub to the available
+   10Gbps root port if physical access is approved.
+4. Escalate firmware 2.0.8/SDK 1.1.22 evidence to the vendor if target coverage
+   remains abnormal.
+5. Use the new nominal-extrinsics audit to plan physical camera-to-base and
    camera-to-IMU calibration; do not promote the nominal values to calibrated.
-5. Keep public benchmark tables source-scoped and update them only when a new
+6. Keep public benchmark tables source-scoped and update them only when a new
    candidate has code, license, runtime and deployability evidence.
-6. After a new vehicle-down confirmation, record moving, loop-closure and
+7. After a new vehicle-down confirmation, record moving, loop-closure and
    relocalization datasets and decide whether RTAB-Map can graduate beyond the
    shadow baseline.
-7. Address the existing Rerun coordinator graceful-stop timeout separately.
-8. Do not enable motion or restore LD19.
+8. Address the existing Rerun coordinator graceful-stop timeout separately.
+9. Do not enable motion or restore LD19.
 
 ## Open Questions
 
