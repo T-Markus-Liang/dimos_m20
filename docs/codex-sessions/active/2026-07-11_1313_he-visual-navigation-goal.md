@@ -191,6 +191,17 @@ health while keeping real motion disconnected.
   service because ROS 2 `setup.bash` is not nounset-safe. Scoped `set +u` to the
   two environment sources and immediately restored `set -u`; no camera state or
   parameter changed during the failed invocation.
+- The first complete threshold experiment restored both services, but the
+  immediate read-only gate observed the temporary Aurora DDS publisher before
+  endpoint expiry. The unchanged gate passed after three more seconds.
+- Fixed the runner to wait five seconds for DDS convergence and to preserve
+  `errexit` after restoration. Sensor/read-only failures can no longer fall
+  through to a success message.
+- `threshold_size=30` reduced global/center validity from 24.26/18.57% to
+  21.84/15.66% and increased never-valid pixels to 72.37%; keep 110.
+- `laser_power=2` produced 26.66% global, 18.95% center and 24.02% stable
+  coverage, but requires an isolated `laser_power=1` control before attribution
+  because both temporary runs observed point cloud near 8Hz.
 
 ## Decisions
 

@@ -1068,3 +1068,9 @@ read-only gates。每轮同时保存 Git HEAD、canonical 参数值和 test valu
 systemd 服务之前，因此没有改变相机状态。修复为只在 source ROS/Aurora 环境期间
 临时关闭 nounset，加载完成后立即恢复。后续 Bash 脚本若启用 `set -u`，必须沿用
 这一兼容方式，不能把环境脚本失败误判成相机或 SDK 故障。
+
+首轮完整参数实验生成 JSON 并恢复服务后，立即执行的 read-only gate 曾看到临时
+driver 的 DDS publisher 尚未过期，与 canonical publisher 短时并存；数秒后重复
+权威门即通过。runner 因此在 canonical service active 后等待 5 秒再验证，不删除或
+放宽 publisher-count 断言。同时修复 `restore_service()` 内部 `set +e` 泄漏到主流程
+的问题，任何 sensor/read-only gate 失败现在都会保持非零退出，不能打印伪成功。

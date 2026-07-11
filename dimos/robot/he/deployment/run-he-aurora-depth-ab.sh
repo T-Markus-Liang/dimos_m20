@@ -53,22 +53,26 @@ stop_isolated_driver() {
 }
 
 restore_service() {
-  $restored && return
-  set +e
+  [[ $restored == true ]] && return
   stop_isolated_driver
   sudo systemctl start aurora930.service
+  active=false
   for _ in {1..40}; do
-    systemctl is-active --quiet aurora930.service && break
+    if systemctl is-active --quiet aurora930.service; then
+      active=true
+      break
+    fi
     sleep 0.25
   done
-  sleep 2
+  [[ $active == true ]] || return 1
+  sleep 5
   restored=true
 }
 
 on_exit() {
   status=$?
   trap - EXIT INT TERM
-  restore_service
+  restore_service || status=$?
   .venv/bin/python dimos/robot/he/deployment/verify-he-sensors.py \
     --image-samples 5 --pointcloud-samples 2 --timeout 15 || status=$?
   bash dimos/robot/he/deployment/verify-he-readonly.sh || status=$?
