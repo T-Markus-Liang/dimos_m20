@@ -1398,3 +1398,19 @@ malformed CameraInfo 已关闭；plausible-but-wrong 数值与物理外参仍需
 发布者均通过。完整证据见
 `docs/he/evidence/2026-07-12_0118_intrinsic-baseline-drift.md`。运行时超容差配置漂移已
 关闭；标定板物理内参验证和 camera-to-base/camera-to-IMU 外参仍是准入门。
+
+## 23. Aurora SDK 设备能力只读探针（2026-07-12）
+
+厂商 SDK 1.1.22 的 `Aurora900` 正式声明了 `GetSupportInfo`、
+`GetCameraTemperature`、`GetLaserCurrent`、`GetDeviceInfo`，通用 `Device` 还提供
+`GetCameraParameters`。SDK Guide 明确 `GetSupportInfo.depth_range` 表示设备最小/最大
+深度能力，`GetLaserCurrent` 单位为 mA；但 `depth_range` 在 ABI 中是不透明 `Data`
+buffer，文档没有公布二进制编码，不能假设它等于当前 150-4000mm 软件过滤窗口。
+
+新增 `probe-he-aurora-sdk.cc` 只调用设备枚举、Open、上述 getter 和 Close，不创建
+stream、不调用 setter/reboot/upgrade。输出省略 serial number，保留 getter return
+code、depth-range 长度/hex/可打印文本、三类 temperature raw value、laser current、
+SDK/firmware 版本和设备内部 RGB/IR 标定。`run-he-aurora-sdk-probe.sh` 在停服务前完成
+编译和 read-only gate，使用 EXIT trap 恢复 canonical Aurora service，并在结束后运行
+live sensor/read-only gates。VM 已用真实 1.1.22 header 通过 `-Werror` 编译，runner
+Bash syntax 通过；Orin live probe 尚待执行。

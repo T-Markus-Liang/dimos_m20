@@ -507,6 +507,17 @@ health while keeping real motion disconnected.
   deployment guide to the macOS Downloads mirror. The final Orin read-only gate
   passed at about 1005MiB sensor-bridge memory and 3.3GiB available memory with
   zero navigation publishers.
+- Audited the Aurora900 SDK 1.1.22 support API and guide. `GetSupportInfo`
+  exposes a vendor depth-range buffer, while temperature, laser-current,
+  device-info and factory RGB/IR camera-parameter getters are also available.
+  The depth-range ABI is opaque and must be preserved as length/hex/text before
+  interpretation; it is not the known 150-4000mm software filter by definition.
+- Added a minimal C++ getter-only probe and restore-guarded runner. It omits the
+  serial number, creates no stream, invokes no setter/reboot/upgrade and reruns
+  sensor/read-only gates after restoring the canonical service. Compilation
+  against the real SDK headers with `-Werror`, Bash syntax and diff checks pass
+  on the VM. All 50 HE tests and an explicit SDK method-call safety audit also
+  pass; live Orin evidence is pending.
 
 ## Decisions
 

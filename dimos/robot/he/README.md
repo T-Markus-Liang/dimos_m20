@@ -66,6 +66,19 @@ Collect a bounded SLAM-input diagnostic without enabling motion:
   --samples 30 --timeout 15 --output /tmp/he-aurora-diagnostic.json
 ```
 
+Query the vendor SDK's read-only support, temperature, laser-current and
+factory camera-parameter getters under automatic service restoration:
+
+```bash
+sudo -v
+bash dimos/robot/he/deployment/run-he-aurora-sdk-probe.sh \
+  /tmp/he-aurora-sdk-probe.json
+```
+
+The runner briefly stops only the canonical Aurora service, never starts a
+stream or calls an SDK setter, and reruns live-sensor and read-only gates after
+restoration.
+
 Measure raw IMU quality, or compare a temporary filtered orientation topic:
 
 ```bash
