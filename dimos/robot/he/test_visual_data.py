@@ -21,11 +21,20 @@ from dimos.robot.he.visual_data import (
     stationary_trajectory_metrics,
     timestamp_alignment,
     topic_rate,
+    visual_fault_payload,
     write_visual_snapshot,
 )
 
 
 class TestHEVisualData(unittest.TestCase):
+    def test_visual_fault_payload_blanks_only_selected_stream(self) -> None:
+        payload = bytes([1, 2, 3])
+        self.assertEqual(visual_fault_payload(payload, "rgb", "blank-rgb"), bytes(3))
+        self.assertEqual(visual_fault_payload(payload, "depth", "blank-rgb"), payload)
+        self.assertEqual(visual_fault_payload(payload, "rgb", "blank-both"), bytes(3))
+        with self.assertRaises(ValueError):
+            visual_fault_payload(payload, "ir", "blank-rgb")
+
     def test_timestamp_alignment_uses_nearest_samples(self) -> None:
         metrics = timestamp_alignment([1.0, 2.0, 3.0], [0.995, 2.02, 3.005])
         self.assertEqual(metrics["pairs"], 3)

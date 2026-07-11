@@ -264,6 +264,9 @@ class TestHERTABMapRuntimeBounds(unittest.TestCase):
         clean_env = os.environ.copy()
         clean_env.pop("HE_RTABMAP_MODE", None)
         clean_env.pop("HE_RTABMAP_DB", None)
+        clean_env.pop("HE_RTABMAP_RGB_TOPIC", None)
+        clean_env.pop("HE_RTABMAP_DEPTH_TOPIC", None)
+        clean_env.pop("HE_RTABMAP_CAMERA_INFO_TOPIC", None)
         if env:
             clean_env.update(env)
         return subprocess.run(
@@ -323,6 +326,28 @@ class TestHERTABMapRuntimeBounds(unittest.TestCase):
             self.assertIn("InitWMWithAllNodes:='true'", localization.stdout)
             self.assertIn("LocalizationReadOnly:='true'", localization.stdout)
             self.assertIn("LocalizationDataSaved:='false'", localization.stdout)
+
+    def test_shadow_input_topic_overrides_are_explicit_and_validated(self) -> None:
+        default = self.mode_check()
+        self.assertIn("RGB input: /aurora/rgb/image_raw", default.stdout)
+        self.assertIn("depth input: /aurora/depth/image_raw", default.stdout)
+
+        fault = self.mode_check(
+            {
+                "HE_RTABMAP_RGB_TOPIC": "/he/fault/rgb/image_raw",
+                "HE_RTABMAP_DEPTH_TOPIC": "/he/fault/depth/image_raw",
+                "HE_RTABMAP_CAMERA_INFO_TOPIC": "/he/fault/rgb/camera_info",
+            }
+        )
+        self.assertEqual(fault.returncode, 0, fault.stderr)
+        self.assertIn("RGB input: /he/fault/rgb/image_raw", fault.stdout)
+        self.assertIn("depth input: /he/fault/depth/image_raw", fault.stdout)
+
+        for topic in ("relative/topic", "/he/fault/rgb;true", "/he//fault"):
+            with self.subTest(topic=topic):
+                result = self.mode_check({"HE_RTABMAP_RGB_TOPIC": topic})
+                self.assertEqual(result.returncode, 2)
+                self.assertIn("Invalid absolute ROS topic", result.stderr)
 
     def watchdog(self, *args: str, env: dict[str, str] | None = None):
         clean_env = os.environ.copy()

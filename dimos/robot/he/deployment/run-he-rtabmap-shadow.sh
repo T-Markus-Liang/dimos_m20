@@ -7,6 +7,21 @@ watchdog_binary="$repo_root/dimos/robot/he/deployment/he-rtabmap-db-watchdog.sh"
 database_dir=/var/tmp/he-rtabmap
 mode=${HE_RTABMAP_MODE:-mapping}
 database=${HE_RTABMAP_DB:-}
+rgb_topic=${HE_RTABMAP_RGB_TOPIC:-/aurora/rgb/image_raw}
+depth_topic=${HE_RTABMAP_DEPTH_TOPIC:-/aurora/depth/image_raw}
+camera_info_topic=${HE_RTABMAP_CAMERA_INFO_TOPIC:-/aurora/rgb/camera_info}
+
+validate_ros_topic() {
+  local topic=$1
+  [[ "$topic" =~ ^/[A-Za-z0-9_]+(/[A-Za-z0-9_]+)*$ ]] || {
+    echo "Invalid absolute ROS topic: $topic" >&2
+    return 2
+  }
+}
+
+validate_ros_topic "$rgb_topic"
+validate_ros_topic "$depth_topic"
+validate_ros_topic "$camera_info_topic"
 
 validate_mode() {
   case "$mode" in
@@ -72,6 +87,9 @@ fi
 if [[ "${1:-}" == --check-mode ]]; then
   echo "HE RTAB-Map mode: $mode"
   echo "HE RTAB-Map database: ${database:-<auto-new>}"
+  echo "HE RTAB-Map RGB input: $rgb_topic"
+  echo "HE RTAB-Map depth input: $depth_topic"
+  echo "HE RTAB-Map camera info input: $camera_info_topic"
   echo "HE RTAB-Map parameter overrides: ${rtabmap_mode_args[*]}"
   exit 0
 fi
@@ -140,9 +158,9 @@ echo "HE RTAB-Map database: $database"
 
 "$odom_binary" --ros-args \
   --params-file "$config" \
-  -r rgb/image:=/aurora/rgb/image_raw \
-  -r depth/image:=/aurora/depth/image_raw \
-  -r rgb/camera_info:=/aurora/rgb/camera_info \
+  -r rgb/image:="$rgb_topic" \
+  -r depth/image:="$depth_topic" \
+  -r rgb/camera_info:="$camera_info_topic" \
   -r odom:=/he/visual_odom \
   -r odom_info:=/he/visual_odom_info &
 odom_pid=$!
@@ -151,9 +169,9 @@ odom_pid=$!
   --params-file "$config" \
   -p database_path:="$database" \
   "${rtabmap_mode_args[@]}" \
-  -r rgb/image:=/aurora/rgb/image_raw \
-  -r depth/image:=/aurora/depth/image_raw \
-  -r rgb/camera_info:=/aurora/rgb/camera_info \
+  -r rgb/image:="$rgb_topic" \
+  -r depth/image:="$depth_topic" \
+  -r rgb/camera_info:="$camera_info_topic" \
   -r odom:=/he/visual_odom \
   -r odom_info:=/he/visual_odom_info \
   -r map:=/he/visual_occupancy \

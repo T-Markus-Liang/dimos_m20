@@ -417,6 +417,10 @@ health while keeping real motion disconnected.
   bounded check confirmed no process/topic remained. Live sensor and read-only
   gates passed, services remained active with zero restarts, and navigation
   publishers remained zero.
+- Started the next motion-free gap: bad-but-fresh visual input faults. Added
+  fail-closed RTAB-Map input topic overrides and a bounded proxy that publishes
+  baseline, blank fault and recovery phases only on isolated `/he/fault/*`
+  topics. Default Aurora inputs remain unchanged; live Orin proof is pending.
 
 ## Decisions
 
@@ -481,10 +485,14 @@ health while keeping real motion disconnected.
   are verified on Orin. Partial and bad-but-fresh input faults remain open.
 - Raw IMU orientation is unusable as published. Madgwick is runnable but failed
   the static admission gate, so the shadow chain remains RGB-D-only.
+- Bad-but-fresh fault tooling is implemented on the VM; blank RGB/depth health
+  transitions and recovery are not yet proven on Orin.
 
 ## Resume Instructions
 
 1. Read this log, ADR-001 and the final shadow soak evidence.
+- Deploy and run isolated `blank-rgb`, then `blank-depth`, while recording
+  localization-health transitions. Restore services and safety gates after each.
 - Read the static IMU evidence before changing RTAB-Map inputs. Do not run an
   IMU-prior A/B until bias/noise/axis and camera-IMU calibration are available.
 2. Run a static matte-target and camera pitch/height experiment to separate

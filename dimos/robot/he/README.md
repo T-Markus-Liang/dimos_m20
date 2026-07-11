@@ -101,6 +101,15 @@ state. Because poor map coverage is already an expected baseline reason, fault
 tests must compare added and removed reasons instead of assuming the baseline
 is healthy.
 
+Run a bounded fresh-image fault proxy only with explicit isolated RTAB-Map
+input overrides. It publishes no command and never writes to `/aurora/*`:
+
+```bash
+.venv/bin/python dimos/robot/he/deployment/inject-he-visual-fault.py \
+  --mode blank-rgb --baseline 10 --fault-duration 8 --recovery 10 \
+  --output /tmp/he-blank-rgb-fault.json
+```
+
 The current RTAB-Map pilot can be checked or run without motion output:
 
 ```bash

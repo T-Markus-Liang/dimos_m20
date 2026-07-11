@@ -1321,3 +1321,15 @@ Madgwick 作为常驻子进程。下一步必须先完成 IMU bias/noise/axis、
 空间外参和时间偏移标定，再重新做静止/移动 A/B。完整证据见
 `docs/he/evidence/2026-07-12_0024_imu-qualification.md` 和同名 JSON。采样后的 live
 sensor/read-only gates 均通过，两服务 active/零重启，导航发布者为零。
+
+## 20. Fresh visual fault 注入工具（2026-07-12）
+
+为验证“图像 timestamp 持续更新但内容失效”的健康门，新增只向
+`/he/fault/rgb/*` 和 `/he/fault/depth/*` 发布的有界代理。代理等待 RTAB-Map RGB 与
+depth subscriber 后，依次执行正常透传、指定模态全零、恢复透传；不会发布到
+canonical `/aurora/*`，不会发布任何 command topic。runner 默认输入完全不变，只有
+显式设置 `HE_RTABMAP_RGB_TOPIC`、`HE_RTABMAP_DEPTH_TOPIC` 和
+`HE_RTABMAP_CAMERA_INFO_TOPIC` 才会使用隔离输入，且非法 ROS topic 在启动前拒绝。
+
+该工具目前只建立可复现测试能力。`blank-rgb`、`blank-depth` 的 live tracking-loss
+状态转换与恢复必须在 Orin 实测并保存证据后，才能关闭 bad-but-fresh 准入缺口。

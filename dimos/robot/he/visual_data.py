@@ -13,6 +13,18 @@ from typing import Any
 import cv2
 import numpy as np
 
+VISUAL_FAULT_MODES = {"blank-rgb", "blank-depth", "blank-both"}
+
+
+def visual_fault_payload(payload: Any, stream: str, mode: str) -> bytes:
+    """Return a copied image payload, blanking only the selected fault stream."""
+    if mode not in VISUAL_FAULT_MODES:
+        raise ValueError(f"unsupported visual fault mode: {mode}")
+    if stream not in {"rgb", "depth"}:
+        raise ValueError(f"unsupported visual stream: {stream}")
+    blank = mode == "blank-both" or mode == f"blank-{stream}"
+    return bytes(len(payload)) if blank else bytes(payload)
+
 
 def stamp_seconds(message: Any) -> float:
     stamp = message.header.stamp
