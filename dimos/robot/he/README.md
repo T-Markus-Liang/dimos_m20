@@ -66,6 +66,16 @@ Collect a bounded SLAM-input diagnostic without enabling motion:
   --samples 30 --timeout 15 --output /tmp/he-aurora-diagnostic.json
 ```
 
+Measure raw IMU quality, or compare a temporary filtered orientation topic:
+
+```bash
+.venv/bin/python dimos/robot/he/deployment/diagnose-he-imu.py \
+  --duration 30 --output /tmp/he-imu-raw.json
+.venv/bin/python dimos/robot/he/deployment/diagnose-he-imu.py \
+  --duration 30 --filtered-topic /he/imu/orientation_probe \
+  --output /tmp/he-imu-filtered.json
+```
+
 Preview or make a time-bounded raw dataset recording:
 
 ```bash

@@ -8,7 +8,7 @@
 - Workspace: VM `/home/markus/work/dimos_wd_m20`; Orin `/home/ubuntu/he/dimos_wd_m20`
 - Task: research, benchmark, select and integrate a visual SLAM navigation foundation for HE
 - Status: active - shadow integrated; benchmark/extrinsics audit complete;
-  physical calibration and moving gates pending
+  IMU qualification in progress; physical calibration and moving gates pending
 - Branch if relevant: `codex/he-orin`; documentation update based on `87549530`
 
 ## User Request Summary
@@ -386,6 +386,20 @@ health while keeping real motion disconnected.
   `docs/he/evidence/2026-07-11_2345_visual-input-outage.md`. Total input-loss
   freshness detection is proven; partial/bad-but-fresh and moving tracking loss
   remain open.
+- Audited the raw HE IMU and official RTAB-Map 0.23.7 source. The raw topic is
+  about 47Hz and carries gyro/acceleration, but every sampled orientation is an
+  all-zero quaternion that RTAB-Map explicitly ignores.
+- Confirmed Orin already has `imu_filter_madgwick` 2.1.5. A bounded isolated
+  probe with no magnetometer and no TF produced a normalized orientation at
+  about 46.7Hz without changing services or motion state. Its orientation
+  covariance remained all zero and yaw is gyro-integrated, so this is not proof
+  of calibrated VIO.
+- Added a pure IMU metrics helper and bounded ROS diagnostic for raw/filtered
+  rates, timestamp gaps, quaternion validity, RPY drift, gyro/acceleration
+  statistics and covariance state. Two focused tests raise the HE total to 43;
+  Ruff and `git diff --check` pass on the VM.
+- Reconfirmed both system services active with zero restarts, no probe process
+  or topic left behind and `/he/nav_cmd_vel` at zero publishers.
 
 ## Decisions
 
@@ -409,6 +423,10 @@ health while keeping real motion disconnected.
 - Do not test shared Nebula/Stellar parameters against Aurora930 merely because
   the ROS node declares them. Limit controlled depth A/B tests to settings that
   the Aurora930 configure path actually applies.
+- Do not enable tightly coupled VIO from the Madgwick probe. First quantify a
+  bounded stationary raw/filtered comparison. Any later use is limited to an
+  explicit optional RTAB-Map shadow orientation prior until physical
+  camera-to-IMU spatial/time and noise calibration is complete.
 
 ## Current State
 
@@ -441,10 +459,17 @@ health while keeping real motion disconnected.
   Orin. Moving/displaced-start relocalization and loop closure remain open.
 - Real health-transition instrumentation and total Aurora input outage/recovery
   are verified on Orin. Partial and bad-but-fresh input faults remain open.
+- Raw IMU orientation is unusable as published. Madgwick is runnable but not yet
+  admitted into the shadow chain; the version-controlled bounded diagnostic is
+  awaiting Orin synchronization and a 30-second evidence run.
 
 ## Resume Instructions
 
 1. Read this log, ADR-001 and the final shadow soak evidence.
+- Push and fast-forward the bounded IMU diagnostic to Orin, then collect a
+  30-second raw/Madgwick comparison with no TF or motion output.
+- Decide from drift, covariance and timing evidence whether to run an optional
+  RGB-D-only versus IMU-prior static shadow A/B; do not claim calibrated VIO.
 2. Run a static matte-target and camera pitch/height experiment to separate
    floor reflectivity/grazing-angle effects from sensor defects.
 3. Evaluate a controlled move from the shared USB 2.0 hub to the available

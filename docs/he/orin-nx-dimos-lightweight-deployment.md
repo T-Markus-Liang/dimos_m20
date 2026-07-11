@@ -1279,3 +1279,33 @@ SIGPIPE 141；不能同时保留多个带 restore trap 的 soak timer，否则�
 shutdown 后两个 native 进程均退出，传感服务 active/零重启；sensor verifier 的临时
 DDS subscription 收敛后，独立 read-only gate PASS。原始修正版 TSV 见
 `docs/he/evidence/2026-07-11_2105_bounded-shadow-*.tsv`。
+
+## 19. IMU orientation 准入调查（2026-07-12）
+
+控制板原始 `/ros_robot_controller/imu_raw` 约 47Hz，frame 为 `imu_link`，角速度和
+线加速度有效，但 orientation quaternion 持续为 `[0, 0, 0, 0]`。RTAB-Map 0.23.7
+源码会明确忽略这种 orientation，因此现有 RGB-D shadow 实际未使用 IMU。Orin 已有
+`imu_filter_madgwick` 2.1.5，无需新增依赖。
+
+一次不发布 TF、不使用磁力计且不改配置的隔离探针证明 Madgwick 能从 raw gyro/
+acceleration 输出约 46.7Hz 的单位四元数，并保留角速度、加速度和 `imu_link`。但该
+输出的 orientation covariance 为全零，不能解释为零不确定度；无磁力计时 yaw 依赖
+陀螺积分，且现有 camera-to-IMU 外参仅是 nominal URDF 值，尚未物理标定。因此这只
+证明滤波器可运行，不证明视觉惯性融合可信，也不批准紧耦合 VIO。
+
+新增有界只读诊断：
+
+```bash
+.venv/bin/python dimos/robot/he/deployment/diagnose-he-imu.py \
+  --duration 30 --output /tmp/he-imu-raw.json
+
+.venv/bin/python dimos/robot/he/deployment/diagnose-he-imu.py \
+  --duration 30 --filtered-topic /he/imu/orientation_probe \
+  --output /tmp/he-imu-filtered.json
+```
+
+工具记录输入率、header 时间戳间隔、四元数范数、RPY/旋转漂移、gyro 与 acceleration
+均值/标准差/模长以及 orientation covariance 状态。下一步先保存 30 秒静止 raw 与
+filtered 对照；只有数值稳定且安全门保持关闭时，才允许把 Madgwick 作为可选的
+RTAB-Map shadow orientation prior 做 A/B。任何 camera-IMU 紧耦合、移动精度或导航
+放行仍必须等待物理空间/时间标定和新的车辆落地安全确认。
