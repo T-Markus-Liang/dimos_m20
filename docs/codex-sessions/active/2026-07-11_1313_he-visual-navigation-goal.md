@@ -79,6 +79,9 @@ health while keeping real motion disconnected.
 - Found that `ros2 run` can leave the RTAB-Map child alive after signaling the
   wrapper. Cleaned the process and switched experiments to the native binary
   under `timeout`; no persistent SLAM service exists yet.
+- Added a version-controlled RTAB-Map parameter YAML and native-PID shadow
+  runner. It constrains RGB/depth pairing to 20ms, mapping detection to 2Hz,
+  disables TF publication and refuses to run if navigation publishers exist.
 
 ## Decisions
 

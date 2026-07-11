@@ -1,0 +1,35 @@
+rgbd_odometry:
+  ros__parameters:
+    frame_id: base_link
+    odom_frame_id: he_visual_odom
+    publish_tf: false
+    approx_sync: true
+    approx_sync_max_interval: 0.02
+    queue_size: 30
+    qos: 2
+    "Odom/Strategy": "0"
+    "OdomF2M/MaxSize": "1000"
+    "Vis/MinInliers": "20"
+
+rtabmap:
+  ros__parameters:
+    frame_id: base_link
+    map_frame_id: he_map
+    publish_tf: false
+    subscribe_rgb: true
+    subscribe_depth: true
+    subscribe_odom_info: true
+    approx_sync: true
+    approx_sync_max_interval: 0.02
+    queue_size: 30
+    qos: 2
+    "Rtabmap/DetectionRate": "2.0"
+    "Mem/IncrementalMemory": "true"
+    "Mem/InitWMWithAllNodes": "false"
+    "Reg/Strategy": "0"
+    "Grid/FromDepth": "true"
+    "Grid/3D": "false"
+    "Grid/CellSize": "0.05"
+    "Grid/RangeMax": "4.0"
+    "Grid/MaxObstacleHeight": "1.0"
+    "Grid/MaxGroundHeight": "0.08"
