@@ -1437,3 +1437,31 @@ gate 有界重试；只有整套 gate 成功才结束，18 秒内仍不收敛则
 均通过。最终 temperature raw 为 65/63/72、其他 support/laser 结果与前两次一致；
 临时 SDK 日志和 binary 无残留，服务 active/零重启，导航发布者为零。完整证据见
 `docs/he/evidence/2026-07-12_0213_aurora-sdk-support-probe.md` 和同名 JSON。
+
+## 24. HE Sense 内存窗口优化（2026-07-12）
+
+全模态 `he-dimos-sense` 当前 cgroup `MemoryCurrent` 约 1001MiB，已接近
+`MemoryHigh=1GiB`。一次只读进程拆分显示，主要占用不是 `/dev/shm`，而是 Python
+private anonymous memory：coordinator 约 128MiB、`HESensorBridge` worker 约 155MiB、
+Rerun worker 约 559MiB，其中一个 anonymous mapping resident 约 420MiB；两个由
+dedicated-worker capacity policy 保留的空闲 worker 各约 72MiB。
+
+本阶段不修改全局 worker policy。该行为来自上游 dedicated worker 设计，贸然改变会
+影响所有 DimOS 蓝图。先使用新增的只读 profiler 建立同口径证据：
+
+```bash
+sudo .venv/bin/python dimos/robot/he/deployment/profile-he-sense-memory.py \
+  --service he-dimos-sense.service \
+  --output /tmp/he-dimos-sense-memory.json
+```
+
+profiler 记录 systemd/cgroup-v2 内存、每个进程的 PSS/private dirty、fd/thread 数和最大
+anonymous mappings；不重启服务、不读取传感器 payload，也不常驻。跨用户 system
+service 受 procfs 权限保护时必须使用 `sudo`。A/B 测试用固定间隔重复执行同一快照，
+避免测量工具本身长期占用资源。
+
+第一项 scoped 优化只针对 `he_sense_headless`：先保存当前 Rerun `256MB` recording
+window 的 10 分钟基线，再测试 `128MB`。必须保留八个 latest-only entity、Aurora
+RGB/depth/IR/point cloud/CameraInfo、IMU 和 odom；不得同步修改 teleop 或 visual-SLAM
+蓝图。只有 cgroup 内存实测明显下降、服务零重启、所有模态帧率和远程 Rerun 可用性
+无回归、`/he/nav_cmd_vel` 仍为零发布者时才保留 128MB，否则恢复 256MB。

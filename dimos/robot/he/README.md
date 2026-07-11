@@ -178,6 +178,20 @@ the measured command-chain limits, latency, precision, and feedback gaps.
 See [Aurora sensor rate reference](docs/aurora-sensor-rate-reference.md) before
 changing camera/point-cloud rates or adding a full-rate perception pipeline.
 
+Capture a read-only memory snapshot for the running sensor service with:
+
+```bash
+sudo .venv/bin/python dimos/robot/he/deployment/profile-he-sense-memory.py \
+  --service he-dimos-sense.service \
+  --output /tmp/he-dimos-sense-memory.json
+```
+
+The report records the systemd memory limits, cgroup-v2 counters, per-process
+PSS/private memory and the ten largest resident anonymous mappings. It neither
+restarts the service nor reads sensor payloads. Use `sudo` when procfs access is
+restricted; run repeated snapshots at fixed intervals for comparable soak
+evidence rather than adding a resident monitor to the sensor service.
+
 The version-controlled deployment plan is
 [Orin NX lightweight deployment](../../../docs/he/orin-nx-dimos-lightweight-deployment.md).
 The visual SLAM evidence ledger and pilot order are in

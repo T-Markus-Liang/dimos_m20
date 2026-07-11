@@ -7,8 +7,8 @@
 - Project: dimos-wd-m20
 - Workspace: VM `/home/markus/work/dimos_wd_m20`; Orin `/home/ubuntu/he/dimos_wd_m20`
 - Task: research, benchmark, select and integrate a visual SLAM navigation foundation for HE
-- Status: active - shadow integrated; static IMU qualification complete;
-  physical calibration and moving gates pending
+- Status: active - HE Sense memory optimization in progress; physical
+  calibration and moving gates pending
 - Branch if relevant: `codex/he-orin`; evidence closeout based on `c14578fd`
 
 ## User Request Summary
@@ -544,6 +544,26 @@ health while keeping real motion disconnected.
 - Evidence closeout passed all 50 HE tests, C++ `-Werror` compilation against
   the real SDK headers, Bash syntax, JSON/hash/support-range/live-depth
   cross-assertions, serial-pattern exclusion and `git diff --check`.
+- Began the HE Sense resource optimization from a clean three-way baseline at
+  `725041e3`. The live cgroup was about 1001MiB: Rerun accounted for about
+  559MiB private anonymous memory, HESensorBridge about 155MiB, the coordinator
+  about 128MiB and two idle workers about 72MiB each; `/dev/shm` was not the
+  dominant cost.
+- Confirmed that dedicated modules intentionally trigger the global Python
+  worker capacity policy from two configured workers to four total workers.
+  This HE task will not change that shared policy. The first scoped A/B changes
+  only the `he_sense_headless` Rerun recording window from 256MB to 128MB.
+- Added pure procfs/cgroup parsers, focused unit tests and a one-shot read-only
+  `profile-he-sense-memory.py` tool. It captures systemd limits, cgroup-v2
+  counters, per-process PSS/private memory and largest anonymous mappings
+  without restarting the service or reading sensor payloads. Ruff and two
+  parser tests pass; a VM system-service smoke test confirmed that cross-user
+  `smaps` access correctly requires `sudo`. The final root smoke read the live
+  `ssh.service` cgroup successfully; all 52 HE `unittest` cases, focused Ruff
+  and `git diff --check` passed. The repository-wide pytest wrapper reports
+  teardown errors from its global thread monitor for pre-existing HE LCM daemon
+  threads even though all 52 assertions pass, so the established HE unittest
+  entry point remains the canonical result for this scoped change.
 - Pushed the probe, failed-getter fix, bounded DDS convergence and final
   evidence as `1655079a`, `b7b56853`, `a4af65e6` and `64cfeb4c`; Orin
   fast-forwarded cleanly and the macOS deployment mirror was synchronized.
@@ -621,6 +641,9 @@ health while keeping real motion disconnected.
 - Structural malformed/missing CameraInfo and runtime drift beyond the approved
   intrinsic tolerance are proven. Physical target calibration and physical
   camera-to-base/camera-to-IMU extrinsics remain open.
+- HE Sense memory profiling is being committed before runtime tuning. The
+  canonical 256MB Orin snapshot and 10-minute 128MB A/B are still pending; no
+  Rerun setting has changed yet.
 
 ## Resume Instructions
 
