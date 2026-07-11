@@ -123,6 +123,13 @@ health while keeping real motion disconnected.
 - Fault-injected a SLAM child exit after the fix. Both native children were gone
   within the six-second check and health reported `slam_process_down`.
 - Restored `he-dimos-sense.service` active with zero restarts after testing.
+- Final `187324bd` live health had only `map_known_ratio_low`: 2.45% known,
+  13.0% free among known, 145ms odometry latency and 471MiB runner RSS. System
+  available memory was 3.35GiB and navigation publishers remained zero.
+- Forced daemon shutdown left no native SLAM process or Rerun port, confirming
+  parent-death cleanup. A transient stale point-cloud sample immediately after
+  restoring the sensor service cleared; direct point-cloud/camera rates and the
+  repeated live sensor quality gate passed.
 
 ## Decisions
 

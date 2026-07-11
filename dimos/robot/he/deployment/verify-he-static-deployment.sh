@@ -23,11 +23,14 @@ printf '%s\n' '=== HE blueprint discovery ==='
 blueprints=$(.venv/bin/dimos list)
 grep -qx 'he-sense-headless' <<<"$blueprints"
 grep -qx 'he-teleop-headless' <<<"$blueprints"
+grep -qx 'he-visual-slam-shadow' <<<"$blueprints"
 
 printf '%s\n' '=== HE standard-library tests ==='
 .venv/bin/python -m unittest -v \
   dimos.robot.he.test_connection \
-  dimos.robot.he.test_sensors
+  dimos.robot.he.test_sensors \
+  dimos.robot.he.test_visual_data \
+  dimos.robot.he.test_visual_slam
 
 printf '%s\n' '=== isolated ROS control dry-run ==='
 .venv/bin/python dimos/robot/he/deployment/verify-he-control-dry-run.py
@@ -61,4 +64,5 @@ bash dimos/robot/he/deployment/verify-he-readonly.sh
 
 printf '%s\n' 'HE static deployment closeout: PASS'
 printf '%s\n' 'Real motion: DISABLED'
-printf '%s\n' 'Visual SLAM/navigation/exploration: DEFERRED'
+printf '%s\n' 'Visual SLAM: SHADOW ONLY (current map quality is unhealthy)'
+printf '%s\n' 'Real navigation/exploration: DEFERRED'

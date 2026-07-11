@@ -77,3 +77,18 @@ that should be fixed before production service activation.
 
 After testing, `he-dimos-sense.service` was restored active with zero restarts.
 Real motion remained disabled for the entire soak.
+
+## Final Configuration Check
+
+Commit `187324bd` disabled map-age gating by default because RTAB-Map occupancy
+is latched and event-driven; map age remains reported and can be explicitly
+gated. The final fresh run reported exactly one reason:
+`map_known_ratio_low`. The sample contained 2.45% known space, 13.0% free space
+among known cells, 145ms odometry latency, 471MiB runner RSS, 0.10s pose age
+and 0.40s TF age. Available system memory was 3.35GiB and navigation publishers
+remained zero.
+
+A forced daemon stop left no native SLAM process or Rerun port, verifying the
+parent-death cleanup path. The first static closeout immediately after service
+restoration saw one stale point-cloud sample. A direct follow-up measured a
+live 9.5Hz point cloud and 13-15Hz camera streams, and the sensor gate passed.
