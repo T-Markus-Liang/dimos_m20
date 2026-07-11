@@ -1,6 +1,6 @@
 # HE Visual Navigation Candidate Evaluation
 
-Updated: 2026-07-12 01:46 CST
+Updated: 2026-07-12 02:12 CST
 
 ## Decision Status
 
@@ -27,6 +27,10 @@ retired, and `/odom_raw` is excluded as SLAM truth.
   axes, temperature and six-position calibration are not yet qualified.
 - Live depth validity is only 17.6-20.4% globally in the samples seen so far.
   Spatial coverage and center ROI validity are a hard RGB-D admission gate.
+- The vendor SDK reports support range `0.3~1m` and no synchronized-two-image
+  support. Existing live valid-depth p50/p95 is 1240/2522mm, so the range field
+  is unresolved rather than used as a cutoff. RGB-depth remains software-paired
+  and requires measured timestamp/quality evidence.
 - `he-dimos-sense` uses about 1006-1009MiB. The system currently has about
   3.5GiB available, but the completed stack must preserve at least 1GiB.
 - Full-rate algorithm input stays local. The bounded latest-only Rerun path is

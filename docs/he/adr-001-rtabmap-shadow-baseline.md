@@ -39,6 +39,11 @@ localization unhealthy and withholds `global_costmap` from planners.
   0.48/2.58mm final/maximum position drift and 108/137ms median/P95 latency.
 - Odometry peak RSS: about 214MiB and about 58% of one CPU core.
 - Mapping process short-run RSS: about 255MiB.
+- Aurora SDK 1.1.22 reports support depth range `0.3~1m` and
+  `synced_two_images=0`. This conflicts with live valid-depth p50/p95 of
+  1240/2522mm and therefore remains a vendor-clarification item, not an
+  algorithm cutoff. Hardware RGB-depth synchronization remains unclaimed; see
+  `evidence/2026-07-12_0213_aurora-sdk-support-probe.md`.
 - A 598-second raw IMU capture found a stable but unacceptable x gyro mean of
   0.03253rad/s (about 1.864deg/s), versus a 0.000479rad/s span across nine
   60-second block means. Uncompensated mean integration was 1114.6deg. Raw IMU

@@ -531,7 +531,19 @@ health while keeping real motion disconnected.
 - The second run proved null serialization and temporary-log cleanup, but a
   fixed ten-second wait still saw a stale DDS publisher before the trap's later
   gate passed. Replaced fixed timing with up to six complete read-only-gate
-  attempts at three-second intervals; a clean main-path rerun is pending.
+  attempts at three-second intervals.
+- The third probe passed its complete main path. Final SDK evidence repeated
+  depth support `0.3~1m`, `synced_two_images=0`, 1450mA laser current and raw
+  temperatures 65/63/72. Device-info/camera-parameter fields remained safely
+  null, and no SDK log or probe binary remained.
+- Preserved `docs/he/evidence/2026-07-12_0213_aurora-sdk-support-probe.md` and
+  raw JSON. The device support range conflicts with live valid-depth p50/p95
+  1240/2522mm, so vendor interpretation remains required; no algorithm cutoff
+  was changed. Final sensor/read-only gates passed with zero service restarts,
+  about 3.3GiB available memory and zero navigation publishers.
+- Evidence closeout passed all 50 HE tests, C++ `-Werror` compilation against
+  the real SDK headers, Bash syntax, JSON/hash/support-range/live-depth
+  cross-assertions, serial-pattern exclusion and `git diff --check`.
 
 ## Decisions
 
@@ -582,7 +594,8 @@ health while keeping real motion disconnected.
   relocalization remain open gates. Real motion remains prohibited.
 - The enhanced diagnostic and effective-parameter A/B are complete. No tested
   setting resolves the stable spatial defect, so the canonical configuration is
-  restored and RGB-D navigation admission remains failed.
+  restored and RGB-D navigation admission remains failed. The SDK support-range
+  and synchronization fields are now captured but require vendor interpretation.
 - The extended static soak exposed active-database growth as a real defect. The
   first threshold-only deployment failed, while the corrected unlinked-node
   persistence setting passed a full 600-second Orin soak with about 99.0%

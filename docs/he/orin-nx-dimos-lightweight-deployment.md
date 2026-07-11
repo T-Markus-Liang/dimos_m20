@@ -1419,7 +1419,9 @@ Bash syntax 通过。
 ASCII `0.3~1m`（hex `30 2e 33 7e 31 6d`）、`running_7x24_hours=1`、
 `synced_two_images=0`；三类 temperature raw value 为 camera/VCSEL/CPU
 65/63/70，laser current 为 1450mA。该设备声明范围明显窄于 150-4000mm 软件过滤
-窗口，后者不能继续作为硬件额定量程使用。
+窗口；同时既有 live baseline 的有效 depth p50/p95 为 1240/2522mm。两者语义未对齐，
+因此 `0.3~1m` 只能记为设备自报 support field，150-4000mm 仍只是软件过滤窗口；在
+厂商解释前，二者都不能单独当作硬件精度保证或算法裁剪边界。
 
 同次调用中 `GetDeviceInfo/GetCameraParameters` 返回 `-1`，SDK stderr 明确要求先成功
 调用 `Open + SetMode`。getter-only 探针不为此调用 SetMode；修复版对失败 getter 输出
@@ -1431,4 +1433,7 @@ trap 的下一轮 gate 已通过；恢复等待从 5 秒增至 10 秒。修复�
 日志也在退出后清除；但固定 10 秒后仍可能观察到旧 DDS publisher，而 EXIT trap
 稍后的完整 gate 再次通过。固定 sleep 因此改为最多 6 次、间隔 3 秒的完整 read-only
 gate 有界重试；只有整套 gate 成功才结束，18 秒内仍不收敛则保留最后错误并失败。
-第三次主路径验证待完成。
+第三次主路径已成功：pre-stop read-only、post-restore live sensor 和最终 read-only gate
+均通过。最终 temperature raw 为 65/63/72、其他 support/laser 结果与前两次一致；
+临时 SDK 日志和 binary 无残留，服务 active/零重启，导航发布者为零。完整证据见
+`docs/he/evidence/2026-07-12_0213_aurora-sdk-support-probe.md` 和同名 JSON。

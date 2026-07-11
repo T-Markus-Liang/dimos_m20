@@ -1,0 +1,41 @@
+{
+  "captured_at": "2026-07-12T02:10:53+0800",
+  "device_count": 1,
+  "device_name": null,
+  "git_head": "a4af65e6b9f5b29a81ee77de1b760b0a72b6974b",
+  "ir_firmware_version": null,
+  "ir_intrinsic": null,
+  "laser_current_ma": 1450,
+  "pid": null,
+  "return_codes": {
+    "camera_parameters": -1,
+    "camera_temperature": 0,
+    "close": 0,
+    "cpu_temperature": 0,
+    "device_info": -1,
+    "laser_current": 0,
+    "support_info": 0,
+    "vcsel_temperature": 0
+  },
+  "rgb_firmware_version": null,
+  "rgb_intrinsic": null,
+  "rgb_to_ir_extrinsic": null,
+  "sdk_version": "1.1.22",
+  "stream_sdk_version": null,
+  "support": {
+    "depth_range_ascii": "0.3~1m",
+    "depth_range_hex": "30 2e 33 7e 31 6d",
+    "depth_range_length": 6,
+    "running_7x24_hours": 1,
+    "scan_code_mode": 1,
+    "scan_face_mode": 1,
+    "secure_encryption": 0,
+    "synced_two_images": 0
+  },
+  "temperature_raw": {
+    "camera": 65,
+    "cpu": 72,
+    "vcsel": 63
+  },
+  "vid": null
+}
