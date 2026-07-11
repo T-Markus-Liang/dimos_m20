@@ -72,6 +72,19 @@ class TestHESensorBridge(unittest.TestCase):
         self.assertIn("Node name: he_pointcloud_throttle", readonly_gate)
         self.assertIn("Node name: dimos_he_sensors", readonly_gate)
 
+    def test_vendor_package_is_derived_evidence_only(self) -> None:
+        repo_root = Path(__file__).parents[3]
+        script = (Path(__file__).parent / "deployment" / "build-he-aurora-vendor-package.sh").read_text()
+        request = (repo_root / "docs/he/aurora930-vendor-support-request.md").read_text()
+
+        self.assertIn("2026-07-12_0213_he-aurora-sdk-probe.json", script)
+        self.assertIn("2026-07-12_0631_native-throttle-raw-timing.json", script)
+        self.assertIn("refusing to package image, recording or rosbag payload", script)
+        self.assertNotIn("rgb.png", script)
+        self.assertNotIn("depth-mm.png", script)
+        self.assertIn("The device serial is intentionally omitted", request)
+        self.assertIn("Questions Requiring Vendor Answers", request)
+
     def test_bgr8_image_preserves_shape_padding_and_timestamp(self) -> None:
         rows = np.array(
             [[1, 2, 3, 4, 5, 6, 99, 99], [7, 8, 9, 10, 11, 12, 99, 99]],

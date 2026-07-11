@@ -1738,3 +1738,15 @@ RTAB-Map 或临时 throttle 残留，部署完整性和最终只读门通过。
 只读门应作为独立 shell 命令运行。若父级 `ssh` 命令行同时包含明文 `rtabmap` 等受检
 进程名，脚本内 `pgrep -f` 会匹配父 shell 并产生假阳性；这不是进程残留。诊断进程
 清单与 gate 分开执行，或在父命令中使用同样的方括号避匹配写法。
+
+## 30. Aurora930 厂商问题包（2026-07-12）
+
+现有固件/SDK getter、深度空间覆盖、参数 A/B、USB 拓扑和长时序证据已整理为
+`docs/he/aurora930-vendor-support-request.md`。问题包明确请求厂商解释 Aurora930 的
+额定范围、精度、FOV、反射率/入射角约束、零深度语义、`0.3~1m` support 字段、
+`synced_two_images=0`、USB3 带宽、固件版本和官方内外参读取流程。
+
+`build-he-aurora-vendor-package.sh` 仅打包白名单派生 JSON 和文字审计，生成并验证
+`SHA256SUMS`。默认排除 RGB/IR/depth 图像、点云 payload、rosbag、Rerun recording、
+设备序列号和 SDK 临时日志。序列号只能通过厂商私密通道单独提供。该包是支持工单
+材料，不代表深度准入已经通过；静态标定板、相机俯仰和 USB3 A/B 仍需现场执行。

@@ -783,6 +783,16 @@ health while keeping real motion disconnected.
   read-only-gate result caused by a parent SSH command line containing the
   protected `rtabmap` process name; the standalone gate passed. Documented both
   operational hazards and their bounded workarounds.
+- Audited the existing Aurora firmware/SDK getter, spatial depth mask, effective
+  parameter A/B, USB topology and long-timing evidence for vendor escalation.
+  Added a direct English support request with nine concrete vendor questions and
+  a whitelist-only package builder. The package excludes sensor images/payloads,
+  rosbags, serials and private scene data, and verifies every included derived
+  artifact through SHA-256. The VM build produced one request and ten evidence
+  files; all internal hashes passed. The extracted package contained no image,
+  rosbag, Rerun or database payload and a scan found no home path, IP, password,
+  private key or serial value. The final validated package SHA-256 was
+  `a1e04fb79c96dd6ff34442fd103cb6231dd05bb8c3989c4f000ed6cd91f933c9`.
 
 ## Decisions
 
