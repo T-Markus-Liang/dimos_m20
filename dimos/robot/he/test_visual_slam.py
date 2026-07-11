@@ -87,6 +87,13 @@ class TestHEVisualSlamBridge(unittest.TestCase):
         self.assertEqual(result.frame_id, "he_map")
         self.assertEqual([item.x for item in result.poses], [1.0, 2.0])
 
+    def test_odom_info_does_not_discard_measured_latency(self) -> None:
+        bridge = HEVisualSlamBridge()
+        bridge._tracking["odom_latency_ms"] = 75.0
+        bridge._on_odom_info(types.SimpleNamespace(lost=False, inliers=80, features=200))
+        self.assertEqual(bridge._tracking["odom_latency_ms"], 75.0)
+        self.assertEqual(bridge._tracking["inliers"], 80)
+
     def test_shadow_blueprint_contains_no_motion_modules(self) -> None:
         module_names = {atom.module.__name__ for atom in he_visual_slam_shadow.blueprints}
         self.assertNotIn("MovementManager", module_names)

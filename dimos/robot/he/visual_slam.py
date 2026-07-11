@@ -232,11 +232,13 @@ class HEVisualSlamBridge(Module):
             logger.warning("Dropping invalid visual trajectory: %s", exc)
 
     def _on_odom_info(self, msg: Any) -> None:
-        self._tracking = {
-            "tracking_lost": bool(msg.lost),
-            "inliers": int(msg.inliers),
-            "features": int(msg.features),
-        }
+        self._tracking.update(
+            {
+                "tracking_lost": bool(msg.lost),
+                "inliers": int(msg.inliers),
+                "features": int(msg.features),
+            }
+        )
 
     def _publish_tf_status(self) -> None:
         status = {**self._tracking, "stamp": time.time(), "tf_ok": False}
@@ -283,7 +285,7 @@ class HELocalizationHealthConfig(ModuleConfig):
     evaluation_hz: float = Field(default=5.0, gt=0.0)
     max_pose_age_s: float = Field(default=0.5, gt=0.0)
     max_map_age_s: float = Field(default=3.0, gt=0.0)
-    max_tf_age_s: float = Field(default=0.5, gt=0.0)
+    max_tf_age_s: float = Field(default=1.0, gt=0.0)
     min_inliers: int = Field(default=20, ge=1)
     min_known_ratio: float = Field(default=0.10, ge=0.0, le=1.0)
     min_free_ratio_of_known: float = Field(default=0.10, ge=0.0, le=1.0)
