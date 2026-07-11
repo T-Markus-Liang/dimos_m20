@@ -1786,3 +1786,10 @@ ratio 为有限的 `[0,1]`。`depth_bottom_coverage_low` 不阻止 shadow 启动
 需要保留失败状态供研发观察；但 health 仍为 unhealthy、planner map 仍被扣留。VM
 shell、结构测试、64 项 HE unittest、聚焦 Ruff、blueprint registry 和 diff 检查通过；
 Orin 正常 admission、停流拒绝和恢复仍待验证。
+
+为避免通过停相机同时破坏 visual odometry 来间接证明 depth gate，admission 规则已
+提取为 `validate_shadow_health_report` 纯函数。确定性测试证明：仅有
+`depth_bottom_coverage_low` 的完整新鲜样本可进入 shadow；`depth_quality_stale`、
+`depth_quality_missing`、`slam_memory_high`、年龄 1.1 秒和缺字段样本均被拒绝。真实
+gate 继续采集 3 秒 live health report 后调用同一函数，不引入测试后门。VM shell、
+65 项 HE unittest、聚焦 Ruff、blueprint registry 和 diff 检查通过。

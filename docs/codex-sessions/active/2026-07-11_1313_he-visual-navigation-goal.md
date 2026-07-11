@@ -819,6 +819,13 @@ health while keeping real motion disconnected.
   unhealthy and planner output withheld. Shell, structural, 64 HE unittest,
   focused Ruff, registry and diff checks pass; Orin positive/negative admission
   evidence remains pending.
+- Extracted the non-trivial admission rules into
+  `validate_shadow_health_report` so production and deterministic tests execute
+  the same code. Tests prove fresh complete low-bottom evidence is allowed for
+  shadow, while stale/missing depth, high SLAM memory, age above 1s and missing
+  ratio fields are rejected. The live gate still captures its own three-second
+  report and has no fault override. All 65 HE tests, focused Ruff, shell,
+  registry and diff checks pass; final Orin positive admission remains pending.
 
 ## Decisions
 

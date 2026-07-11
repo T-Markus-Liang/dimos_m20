@@ -27,6 +27,7 @@ from dimos.robot.he.visual_slam import (
     HEVisualSlamBridge,
     summarize_localization_health,
     system_memory_status,
+    validate_shadow_health_report,
 )
 from dimos.visualization.rerun.bridge import RerunBridgeModule
 
@@ -292,6 +293,44 @@ class TestHELocalizationHealth(unittest.TestCase):
         self.assertIn("depth_center_coverage_low", result.reasons)
         self.assertIn("depth_bottom_coverage_low", result.reasons)
         self.assertAlmostEqual(result.details["depth_bottom_valid_ratio"], 0.06)
+
+    def test_shadow_admission_requires_fresh_complete_depth_evidence(self) -> None:
+        sample = {
+            "depth_quality_age_s": 0.2,
+            "details": {
+                "depth_valid_ratio": 0.25,
+                "depth_center_valid_ratio": 0.18,
+                "depth_bottom_valid_ratio": 0.05,
+            },
+        }
+        low_coverage_report = {
+            "summary": {"reason_counts": {"depth_bottom_coverage_low": 1}},
+            "samples": [sample],
+        }
+        validate_shadow_health_report(low_coverage_report)
+
+        for reason in ("depth_quality_stale", "depth_quality_missing", "slam_memory_high"):
+            with self.subTest(reason=reason), self.assertRaisesRegex(
+                ValueError, "shadow admission health failed"
+            ):
+                validate_shadow_health_report(
+                    {"summary": {"reason_counts": {reason: 1}}, "samples": [sample]}
+                )
+
+        with self.assertRaisesRegex(ValueError, "age is invalid"):
+            validate_shadow_health_report(
+                {
+                    "summary": {"reason_counts": {}},
+                    "samples": [{**sample, "depth_quality_age_s": 1.1}],
+                }
+            )
+        with self.assertRaisesRegex(ValueError, "evidence is incomplete"):
+            validate_shadow_health_report(
+                {
+                    "summary": {"reason_counts": {}},
+                    "samples": [{"depth_quality_age_s": 0.2, "details": {}}],
+                }
+            )
 
     def test_camera_info_missing_invalid_and_stale_fail_closed(self) -> None:
         evaluator = HELocalizationHealth()
@@ -564,6 +603,7 @@ class TestHERTABMapRuntimeBounds(unittest.TestCase):
         throttle_unit = (DEPLOYMENT_DIR / "he-pointcloud-throttle.service").read_text()
         switch = (DEPLOYMENT_DIR / "switch-he-dimos-mode.sh").read_text()
         shadow_gate = (DEPLOYMENT_DIR / "verify-he-shadow-readonly.sh").read_text()
+        health_source = (DEPLOYMENT_DIR.parent / "visual_slam.py").read_text()
 
         self.assertIn("Conflicts=he-dimos-sense.service", shadow_unit)
         self.assertIn("Conflicts=he-dimos-shadow.service", sense_unit)
@@ -585,12 +625,10 @@ class TestHERTABMapRuntimeBounds(unittest.TestCase):
         self.assertIn('wait_gate "$deployment/verify-he-readonly.sh"', switch)
         self.assertIn("verify-he-shadow-readonly.sh", switch)
         self.assertIn("Publisher count: 0", shadow_gate)
-        self.assertIn("swap_growth_high", shadow_gate)
-        self.assertIn("depth_quality_missing", shadow_gate)
-        self.assertIn("depth_quality_invalid", shadow_gate)
-        self.assertIn("depth_quality_stale", shadow_gate)
-        self.assertIn('sample["depth_quality_age_s"]', shadow_gate)
-        self.assertIn('"depth_bottom_valid_ratio"', shadow_gate)
+        self.assertIn("swap_growth_high", health_source)
+        self.assertIn("depth_quality_stale", health_source)
+        self.assertIn("validate_shadow_health_report(report)", shadow_gate)
+        self.assertIn('"$repo_root/.venv/bin/python" - "$health_file"', shadow_gate)
         self.assertNotIn('"depth_bottom_coverage_low",', shadow_gate)
 
     def test_watchdog_default_and_configuration_boundaries(self) -> None:

@@ -454,6 +454,62 @@ def summarize_localization_health(samples: Sequence[Mapping[str, Any]]) -> dict[
     }
 
 
+def validate_shadow_health_report(
+    report: Mapping[str, Any], *, max_depth_quality_age_s: float = 1.0
+) -> None:
+    """Reject shadow admission reports with missing runtime or depth evidence."""
+    summary = report.get("summary")
+    samples = report.get("samples")
+    if not isinstance(summary, Mapping) or not isinstance(samples, list) or not samples:
+        raise ValueError("shadow health report is incomplete")
+    reason_counts = summary.get("reason_counts")
+    if not isinstance(reason_counts, Mapping):
+        raise ValueError("shadow health report has no reason counts")
+
+    admission_reasons = {
+        "runtime_status_missing",
+        "runtime_status_invalid",
+        "runtime_status_stale",
+        "slam_process_down",
+        "slam_memory_invalid",
+        "slam_memory_high",
+        "system_memory_invalid",
+        "system_memory_low",
+        "swap_usage_invalid",
+        "swap_growth_invalid",
+        "swap_growth_high",
+        "depth_quality_missing",
+        "depth_quality_invalid",
+        "depth_quality_stale",
+    }
+    unexpected = admission_reasons.intersection(reason_counts)
+    if unexpected:
+        raise ValueError(f"shadow admission health failed: {sorted(unexpected)}")
+
+    for sample in samples:
+        if not isinstance(sample, Mapping):
+            raise ValueError("shadow health sample is invalid")
+        details = sample.get("details")
+        if not isinstance(details, Mapping):
+            raise ValueError("shadow depth-quality evidence is incomplete")
+        try:
+            age = float(sample["depth_quality_age_s"])
+            ratios = [
+                float(details[name])
+                for name in (
+                    "depth_valid_ratio",
+                    "depth_center_valid_ratio",
+                    "depth_bottom_valid_ratio",
+                )
+            ]
+        except (KeyError, TypeError, ValueError):
+            raise ValueError("shadow depth-quality evidence is incomplete") from None
+        if not math.isfinite(age) or not 0.0 <= age <= max_depth_quality_age_s:
+            raise ValueError(f"shadow depth-quality age is invalid: {age}")
+        if any(not math.isfinite(value) or not 0.0 <= value <= 1.0 for value in ratios):
+            raise ValueError(f"shadow depth-quality ratios are invalid: {ratios}")
+
+
 class HELocalizationHealthConfig(ModuleConfig):
     evaluation_hz: float = Field(default=5.0, gt=0.0)
     max_pose_age_s: float = Field(default=0.5, gt=0.0)

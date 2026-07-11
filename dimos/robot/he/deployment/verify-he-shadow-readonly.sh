@@ -103,52 +103,18 @@ trap 'rm -f "$health_file"' EXIT
 "$repo_root/.venv/bin/python" \
   "$repo_root/dimos/robot/he/deployment/benchmark-he-localization-health.py" \
   --duration 3 --output "$health_file" >/dev/null
-python3 - "$health_file" <<'PY'
+"$repo_root/.venv/bin/python" - "$health_file" <<'PY'
 import json
-import math
 import sys
+
+from dimos.robot.he.visual_slam import validate_shadow_health_report
 
 with open(sys.argv[1], encoding="utf-8") as stream:
     report = json.load(stream)
-reasons = report["summary"]["reason_counts"]
-admission_reasons = {
-    "runtime_status_missing",
-    "runtime_status_invalid",
-    "runtime_status_stale",
-    "slam_process_down",
-    "slam_memory_invalid",
-    "slam_memory_high",
-    "system_memory_invalid",
-    "system_memory_low",
-    "swap_usage_invalid",
-    "swap_growth_invalid",
-    "swap_growth_high",
-    "depth_quality_missing",
-    "depth_quality_invalid",
-    "depth_quality_stale",
-}
-unexpected = admission_reasons.intersection(reasons)
-if unexpected:
-    raise SystemExit(f"shadow admission health failed: {sorted(unexpected)}")
-
-for sample in report["samples"]:
-    details = sample.get("details", {})
-    try:
-        age = float(sample["depth_quality_age_s"])
-        ratios = [
-            float(details[name])
-            for name in (
-                "depth_valid_ratio",
-                "depth_center_valid_ratio",
-                "depth_bottom_valid_ratio",
-            )
-        ]
-    except (KeyError, TypeError, ValueError):
-        raise SystemExit("shadow depth-quality evidence is incomplete") from None
-    if not math.isfinite(age) or age < 0.0 or age > 1.0:
-        raise SystemExit(f"shadow depth-quality age is invalid: {age}")
-    if any(not math.isfinite(value) or not 0.0 <= value <= 1.0 for value in ratios):
-        raise SystemExit(f"shadow depth-quality ratios are invalid: {ratios}")
+try:
+    validate_shadow_health_report(report)
+except ValueError as exc:
+    raise SystemExit(str(exc)) from None
 PY
 
 printf 'HE integrated shadow read-only gate: PASS\n'
