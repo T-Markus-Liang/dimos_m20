@@ -30,15 +30,18 @@ driver output by default:
 - `color_image`: `/aurora/rgb/image_raw`, BGR8, limited to 5Hz;
 - `depth_image`: `/aurora/depth/image_raw`, 16-bit depth, limited to 5Hz;
 - `ir_image`: `/aurora/ir/image_raw`, 8-bit grayscale, limited to 5Hz;
-- `pointcloud`: `/aurora/points2`, limited to 1Hz and stride-downsampled by 8;
+- `pointcloud`: `/he/aurora/points2_sampled`, serialized-throttled from raw
+  `/aurora/points2` at 1Hz, then stride-downsampled by 8;
 - `camera_info`: `/aurora/rgb/camera_info`;
 - `depth_camera_info`: `/aurora/ir/camera_info`, whose driver frame is
   `depth_camera_link` and supplies the depth/IR intrinsics;
 - `imu` and command-integrated `odom` remain available for diagnostics.
 
-LD19 is retired from the HE runtime and is not a bridge input. The Aurora
-limits reduce DimOS and Rerun load; the ROS subscriptions remain active for all
-modalities. Rerun keeps only the latest state in a 256MB recording window.
+LD19 is retired from the HE runtime and is not a bridge input. Raw Aurora point
+cloud remains available locally for algorithms; only the visualization branch
+uses `he-pointcloud-throttle.service`. Install its official Humble dependency
+with `sudo apt-get install ros-humble-topic-tools`. Rerun keeps only the latest
+state in a 128MB recording window.
 
 ## Verification
 

@@ -26,22 +26,24 @@ valid embedded default.
 
 ## Current HESensorBridge Output
 
-`HESensorBridge` subscribes to all six Aurora ROS topics by default. It then
-rate-limits the DimOS outputs used by the current headless Rerun stack:
+`HESensorBridge` receives all six Aurora modalities by default. Images and
+CameraInfo use the raw driver topics. Raw point cloud stays on
+`/aurora/points2`; the C++ serialized throttle publishes
+`/he/aurora/points2_sampled` at 1Hz for the Python bridge:
 
 | DimOS output | Configuration | Default | Observed output |
 | --- | --- | ---: | ---: |
 | `color_image` | `color_image_max_hz` | 5Hz | about 4.4Hz |
 | `depth_image` | `depth_image_max_hz` | 5Hz | about 4.4Hz |
 | `ir_image` | `ir_image_max_hz` | 5Hz | about 4.4Hz |
-| `pointcloud` | `pointcloud_max_hz` | 1Hz | 1Hz |
+| `pointcloud` | serialized throttle + `pointcloud_max_hz` guard | 1Hz + 1.1Hz | 1Hz |
 | `pointcloud` | `pointcloud_stride` | 8 | one of every 8 points |
 | `camera_info` | `camera_info_max_hz` | 1Hz | 1Hz |
 | `depth_camera_info` | `camera_info_max_hz` | 1Hz | 1Hz |
 
 The rate difference is intentional. It protects the Orin and remote viewer; it
 does not indicate that Aurora only produces 5Hz images or a 1Hz point cloud.
-Rerun retains latest-only entities in a 256MB recording window.
+Rerun retains latest-only entities in a 128MB recording window.
 
 ## Resource Evidence
 
@@ -59,7 +61,8 @@ Rerun retains latest-only entities in a 256MB recording window.
 Keep the current bounded path for visualization and operational monitoring:
 
 ```text
-Aurora raw ROS -> HESensorBridge -> bounded DimOS streams -> latest-only Rerun
+Aurora raw images/info -> HESensorBridge -> bounded DimOS streams -> Rerun
+Aurora raw pointcloud -> serialized throttle 1Hz -> HESensorBridge -> Rerun
 ```
 
 For visual SLAM or another algorithm that needs full temporal resolution, do
@@ -109,6 +112,8 @@ cd /home/ubuntu/he/dimos_wd_m20
 bash dimos/robot/he/deployment/verify-he-readonly.sh
 systemctl show he-dimos-sense.service \
   -p MemoryCurrent -p MemoryPeak -p MemoryHigh -p MemoryMax -p NRestarts
+systemctl show he-pointcloud-throttle.service \
+  -p MemoryCurrent -p MemoryHigh -p MemoryMax -p NRestarts
 ```
 
 SLAM admission diagnostic and bounded recording:

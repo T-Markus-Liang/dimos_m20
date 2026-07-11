@@ -33,7 +33,7 @@ class HESensorBridgeConfig(ModuleConfig):
     color_image_topic: str = "/aurora/rgb/image_raw"
     depth_image_topic: str = "/aurora/depth/image_raw"
     ir_image_topic: str = "/aurora/ir/image_raw"
-    pointcloud_topic: str = "/aurora/points2"
+    pointcloud_topic: str = "/he/aurora/points2_sampled"
     camera_info_topic: str = "/aurora/rgb/camera_info"
     depth_camera_info_topic: str = "/aurora/ir/camera_info"
     odom_max_hz: float = Field(default=20.0, ge=0.0)
@@ -41,7 +41,7 @@ class HESensorBridgeConfig(ModuleConfig):
     color_image_max_hz: float = Field(default=5.0, ge=0.0)
     depth_image_max_hz: float = Field(default=5.0, ge=0.0)
     ir_image_max_hz: float = Field(default=5.0, ge=0.0)
-    pointcloud_max_hz: float = Field(default=1.0, ge=0.0)
+    pointcloud_max_hz: float = Field(default=1.1, ge=0.0)
     camera_info_max_hz: float = Field(default=1.0, ge=0.0)
     pointcloud_stride: int = Field(default=8, ge=1)
     enable_color_image: bool = True

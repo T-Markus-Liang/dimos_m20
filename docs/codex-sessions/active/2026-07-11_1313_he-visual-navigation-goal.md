@@ -728,6 +728,17 @@ health while keeping real motion disconnected.
   Orin post-revert deployment passed deployment integrity, read-only and live
   sensor gates. Sense is active with zero restarts, shadow is inactive, all
   Aurora modalities/calibrations are present and navigation publishers are zero.
+- Audited ROS Humble `topic_tools` 1.1.2 and confirmed its native throttle uses
+  GenericSubscription/GenericPublisher over SerializedMessage. Installed the
+  official Apache-2.0 arm64 package and proved a temporary 1Hz relay preserves
+  the 256000-point, 4096000-byte PointCloud2 payload. Manual cleanup also proved
+  the `ros2 run` wrapper can leave its native child, so deployment directly execs
+  the binary under a systemd cgroup.
+- Prepared a Python-before-deserialization candidate: raw point cloud remains
+  available for local algorithms, a bounded native service publishes a 1Hz
+  sampled topic, and HESensorBridge consumes only that sampled topic. Sense,
+  shadow, integrity and both read-only gates lock service and graph ownership.
+  All 60 HE tests and static checks pass; Orin A/B is pending.
 - Pushed the probe, failed-getter fix, bounded DDS convergence and final
   evidence as `1655079a`, `b7b56853`, `a4af65e6` and `64cfeb4c`; Orin
   fast-forwarded cleanly and the macOS deployment mirror was synchronized.
@@ -784,6 +795,8 @@ health while keeping real motion disconnected.
 - Long-duration software timestamp qualification now has a bounded tool but is
   characterized on Orin. It does not pass admission because camera/point-cloud
   gaps remain; hardware synchronization remains unclaimed.
+- Serialized point-cloud pre-throttling is implemented and VM-validated as a
+  candidate, not accepted until equivalent Orin timing/resource/shadow evidence.
 - The enhanced diagnostic and effective-parameter A/B are complete. No tested
   setting resolves the stable spatial defect, so the canonical configuration is
   restored and RGB-D navigation admission remains failed. The SDK support-range

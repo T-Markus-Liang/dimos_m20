@@ -15,6 +15,9 @@ compare() {
 
 compare "$deployment/he-dimos-sense.service" /etc/systemd/system/he-dimos-sense.service
 compare "$deployment/he-dimos-shadow.service" /etc/systemd/system/he-dimos-shadow.service
+compare \
+  "$deployment/he-pointcloud-throttle.service" \
+  /etc/systemd/system/he-pointcloud-throttle.service
 compare "$deployment/he-camera-tf.service" /etc/systemd/system/he-camera-tf.service
 compare "$deployment/he-twist-mux.service" /etc/systemd/system/he-twist-mux.service
 compare \
@@ -22,6 +25,8 @@ compare \
   /etc/systemd/system/odom-publisher.service.d/he-command-mux.conf
 test ! -e /etc/systemd/system/he-ld19.service
 test "$(systemctl is-enabled he-dimos-shadow.service || true)" = static
+test "$(systemctl is-enabled he-pointcloud-throttle.service)" = enabled
+dpkg-query -W -f='${Status}\n' ros-humble-topic-tools | grep -qx 'install ok installed'
 
 (
   cd "$ros_root/src/driver/controller"

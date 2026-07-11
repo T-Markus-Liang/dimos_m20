@@ -162,9 +162,7 @@ class TestHEVisualSlamBridge(unittest.TestCase):
         self.assertEqual(bridge._tracking["inliers"], 80)
 
     def test_shadow_blueprint_contains_no_motion_modules(self) -> None:
-        ordered_module_names = [
-            atom.module.__name__ for atom in he_visual_slam_shadow.blueprints
-        ]
+        ordered_module_names = [atom.module.__name__ for atom in he_visual_slam_shadow.blueprints]
         module_names = set(ordered_module_names)
         self.assertNotIn("MovementManager", module_names)
         self.assertNotIn("HEConnection", module_names)
@@ -521,11 +519,15 @@ class TestHERTABMapRuntimeBounds(unittest.TestCase):
     def test_shadow_systemd_mode_is_bounded_static_and_restorable(self) -> None:
         shadow_unit = (DEPLOYMENT_DIR / "he-dimos-shadow.service").read_text()
         sense_unit = (DEPLOYMENT_DIR / "he-dimos-sense.service").read_text()
+        throttle_unit = (DEPLOYMENT_DIR / "he-pointcloud-throttle.service").read_text()
         switch = (DEPLOYMENT_DIR / "switch-he-dimos-mode.sh").read_text()
         shadow_gate = (DEPLOYMENT_DIR / "verify-he-shadow-readonly.sh").read_text()
 
         self.assertIn("Conflicts=he-dimos-sense.service", shadow_unit)
         self.assertIn("Conflicts=he-dimos-shadow.service", sense_unit)
+        self.assertIn("he-pointcloud-throttle.service", sense_unit)
+        self.assertIn("he-pointcloud-throttle.service", shadow_unit)
+        self.assertNotIn("MovementManager", throttle_unit)
         self.assertIn("MemoryHigh=2G", shadow_unit)
         self.assertIn("MemoryMax=2560M", shadow_unit)
         self.assertIn("Restart=no", shadow_unit)

@@ -1672,3 +1672,37 @@ driver 侧预限频，同时保留默认 point-cloud surface；不能通过降�
 回退提交 `2e525592` 已部署到 Orin。最终部署完整性、只读和 live sensor gate 通过：
 Sense active/零重启、shadow inactive，RGB/depth/IR 为 15.63/13.16/15.38Hz，depth
 valid 25.8%，点云 256000 点，两路 CameraInfo 存在，导航发布者为零。单线程回退完成。
+
+## 29. Python 前 serialized 点云预限频候选（2026-07-12）
+
+基于第 28 节证据，Python 多线程不能解决 point-cloud DDS 压力。Orin 官方 Ubuntu
+仓库提供 `ros-humble-topic-tools` 1.1.2 arm64（Apache-2.0）；源码审计确认 throttle
+使用 C++ `GenericSubscription`、`GenericPublisher` 和 `rclcpp::SerializedMessage`，
+不会解析 PointCloud2 字段。已安装该包及 interfaces，磁盘增量远低于 2MB。
+
+候选拓扑为：
+
+```text
+/aurora/points2 raw 13-15Hz
+  |-- 本机算法/诊断（保持 raw）
+  `-- he-pointcloud-throttle 1Hz serialized
+      -> /he/aurora/points2_sampled
+      -> HESensorBridge typed conversion + stride 8
+      -> latest-only Rerun
+```
+
+`he-pointcloud-throttle.service` 直接 exec native binary，避免 `ros2 run` Python wrapper
+退出后遗留子进程。服务 enabled，依赖 Aurora，使用 `MemoryHigh=128M`、
+`MemoryMax=256M`、`OOMPolicy=stop`、`TasksMax=64`。Sense 和 shadow 都等待/拉起该
+服务。两套只读门严格检查 raw topic 仅由 Aurora 发布、仅由 throttle 订阅；sampled
+topic 仅由 throttle 发布、仅由 `dimos_he_sensors` 订阅。
+
+HESensorBridge 默认 point-cloud topic 改为 sampled，内部 guard 设为 1.1Hz，避免
+1Hz 上游轻微调度误差触发二次隔帧；实际上限仍由 native throttle 固定为 1Hz。RGB-D
+SLAM 继续直接使用 raw depth，不得使用 sampled point cloud 替代全帧率算法输入。
+
+临时原型成功保留 frame、256000 点和 4096000-byte payload，native 进程 CPU 很低；
+5 个样本中出现一次 2 秒间隔，因此不能仅凭原型保留。VM 60 项 HE unittest、Ruff、
+shell、systemd 和 diff 检查通过。Orin 必须完成同口径 timing、sampled output、资源、
+service stop/no-residue 和 shadow 往返 A/B，失败则恢复 raw HESensorBridge topic 并停用
+该服务。

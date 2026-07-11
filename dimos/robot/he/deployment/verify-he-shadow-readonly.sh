@@ -11,6 +11,7 @@ required_services=(
   joystick-control.service
   he-twist-mux.service
   he-camera-tf.service
+  he-pointcloud-throttle.service
   aurora930.service
 )
 for service in "${required_services[@]}"; do
@@ -44,7 +45,6 @@ aurora_topics=(
   /aurora/rgb/image_raw
   /aurora/depth/image_raw
   /aurora/ir/image_raw
-  /aurora/points2
   /aurora/rgb/camera_info
   /aurora/ir/camera_info
 )
@@ -54,6 +54,18 @@ for topic in "${aurora_topics[@]}"; do
   grep -q '^Node name: aurora$' <<<"$topic_info"
   grep -q '^Node name: dimos_he_sensors$' <<<"$topic_info"
 done
+
+raw_pointcloud_info=$(ros2 topic info /aurora/points2 -v)
+grep -q '^Publisher count: 1$' <<<"$raw_pointcloud_info"
+grep -q '^Subscription count: 1$' <<<"$raw_pointcloud_info"
+grep -q '^Node name: aurora$' <<<"$raw_pointcloud_info"
+grep -q '^Node name: he_pointcloud_throttle$' <<<"$raw_pointcloud_info"
+
+sampled_pointcloud_info=$(ros2 topic info /he/aurora/points2_sampled -v)
+grep -q '^Publisher count: 1$' <<<"$sampled_pointcloud_info"
+grep -q '^Subscription count: 1$' <<<"$sampled_pointcloud_info"
+grep -q '^Node name: he_pointcloud_throttle$' <<<"$sampled_pointcloud_info"
+grep -q '^Node name: dimos_he_sensors$' <<<"$sampled_pointcloud_info"
 
 if ros2 topic list | grep -qx /scan; then
   echo 'retired LD19 /scan topic is still present' >&2

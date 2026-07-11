@@ -1,5 +1,6 @@
 """Unit tests for Aurora-to-DimOS message conversion."""
 
+from pathlib import Path
 import types
 import unittest
 
@@ -56,7 +57,20 @@ class TestHESensorBridge(unittest.TestCase):
         self.assertTrue(bridge.config.enable_ir_image)
         self.assertTrue(bridge.config.enable_pointcloud)
         self.assertTrue(bridge.config.enable_camera_info)
+        self.assertEqual(bridge.config.pointcloud_topic, "/he/aurora/points2_sampled")
+        self.assertEqual(bridge.config.pointcloud_max_hz, 1.1)
         self.assertFalse(hasattr(bridge.config, "scan_topic"))
+
+    def test_pointcloud_is_prethrottled_as_serialized_data(self) -> None:
+        deployment = Path(__file__).parent / "deployment"
+        unit = (deployment / "he-pointcloud-throttle.service").read_text()
+        readonly_gate = (deployment / "verify-he-readonly.sh").read_text()
+
+        self.assertIn("/opt/ros/humble/lib/topic_tools/throttle messages", unit)
+        self.assertIn("/aurora/points2 1.0 /he/aurora/points2_sampled", unit)
+        self.assertIn("MemoryMax=256M", unit)
+        self.assertIn("Node name: he_pointcloud_throttle", readonly_gate)
+        self.assertIn("Node name: dimos_he_sensors", readonly_gate)
 
     def test_bgr8_image_preserves_shape_padding_and_timestamp(self) -> None:
         rows = np.array(

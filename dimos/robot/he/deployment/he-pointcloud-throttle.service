@@ -1,0 +1,24 @@
+[Unit]
+Description=HE serialized Aurora point-cloud throttle
+After=aurora930.service
+Wants=aurora930.service
+Before=he-dimos-sense.service he-dimos-shadow.service
+
+[Service]
+Type=simple
+User=ubuntu
+Environment=HOME=/home/ubuntu
+ExecStart=/bin/bash -lc 'source /opt/ros/humble/setup.bash && exec /opt/ros/humble/lib/topic_tools/throttle messages /aurora/points2 1.0 /he/aurora/points2_sampled --ros-args -p use_wall_clock:=true -r __node:=he_pointcloud_throttle'
+Restart=on-failure
+RestartSec=5
+KillSignal=SIGTERM
+KillMode=control-group
+TimeoutStopSec=10
+MemoryAccounting=yes
+MemoryHigh=128M
+MemoryMax=256M
+OOMPolicy=stop
+TasksMax=64
+
+[Install]
+WantedBy=multi-user.target
