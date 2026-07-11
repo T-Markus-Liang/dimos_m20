@@ -1,6 +1,6 @@
 # Codex Sessions
 
-Last updated: 2026-07-11 12:40 CST
+Last updated: 2026-07-11 12:53 CST
 
 ## Active
 
@@ -8,6 +8,7 @@ Last updated: 2026-07-11 12:40 CST
 
 ## Completed
 
+- [2026-07-11_1253_aurora-sensor-rate-reference.md](/home/markus/work/dimos_wd_m20/docs/codex-sessions/completed/2026-07-11_1253_aurora-sensor-rate-reference.md)
 - [2026-07-11_1135_he-aurora-git-baseline.md](/home/markus/work/dimos_wd_m20/docs/codex-sessions/completed/2026-07-11_1135_he-aurora-git-baseline.md)
 - [2026-07-10_2341_orin-nx-car-hardware-audit.md](/home/markus/work/dimos_wd_m20/docs/codex-sessions/completed/2026-07-10_2341_orin-nx-car-hardware-audit.md)
 - [2026-07-10_2300_fix-wd-m20-rerun-baseline.md](/home/markus/work/dimos_wd_m20/docs/codex-sessions/completed/2026-07-10_2300_fix-wd-m20-rerun-baseline.md)

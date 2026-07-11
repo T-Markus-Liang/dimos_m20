@@ -856,6 +856,10 @@ LD19 已从 HE 默认架构完全退出：`he-ld19.service` 停止、disable 后
 
 Aurora 当前六路 ROS 输出全部默认进入 `HESensorBridge`：
 
+原始帧率、桥接限流、资源代价和未来 SLAM 分流原则的集中参考位于
+`dimos/robot/he/docs/aurora-sensor-rate-reference.md`。后续调整算法参数或优化
+传感链前，必须先核对该文档，不能把当前 Rerun 频率误认为传感器硬件上限。
+
 | ROS 输入 | 实测格式/频率 | DimOS 输出 | 默认桥接频率 |
 | --- | --- | --- | ---: |
 | `/aurora/rgb/image_raw` | BGR8 640x400，约 15Hz | `color_image` | 5Hz |
@@ -869,6 +873,10 @@ Aurora 当前六路 ROS 输出全部默认进入 `HESensorBridge`：
 和开环 odom 继续输入。Rerun 对这些实体使用 latest-only，recording window 保持
 256MB。内部 LCM 吞吐约 7.3MB/s，但 10 秒 Wi-Fi 实测仅约 18.6KB TX，内部
 multicast 没有把该带宽外发到无线网络。
+
+当前限流只面向 DimOS/Rerun 可视化链。未来视觉 SLAM 如果需要 13-15Hz 原始数据，
+应新增本机同步的全帧率算法路径，同时继续保留 5Hz 图像、1Hz 下采样点云的远程
+可视化路径；不应通过把所有 Rerun 输出直接提高到 15Hz 来实现算法输入。
 
 启用全模态后的 `he-dimos-sense` 两分钟内稳定在约 1008-1010MiB，`NRestarts=0`，
 仍低于 `MemoryHigh=1GiB` 和 `MemoryMax=1.25GiB`，整机约 3.5GiB available。

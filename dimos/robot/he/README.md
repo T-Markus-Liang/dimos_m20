@@ -59,5 +59,8 @@ Run the bridge conversion tests with:
 See [Chassis characterization](docs/chassis-characterization-2026-07-11.md) for
 the measured command-chain limits, latency, precision, and feedback gaps.
 
+See [Aurora sensor rate reference](docs/aurora-sensor-rate-reference.md) before
+changing camera/point-cloud rates or adding a full-rate perception pipeline.
+
 The version-controlled deployment plan is
 [Orin NX lightweight deployment](../../../docs/he/orin-nx-dimos-lightweight-deployment.md).
