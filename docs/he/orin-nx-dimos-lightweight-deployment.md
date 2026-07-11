@@ -984,3 +984,32 @@ TF、tracking、inliers、latency、RSS 和地图质量仍为默认门禁。
 `slam_process_down`，无原生进程残留。当前剩余的运行粗糙点是 DimOS
 `RerunBridgeModule` 停止会占满 CLI 的 5 秒 grace period，使主 daemon 被升级为
 SIGKILL；原生 SLAM 清理通过，但后续应在 DimOS/Rerun 协调层修复优雅退出。
+
+## 16. 公开基准与视觉外参准入复核（2026-07-11）
+
+公开数值基准已从官方论文补齐到
+`docs/he/visual-navigation-candidate-evaluation.md`。结果按数据集、输入模态、轨迹
+对齐方式和测试硬件分别记录，不生成跨数据集总排名。关键工程结论是：DPV-SLAM
+在 RTX 3090 上可达到约 50 FPS/5GB，但仍缺少 metric scale、ROS 2、occupancy 和
+aarch64 证据；MASt3R-SLAM 的官方约 14.6 FPS 来自 RTX 4090；DROID-SLAM 的
+长序列后端和当前官方最低显存要求均超过 NX 8GB。论文精度不能替代 HE 实测。
+
+同时完成了不涉及运动的实时 TF 审计。Aurora 驱动发布的
+`depth_camera_link -> rgb_camera_link` 约 10mm 基线，来自设备内部标定；这是当前
+唯一有设备标定来源的视觉外参。其余链路为：
+
+- `base_link -> camera_link0 = [0.057373, 0.000079, 0.091864]m`，零旋转；
+- `camera_link0 -> depth_camera_link` 为零平移和约 `[-90, 0, -90]deg` 轴向转换；
+- `base_link -> imu_link = [0.040, -0.015, 0.050]m`，yaw 约 90deg；
+- 组合后的 `imu_link -> depth_camera_link` 约为
+  `[0.015, -0.017, 0.042]m`、RPY `[-90, 0, -180]deg`。
+
+这些 camera-to-base 和 camera-to-IMU 数值只来自现有 Ackermann URDF 与静态
+服务，没有现场尺寸复核、标定板求解或不确定度。`camera_link0 -> depth_camera_link`
+使用零平移也不能证明光心与安装 frame 重合。控制板 IMU 的 orientation quaternion
+为全零，只能把该 topic 当作 raw angular velocity/acceleration，不能当姿态真值。
+
+因此 OpenVINS 或其他紧耦合 VIO 仍未通过准入；后续必须在车辆允许运动后完成
+camera-IMU 空间/时间标定、IMU 轴向与噪声标定。RTAB-Map 可以继续作为受限 shadow
+输出验证，但其 pose/map 不能批准给导航。完整审计证据位于
+`docs/he/evidence/2026-07-11_1539_visual-benchmark-extrinsics-audit.md`。

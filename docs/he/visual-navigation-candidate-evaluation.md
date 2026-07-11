@@ -1,6 +1,6 @@
 # HE Visual Navigation Candidate Evaluation
 
-Updated: 2026-07-11 15:10 CST
+Updated: 2026-07-11 15:39 CST
 
 ## Decision Status
 
@@ -83,6 +83,9 @@ better estimator.
 | DROID-SLAM | Learned mono/stereo/RGB-D SLAM with trajectory and dense reconstruction. | Pushed 2025-05-05; current README states at least 11GB GPU memory for inference. | BSD-3-Clause code; verify weights. | Reject on Orin NX 8GB resource requirement. May run offline on a larger GPU for research only. |
 | MASt3R-SLAM | Learned dense monocular SLAM and relocalization. | Official research implementation is active enough for evaluation but depends on large learned backbones and custom CUDA/PyTorch components. | Code and weights include research/non-commercial constraints that require a separate audit. | Offline research candidate only; resource and license risks prevent first deployment. |
 | DINOv3 | Dense image features and image retrieval; no geometric pose estimator. | Meta repository pushed 2026-06-15; model card offers ViT and ConvNeXt sizes. | Custom DINOv3 license. | Never a standalone SLAM choice. Consider a small model later for place recognition/relocalization only after the geometric stack is stable. |
+| ScaRF-SLAM | Classical visual SLAM supplies poses; a geometric foundation model builds scale-consistent dense submaps. It is a mapping wrapper, not a replacement pose frontend. | Paper v1 published 2026-05-29. Official code was pushed 2026-07-07 and documents online/offline reconstruction. | GPL-3.0 plus third-party model terms. | Relevant future dense-map adapter after a trusted pose frontend exists. The foundation-model mapping path is too heavy and insufficiently qualified for the current NX 8GB runtime. |
+| GeoGS-SLAM | Geometry-only Gaussian-splatting dense monocular SLAM with loop-corrected map updates. | Paper v1 published 2026-07-08. No official code or embedded deployment evidence was linked at audit time. | Not yet auditable. | Track only. A new paper without code, license, occupancy output or Orin evidence cannot enter the HE runtime baseline. |
+| WildPose | Dynamic-aware monocular pose estimation using a frozen MASt3R backbone and differentiable BA. | Paper v1 published 2026-05-12. The paper links a project page but no official code repository was available at audit time. | Not yet auditable. | Offline research watch item for dynamic scenes. It lacks a navigation map contract and inherits a large foundation-model resource risk. |
 
 Official sources:
 
@@ -94,12 +97,20 @@ Official sources:
 - https://arxiv.org/abs/2007.11898
 - https://github.com/rpng/open_vins
 - https://docs.openvins.com/
+- https://pgeneva.com/downloads/papers/Geneva2020ICRA.pdf
 - https://github.com/HKUST-Aerial-Robotics/VINS-Fusion
 - https://github.com/princeton-vl/DPVO
+- https://arxiv.org/abs/2208.04726
 - https://arxiv.org/abs/2408.01654
 - https://github.com/princeton-vl/DROID-SLAM
+- https://arxiv.org/abs/2108.10869
 - https://github.com/rmurai0610/MASt3R-SLAM
+- https://arxiv.org/abs/2412.12392
 - https://github.com/facebookresearch/dinov3
+- https://github.com/ori-drs/ScaRF-SLAM
+- https://arxiv.org/abs/2607.07452
+- https://arxiv.org/abs/2605.12774
+- https://arxiv.org/abs/2605.03678
 
 ## Public Results: Scope Matters
 
@@ -114,6 +125,28 @@ Official sources:
   used as a single ranking number.
 - DROID-SLAM's own current 11GB inference requirement is direct exclusion
   evidence for the 8GB target regardless of its benchmark rank.
+
+## Published Numeric Evidence
+
+These tables preserve each paper's own input, dataset, alignment and hardware
+scope. They are not combined into one score and are not HE acceptance results.
+
+| Official source | Input and dataset | Reported result | Reported execution context | HE interpretation |
+| --- | --- | --- | --- | --- |
+| ORB-SLAM3 paper, Table II | EuRoC; mono, stereo, mono-inertial, stereo-inertial | Average RMS ATE `0.041`, `0.084`, `0.043`, `0.035m` respectively; monocular excludes one failed sequence | Intel i7-7700 3.6GHz, 32GB, CPU only. EuRoC V202 tracking averaged `21.52`, `31.48`, `23.22`, `33.05ms` for the four modes at 20Hz | Strong classical accuracy, but Aurora is not stereo and the HE DimOS wrapper is incomplete. GPL and old ROS integration remain deployment blockers. |
+| OpenVINS paper, Tables II-III | EuRoC Vicon sequences; 20Hz camera and 200Hz IMU | Mono SLAM/VIO average ATE `0.079/0.148m`; stereo SLAM/VIO `0.054/0.055m`. Mono SLAM 8-48m translational RPE `0.074-0.122m` | Xeon E3-1505M v6 3.0GHz, single thread; mono SLAM/VIO `2.7x/4.3x` realtime and stereo `1.2x/1.9x` | Plausible lightweight VIO fallback, but HE's 47Hz IMU, unknown physical camera-IMU extrinsic and software timestamping do not match the paper setup. |
+| DPVO paper | Monocular, scale-aligned; EuRoC/TartanAir/TUM-RGBD | EuRoC VO average ATE `0.105m`; TartanAir test average `0.21m`; TUM fr1 average `0.089m` | RTX 3090: default `60 FPS/4.9GB`, fast `120 FPS/2.5GB`; trained on synthetic TartanAir | Good offline comparator, but scale alignment hides the metric-scale problem and even the fast memory figure consumes a large fraction of unified NX memory. |
+| DROID-SLAM paper | Monocular SLAM; EuRoC/TUM-RGBD/TartanAir | EuRoC average ATE `0.022m`; TUM fr1 average `0.038m`; TartanAir hard average `0.24m` | EuRoC `20 FPS` using two RTX 3090 GPUs; long sequences require a 24GB backend GPU. Current repository requires at least 11GB for inference | Accuracy does not overcome the direct NX 8GB memory exclusion. |
+| DPV-SLAM paper, Tables 1-4 | Monocular SLAM; EuRoC/TUM-RGBD/KITTI/TartanAir | DPV-SLAM EuRoC `0.024m`, TUM `0.076m`; DPV-SLAM++ EuRoC `0.023m`, TUM `0.054m`. KITTI averages are much worse at `53.03/25.76m` | RTX 3090. DPV-SLAM: EuRoC `50 FPS/5GB`, TUM `30 FPS/4GB`; `++` adds about 2GB | Better bounded GPU use than DROID, but still no native ROS 2, metric scale, occupancy map or demonstrated aarch64 build. KITTI results show domain dependence. |
+| MASt3R-SLAM paper | Monocular; TUM-RGBD/EuRoC/7-Scenes | Calibrated average ATE `0.030m` on TUM, `0.041m` on EuRoC and `0.047m` on 7-Scenes | All official experiments on RTX 4090; single-threaded average `14.6 FPS` across representative runs | The reported real-time claim is not Orin evidence. Large MASt3R checkpoints, custom CUDA and model licensing keep it offline-only. |
+
+A May 2026 cross-system degradation study (`arXiv:2605.03678`) separately
+reports Orin NX 15W latency of `8.4/29.4/68.3/95.0/142.5ms` for ORB-SLAM3,
+DPVO, DROID-SLAM, DUSt3R and MASt3R, and reports DPVO at `3.1GB` GPU memory.
+It also reports overall tracking success of `62.4/86.1/94.2/96.5/95.8%`.
+This is a secondary UAV/custom-degradation study, not an official author
+benchmark or Aurora test. Its numbers justify an optional DPVO Orin feasibility
+probe only after the static safety work; they do not approve deployment.
 
 ## Unified HE Evaluation Matrix
 

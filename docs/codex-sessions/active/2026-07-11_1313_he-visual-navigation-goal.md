@@ -7,8 +7,9 @@
 - Project: dimos-wd-m20
 - Workspace: VM `/home/markus/work/dimos_wd_m20`; Orin `/home/ubuntu/he/dimos_wd_m20`
 - Task: research, benchmark, select and integrate a visual SLAM navigation foundation for HE
-- Status: active - DimOS shadow integration implemented; Orin soak pending
-- Branch if relevant: `codex/he-orin` from `e495dadb`
+- Status: active - shadow integrated; benchmark/extrinsics audit complete;
+  physical calibration and moving gates pending
+- Branch if relevant: `codex/he-orin`; documentation update based on `87549530`
 
 ## User Request Summary
 
@@ -130,6 +131,23 @@ health while keeping real motion disconnected.
   parent-death cleanup. A transient stale point-cloud sample immediately after
   restoring the sensor service cleared; direct point-cloud/camera rates and the
   repeated live sensor quality gate passed.
+- Re-audited VM, origin and Orin at `87549530`; both worktrees were clean,
+  `he-dimos-sense` was active with zero restarts, no SLAM process remained and
+  `/he/nav_cmd_vel` had zero publishers.
+- Extracted directly scoped numeric evidence from the official ORB-SLAM3,
+  OpenVINS, DPVO, DROID-SLAM, DPV-SLAM and MASt3R-SLAM papers. Added dataset,
+  input, alignment, FPS, memory and hardware boundaries without constructing a
+  cross-dataset ranking.
+- Scanned the latest ScaRF-SLAM, GeoGS-SLAM and WildPose work. ScaRF is a
+  GPL-3.0 learned mapping wrapper around classical tracking; the other two did
+  not expose auditable official code during inspection. None replaces the HE
+  shadow baseline.
+- Audited the live HE static tree and source URDF. Aurora RGB-depth calibration
+  is device-derived, while base-camera, base-IMU and composed camera-IMU values
+  are nominal URDF/service transforms only. Physical camera-IMU qualification
+  remains an explicit VIO gate.
+- Verified the documentation update with all 29 HE unit tests, the generated
+  blueprint registry test, `git diff --check` and required-file integrity.
 
 ## Decisions
 
@@ -153,7 +171,8 @@ health while keeping real motion disconnected.
 
 ## Current State
 
-- VM, origin and Orin are synchronized at `22473979`; both worktrees are clean.
+- VM, origin and Orin were synchronized at `87549530` before this documentation
+  update; the update is verified and ready for commit/push/Orin fast-forward.
 - The final static closeout passed all 29 HE tests, blueprint discovery,
   deployment integrity, isolated control dry-run, Aurora live quality and both
   read-only gates. `he-dimos-sense` is active with zero restarts.
@@ -166,10 +185,10 @@ health while keeping real motion disconnected.
 ## Resume Instructions
 
 1. Read this log, ADR-001 and the final shadow soak evidence.
-2. Complete camera-to-base and camera-to-IMU extrinsic qualification.
-3. Expand the public candidate ledger with directly comparable published
-   benchmark tables; current source/compatibility coverage is stronger than its
-   numeric score coverage.
+2. Use the new nominal-extrinsics audit to plan physical camera-to-base and
+   camera-to-IMU calibration; do not promote the nominal values to calibrated.
+3. Keep public benchmark tables source-scoped and update them only when a new
+   candidate has code, license, runtime and deployability evidence.
 4. After a new vehicle-down confirmation, record moving, loop-closure and
    relocalization datasets and decide whether RTAB-Map can graduate beyond the
    shadow baseline.
