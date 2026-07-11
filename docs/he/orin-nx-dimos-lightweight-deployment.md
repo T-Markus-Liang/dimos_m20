@@ -1146,3 +1146,20 @@ runner 联动停止并回收 odometry 与 SLAM，不能继续无界写盘。可�
 database；不能在不保证图一致性时删除活动节点。完整基线、里程计和资源原始证据见
 `docs/he/evidence/2026-07-11_2027_extended-shadow-soak.md`。修复部署后还必须完成
 第二次同长度静态 soak，证明数据库增长被实质抑制后才能关闭该缺陷。
+
+修正版完成 detached 600 秒复测。主采样覆盖 590 秒，active database 从
+344,064 bytes 增至 1,458,176 bytes，净增约 1.06MiB，即约 0.108MiB/min；原基线
+同窗口净增约 110.0MiB，下降约 99.0%。这证明静止 rehearsal 节点写库已被实质
+抑制，但不是绝对零增长，因此 256MiB watchdog 仍必须保留。
+
+复测期间整栈 RSS 平均/峰值约 1.73/1.77GiB，RTAB-Map RSS 平均/峰值约
+481/509MiB；CPU 平均约 134%，GPU 平均/峰值约 11/26%，最高温度 63.28°C；
+available memory 最低约 3.18GiB，swap 零增长。所有采样点
+`/he/nav_cmd_vel` publishers=0。
+
+测试编排还暴露两点：不能让高频 native log 长期绑定 SSH pipe，否则断开时可能产生
+SIGPIPE 141；不能同时保留多个带 restore trap 的 soak timer，否则旧 timer 到期会
+停止新 run。最终测试使用 Orin 本地 detached stdout/stderr 且只有一个 restore owner。
+shutdown 后两个 native 进程均退出，传感服务 active/零重启；sensor verifier 的临时
+DDS subscription 收敛后，独立 read-only gate PASS。原始修正版 TSV 见
+`docs/he/evidence/2026-07-11_2105_bounded-shadow-*.tsv`。

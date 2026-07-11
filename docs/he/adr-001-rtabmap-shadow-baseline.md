@@ -82,6 +82,14 @@ map nodes and RGB-D data remain retained. File retention and this active-file
 cap solve different failure modes; neither is permission to discard linked map
 state during real navigation.
 
+The corrected configuration completed a detached 600-second stationary soak.
+The active database gained 1.06MiB in 590 sampled seconds versus about 110MiB
+before the fix, a reduction of about 99.0%. Full-stack RSS peaked at 1.77GiB,
+swap did not grow, the peak sampled temperature was 63.28C and every navigation
+publisher sample remained zero. This closes the stationary active-database
+growth defect for shadow evaluation; it does not close moving-map quality,
+long-duration field operation or real-navigation gates.
+
 Real navigation remains prohibited until moving ATE/RPE, loop closure,
 relocalization, map quality, camera extrinsics, tracking-loss detection,
 resource soak and control safety gates pass after a new vehicle-down safety

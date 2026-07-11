@@ -260,6 +260,18 @@ health while keeping real motion disconnected.
   precedes its default 0.1m/0.1rad motion gate and unlinked nodes are persisted
   by default. Restore 0.1/0.1 and set `Mem/NotLinkedNodesKept=false`; the hard
   watchdog remains unchanged. A detached rerun is pending.
+- Completed the corrected detached 600-second soak. The active database gained
+  1.06MiB in 590 sampled seconds versus about 110.0MiB before the fix, reducing
+  stationary growth about 99.0%. Swap growth was zero; full-stack RSS averaged
+  1.73GiB and peaked at 1.77GiB; CPU averaged 134%, GPU averaged 11% and peaked
+  at 26%; maximum temperature was 63.28C.
+- Preserved the corrected primary and supplement TSV evidence. Every sampled
+  navigation publisher count was zero. After DDS endpoint convergence, the
+  independent read-only gate passed with both services active, zero restarts
+  and no native SLAM process.
+- Recorded two orchestration hazards and fixes: redirect native output for
+  detached soaks to avoid SSH SIGPIPE 141, and require exactly one timer/restore
+  owner so an old soak cannot stop a new run.
 
 ## Decisions
 
@@ -286,10 +298,9 @@ health while keeping real motion disconnected.
 
 ## Current State
 
-- VM has the tested database-boundedness patch and baseline evidence pending
-  commit. Origin and Orin remain on the preceding clean commit until this
-  change is pushed and fast-forwarded. Use `git rev-parse HEAD` for commit
-  identity rather than embedding a self-invalidating value here.
+- The database-boundedness code and runtime configuration are synchronized
+  across VM, origin and Orin. Use `git rev-parse HEAD` for final commit identity
+  rather than embedding a self-invalidating value here.
 - The final current-script static closeout passed under systemd with status 0.
   `he-dimos-sense` is active with zero restarts, memory is about 1005MiB,
   no visual SLAM node is running and `/he/nav_cmd_vel` has zero publishers.
@@ -306,37 +317,35 @@ health while keeping real motion disconnected.
   setting resolves the stable spatial defect, so the canonical configuration is
   restored and RGB-D navigation admission remains failed.
 - The extended static soak exposed active-database growth as a real defect. The
-  first threshold-only deployment failed. The corrected unlinked-node
-  persistence setting is implemented on the VM and remains pending deployment,
-  a short slope check and a detached 600-second Orin soak.
+  first threshold-only deployment failed, while the corrected unlinked-node
+  persistence setting passed a full 600-second Orin soak with about 99.0%
+  lower database growth. The 256MiB hard watchdog remains enabled.
 
 ## Resume Instructions
 
 1. Read this log, ADR-001 and the final shadow soak evidence.
-2. Deploy the database boundedness patch and repeat the 600-second stationary
-   shadow soak; compare database slope, RSS, CPU, GPU, swap and cleanup gates.
-3. Run a static matte-target and camera pitch/height experiment to separate
+2. Run a static matte-target and camera pitch/height experiment to separate
    floor reflectivity/grazing-angle effects from sensor defects.
-4. Evaluate a controlled move from the shared USB 2.0 hub to the available
+3. Evaluate a controlled move from the shared USB 2.0 hub to the available
    10Gbps root port if physical access is approved.
-5. Escalate firmware 2.0.8/SDK 1.1.22 evidence to the vendor if target coverage
+4. Escalate firmware 2.0.8/SDK 1.1.22 evidence to the vendor if target coverage
    remains abnormal, requesting optical specifications and the documented
    `SupportedInfo.depth_range` interpretation.
-6. Use the new nominal-extrinsics audit to plan physical camera-to-base and
+5. Use the new nominal-extrinsics audit to plan physical camera-to-base and
    camera-to-IMU calibration; do not promote the nominal values to calibrated.
-7. Keep public benchmark tables source-scoped and update them only when a new
+6. Keep public benchmark tables source-scoped and update them only when a new
    candidate has code, license, runtime and deployability evidence.
-8. After a new vehicle-down confirmation, record moving, loop-closure and
+7. After a new vehicle-down confirmation, record moving, loop-closure and
    relocalization datasets and decide whether RTAB-Map can graduate beyond the
    shadow baseline.
-9. Address the existing Rerun coordinator graceful-stop timeout separately.
-10. Do not enable motion or restore LD19.
+8. Address the existing Rerun coordinator graceful-stop timeout separately.
+9. Do not enable motion or restore LD19.
 
 ## Open Questions
 
 - Can Aurora depth coverage and synchronization meet RGB-D/VIO prerequisites?
 - Can RTAB-Map produce navigation-usable map coverage after the camera can move?
-- Will the full DimOS shadow stack preserve at least 1GiB available memory in
-  an extended Orin soak?
+- Will the full DimOS shadow stack preserve the measured memory margin in
+  multi-hour operation and moving-map workloads?
 - Can the public candidate results be normalized enough to support a stronger
   SOTA comparison without mixing datasets, inputs and alignment methods?

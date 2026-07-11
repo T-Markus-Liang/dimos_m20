@@ -2,7 +2,7 @@
 
 Date: 2026-07-11 20:27-20:37 CST
 
-Status: baseline defect reproduced; corrected boundedness fix pending soak
+Status: corrected boundedness fix verified in a 600-second static soak
 
 ## Safety And Scope
 
@@ -72,8 +72,52 @@ The corrected patch explicitly restores 0.1m/0.1rad and sets
 `Mem/NotLinkedNodesKept=false`. Linked map nodes and their binary RGB-D data
 remain available; only nodes rejected or merged before graph linkage stop being
 retained. The independent 256MiB watchdog remains the final hard boundary.
-This corrected configuration requires a short slope check followed by the full
-600-second static soak.
+This corrected configuration first passed a 110-second uncontaminated slope
+window, then completed the full detached 600-second static soak.
+
+## Corrected 600-Second Result
+
+The corrected primary sampler covered 590 seconds with 55 samples. The active
+database grew from 344,064 to 1,458,176 bytes: 1.06MiB net or about
+0.108MiB/minute. The baseline gained about 110.0MiB in the same window, so
+active-database growth fell by about 99.0%. The result is materially suppressed
+but not mathematically zero; the 256MiB watchdog remains required for long-term
+fault containment.
+
+| Metric | Corrected result |
+|---|---:|
+| available memory | 3.18-3.30GiB, 3.23GiB average |
+| swap growth | 0 bytes |
+| RTAB-Map RSS | 439-509MiB, 481MiB average |
+| full stack RSS | 1.68-1.77GiB, 1.73GiB average |
+| full stack CPU | 121.8-156.1%, 134.2% average |
+| GPU | 6-26%, 11.0% average |
+| maximum temperature | 63.28C |
+| navigation publishers | 0 in every sample |
+
+Normal shutdown removed both native processes and restored
+`he-dimos-sense.service` and `aurora930.service` active with zero restarts. The
+in-script final read-only gate initially saw a temporary extra Aurora
+subscription from its own sensor verifier. After DDS convergence, an
+independent `verify-he-readonly.sh` passed with no localization/navigation
+process and zero `/he/nav_cmd_vel` publishers.
+
+## Test-Orchestration Findings
+
+Two failed attempts were not hidden:
+
+- keeping an SSH output pipe attached to the very verbose native processes
+  caused exit status 141 when the connection closed; detached runs must redirect
+  stdout/stderr locally on Orin;
+- an earlier timer-owned soak survived its SSH connection and later stopped a
+  newer run during its cleanup. Before a new soak, verify there is exactly one
+  `/tmp/run-shadow-soak.sh` restore owner.
+
+These failures affected test orchestration, not the final detached soak. The
+second issue briefly caused one `he-dimos-sense` restart during overlapping
+restore attempts. After all stale owners exited, the service was stabilized,
+the explained counter reset, and both live sensor and independent read-only
+gates passed before the final run.
 
 A second 600-second static soak is required after deployment. It must prove
 that stationary database growth is materially suppressed and that watchdog,
@@ -84,3 +128,7 @@ process cleanup, resource and read-only gates still hold.
 - `2026-07-11_2027_extended-shadow-soak.tsv`
 - `2026-07-11_2031_extended-shadow-supplement.tsv`
 - `2026-07-11_2035_stationary-odom-90s.json`
+- `2026-07-11_2051_first-threshold-failed.tsv`
+- `2026-07-11_2051_first-threshold-supplement.tsv`
+- `2026-07-11_2105_bounded-shadow-soak.tsv`
+- `2026-07-11_2105_bounded-shadow-supplement.tsv`
