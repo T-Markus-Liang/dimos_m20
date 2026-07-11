@@ -713,6 +713,16 @@ health while keeping real motion disconnected.
   duration. The unchanged payload-free collector remains bounded; a paired
   Sense-concurrent versus isolated-subscriber A/B is required before assigning
   the gaps to Aurora/USB rather than diagnostic subscription pressure.
+- Completed the paired 120-second load A/B. With Sense concurrent, depth and
+  point-cloud span rates were 13.13/9.65Hz and estimated missing ratios were
+  10.8%/34.0%; with the timing diagnostic as the sole subscriber chain they
+  improved to 14.47/12.35Hz and 1.6%/16.1%. RGB/IR improved modestly and IMU was
+  unchanged. This proves bridge-side contention is material while leaving a
+  separate point-cloud/USB risk.
+- Prepared a minimal scheduler candidate: a fixed two-thread ROS executor with
+  the point-cloud subscription in its own mutually exclusive callback group.
+  Topic names, all default modalities, output rates, point-cloud stride and
+  Rerun are unchanged. All 60 HE tests pass; Orin A/B decides retention.
 - Pushed the probe, failed-getter fix, bounded DDS convergence and final
   evidence as `1655079a`, `b7b56853`, `a4af65e6` and `64cfeb4c`; Orin
   fast-forwarded cleanly and the macOS deployment mirror was synchronized.

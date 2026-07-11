@@ -182,3 +182,13 @@ occluded the image. The pattern follows the smooth floor at a grazing angle.
 Aurora is also on a shared 480Mbps hub, which remains a throughput qualification
 risk but has no observed reset/stall evidence and does not alone explain the
 stable geometric mask.
+
+A 2026-07-12 timing A/B found that the existing single-threaded ROS executor
+also contributes to receive gaps: with Sense active, depth/point-cloud estimated
+missing ratios were 10.8%/34.0%; with Sense stopped and the diagnostic as the
+only subscription chain they fell to 1.6%/16.1%. RGB and IR improved more
+modestly. The candidate bridge therefore places point-cloud callbacks in a
+separate mutually exclusive callback group under a fixed two-thread executor.
+Topics, default modalities, 1Hz point-cloud output and stride 8 are unchanged.
+Retain this candidate only if the equivalent Orin test improves continuity
+without a material CPU, memory, swap or output-rate regression.

@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
+from collections.abc import AsyncGenerator
 import threading
 import time
-from collections.abc import AsyncGenerator
 from typing import Any
 
 import numpy as np
@@ -75,6 +75,7 @@ class HESensorBridge(Module):
         super().__init__(**config_args)
         self._node: Any | None = None
         self._executor: Any | None = None
+        self._pointcloud_callback_group: Any | None = None
         self._spin_thread: threading.Thread | None = None
         self._last_published: dict[str, float] = {}
 
@@ -87,15 +88,18 @@ class HESensorBridge(Module):
 
     def _start_ros_subscriptions(self) -> None:
         try:
-            import rclpy
             from nav_msgs.msg import Odometry as RosOdometry
-            from rclpy.executors import SingleThreadedExecutor
+            import rclpy
+            from rclpy.callback_groups import MutuallyExclusiveCallbackGroup
+            from rclpy.executors import MultiThreadedExecutor
             from rclpy.node import Node
             from rclpy.qos import qos_profile_sensor_data
-            from sensor_msgs.msg import CameraInfo as RosCameraInfo
-            from sensor_msgs.msg import Image as RosImage
-            from sensor_msgs.msg import Imu as RosImu
-            from sensor_msgs.msg import PointCloud2 as RosPointCloud2
+            from sensor_msgs.msg import (
+                CameraInfo as RosCameraInfo,
+                Image as RosImage,
+                Imu as RosImu,
+                PointCloud2 as RosPointCloud2,
+            )
         except ImportError as exc:
             raise RuntimeError("HESensorBridge requires ROS 2 Humble Python packages") from exc
 
@@ -130,11 +134,13 @@ class HESensorBridge(Module):
                 qos_profile_sensor_data,
             )
         if self.config.enable_pointcloud:
+            self._pointcloud_callback_group = MutuallyExclusiveCallbackGroup()
             self._node.create_subscription(
                 RosPointCloud2,
                 self.config.pointcloud_topic,
                 self._on_pointcloud,
                 qos_profile_sensor_data,
+                callback_group=self._pointcloud_callback_group,
             )
         if self.config.enable_camera_info:
             self._node.create_subscription(
@@ -150,7 +156,7 @@ class HESensorBridge(Module):
                 qos_profile_sensor_data,
             )
 
-        self._executor = SingleThreadedExecutor()
+        self._executor = MultiThreadedExecutor(num_threads=2)
         self._executor.add_node(self._node)
         self._spin_thread = threading.Thread(target=self._spin_ros, daemon=True)
         self._spin_thread.start()
@@ -185,6 +191,7 @@ class HESensorBridge(Module):
         if self._node is not None:
             self._node.destroy_node()
             self._node = None
+        self._pointcloud_callback_group = None
 
     def _allowed(self, stream: str, max_hz: float) -> bool:
         if max_hz <= 0.0:
@@ -277,11 +284,7 @@ class HESensorBridge(Module):
             raise ValueError(f"image payload has {raw.size} bytes, expected at least {required}")
         rows = raw[:required].reshape(msg.height, msg.step)[:, :row_bytes]
         if dtype.itemsize == 1:
-            shape = (
-                (msg.height, msg.width, channels)
-                if channels > 1
-                else (msg.height, msg.width)
-            )
+            shape = (msg.height, msg.width, channels) if channels > 1 else (msg.height, msg.width)
             image = np.ascontiguousarray(rows).reshape(shape)
         else:
             byte_order = ">" if msg.is_bigendian else "<"
