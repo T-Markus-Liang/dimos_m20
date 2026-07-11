@@ -8,6 +8,7 @@ import numpy as np
 from dimos.robot.he.visual_data import (
     depth_array,
     depth_quality,
+    occupancy_grid_metrics,
     quaternion_distance_degrees,
     stationary_trajectory_metrics,
     timestamp_alignment,
@@ -73,6 +74,14 @@ class TestHEVisualData(unittest.TestCase):
             ),
             90.0,
         )
+
+    def test_occupancy_grid_metrics(self) -> None:
+        metrics = occupancy_grid_metrics([-1, 0, 49, 50, 100, -1], 3, 2, 0.1)
+        self.assertEqual(metrics["unknown_cells"], 2)
+        self.assertEqual(metrics["free_cells"], 1)
+        self.assertEqual(metrics["occupied_cells"], 2)
+        self.assertAlmostEqual(metrics["known_ratio"], 4.0 / 6.0)
+        self.assertAlmostEqual(metrics["occupied_ratio_of_known"], 0.5)
 
 
 if __name__ == "__main__":

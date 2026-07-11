@@ -151,3 +151,27 @@ def stationary_trajectory_metrics(
             }
         )
     return result
+
+
+def occupancy_grid_metrics(
+    data: list[int], width: int, height: int, resolution: float
+) -> dict[str, float | int]:
+    cells = np.asarray(data, dtype=np.int16)
+    if width <= 0 or height <= 0 or cells.size != width * height:
+        raise ValueError("occupancy data must match positive map dimensions")
+    unknown = int(np.count_nonzero(cells < 0))
+    free = int(np.count_nonzero(cells == 0))
+    occupied = int(np.count_nonzero(cells >= 50))
+    known = int(cells.size - unknown)
+    return {
+        "width": width,
+        "height": height,
+        "resolution_m": resolution,
+        "area_m2": width * height * resolution * resolution,
+        "cells": int(cells.size),
+        "unknown_cells": unknown,
+        "free_cells": free,
+        "occupied_cells": occupied,
+        "known_ratio": known / cells.size,
+        "occupied_ratio_of_known": occupied / known if known else 0.0,
+    }

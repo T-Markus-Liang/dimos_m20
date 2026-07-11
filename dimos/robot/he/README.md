@@ -77,6 +77,8 @@ Measure bounded stationary drift for a running shadow odometry topic:
 ```bash
 .venv/bin/python dimos/robot/he/deployment/benchmark-he-visual-odom.py \
   --duration 60 --output /tmp/he-visual-odom-benchmark.json
+.venv/bin/python dimos/robot/he/deployment/benchmark-he-visual-map.py \
+  --duration 15 --output /tmp/he-visual-map-benchmark.json
 ```
 
 The current RTAB-Map pilot can be checked or run without motion output:

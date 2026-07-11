@@ -152,3 +152,17 @@ Hard failures for selection are: unobservable metric scale, no tracking-health
 signal, no navigation map path, incompatible license, less than 1GiB system
 memory remaining, sustained swap, unbounded growth, or inability to recover
 from a tested tracking loss.
+
+## First HE Pilot Result
+
+RTAB-Map 0.23.7 passed the initial static feasibility gate. Tuned RGB-D odometry
+ran for 60s with zero tracking losses, 0.48mm final/2.58mm maximum positional
+drift, 0.051/0.102 degree rotational drift and 6.31Hz output. Median/P95 message
+latency was 108/137ms. Odometry RSS peaked near 214MiB; adding the map process
+used about 255MiB more in a short run. Occupancy, cloud, MapData, SLAM Info,
+database persistence and the isolated dynamic TF chain were observed.
+
+This does not complete selection: the static trajectory accumulated 0.236m of
+small jitter, map content still needs quantitative validation, depth coverage
+is poor, and no moving/loop/relocalization data is authorized yet. Full raw
+evidence is under `docs/he/evidence/2026-07-11_1418_rtabmap-*`.

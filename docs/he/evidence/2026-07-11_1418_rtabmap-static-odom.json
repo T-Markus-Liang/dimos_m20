@@ -1,0 +1,33 @@
+{
+  "captured_at": "2026-07-11T14:19:12+0800",
+  "frame_ids": [
+    [
+      "he_visual_odom",
+      "base_link"
+    ]
+  ],
+  "odometry_info": {
+    "features_median": 219.0,
+    "inliers_median": 79.0,
+    "inliers_min": 63,
+    "lost_count": 0,
+    "reported_memory_max_mb": 0,
+    "samples": 376,
+    "time_estimation_median_ms": 89.20156955718994,
+    "time_estimation_p95_ms": 114.08281326293945
+  },
+  "requested_duration_seconds": 60.0,
+  "trajectory": {
+    "accumulated_position_motion_m": 0.236229594673179,
+    "duration_seconds": 59.45599985122681,
+    "final_position_drift_m": 0.00048374207683609766,
+    "final_rotation_drift_deg": 0.05079451600625385,
+    "latency_max_ms": 172.90234565734863,
+    "latency_median_ms": 107.96880722045898,
+    "latency_p95_ms": 136.8834376335144,
+    "max_position_drift_m": 0.0025793535741904868,
+    "max_rotation_drift_deg": 0.10204273972240678,
+    "output_rate_hz": 6.307185161099638,
+    "samples": 376
+  }
+}

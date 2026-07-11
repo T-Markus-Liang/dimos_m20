@@ -86,6 +86,11 @@ health while keeping real motion disconnected.
   database, but disabling TF caused repeated missing `he_visual_odom ->
   base_link` warnings. Enable the isolated HE-prefixed map/odom TF chain for
   the next run; it does not collide with the current platform tree.
+- Verified the corrected `he_map -> he_visual_odom -> base_link` chain with no
+  TF or bad-sync warnings. Occupancy output was 82x59 at 0.05m and shutdown
+  removed both native processes before the final read-only gate.
+- Added a bounded map/TF benchmark to count known/free/occupied cells, map
+  update rate, lookup failures, TF latency and static transform drift.
 
 ## Decisions
 
