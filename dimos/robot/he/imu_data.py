@@ -84,7 +84,7 @@ def summarize_imu_samples(
             "nonpositive_count": len(intervals) - len(positive_intervals),
         },
         "orientation": {
-            "zero_norm_count": sum(norm == 0.0 for norm in quaternion_norms),
+            "zero_norm_count": int(sum(norm == 0.0 for norm in quaternion_norms)),
             "norm_median": statistics.median(quaternion_norms) if quaternion_norms else None,
             "norm_max_error_from_one": max(
                 (abs(norm - 1.0) for norm in quaternion_norms), default=None
@@ -105,17 +105,23 @@ def summarize_imu_samples(
             ],
         },
         "orientation_covariance": {
-            "all_zero_count": sum(
-                all(value == 0.0 for value in covariance)
-                for covariance in orientation_covariances
+            "all_zero_count": int(
+                sum(
+                    all(value == 0.0 for value in covariance)
+                    for covariance in orientation_covariances
+                )
             ),
-            "unknown_count": sum(
-                bool(covariance) and covariance[0] == -1.0
-                for covariance in orientation_covariances
+            "unknown_count": int(
+                sum(
+                    bool(covariance) and covariance[0] == -1.0
+                    for covariance in orientation_covariances
+                )
             ),
-            "nonfinite_count": sum(
-                any(not math.isfinite(value) for value in covariance)
-                for covariance in orientation_covariances
+            "nonfinite_count": int(
+                sum(
+                    any(not math.isfinite(value) for value in covariance)
+                    for covariance in orientation_covariances
+                )
             ),
         },
         "angular_velocity_rad_s": _vector_summary(gyroscopes),

@@ -1,7 +1,10 @@
 """Tests for bounded HE IMU diagnostic helpers."""
 
+import json
 import math
 import unittest
+
+import numpy as np
 
 from dimos.robot.he.imu_data import summarize_imu_samples
 
@@ -40,6 +43,20 @@ class TestHEImuData(unittest.TestCase):
         )
         self.assertAlmostEqual(metrics["orientation"]["rpy_delta_deg"][2], 10.0)
         self.assertEqual(metrics["orientation_covariance"]["unknown_count"], 2)
+
+    def test_numpy_covariance_counts_are_json_serializable(self) -> None:
+        metrics = summarize_imu_samples(
+            stamps=[1.0, 1.1],
+            quaternions=[[0.0, 0.0, 0.0, 1.0]] * 2,
+            gyroscopes=[[0.0, 0.0, 0.0]] * 2,
+            accelerations=[[0.0, 0.0, 9.81]] * 2,
+            orientation_covariances=[
+                [np.float64(0.0)] * 9,
+                [np.float64(-1.0)] + [np.float64(0.0)] * 8,
+            ],
+            frame_ids={"imu_link"},
+        )
+        json.dumps(metrics)
 
 
 if __name__ == "__main__":

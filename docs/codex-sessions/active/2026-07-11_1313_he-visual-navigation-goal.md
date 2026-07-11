@@ -396,10 +396,16 @@ health while keeping real motion disconnected.
   of calibrated VIO.
 - Added a pure IMU metrics helper and bounded ROS diagnostic for raw/filtered
   rates, timestamp gaps, quaternion validity, RPY drift, gyro/acceleration
-  statistics and covariance state. Two focused tests raise the HE total to 43;
+  statistics and covariance state. Focused tests initially raised the HE total to 43;
   Ruff and `git diff --check` pass on the VM.
 - Reconfirmed both system services active with zero restarts, no probe process
   or topic left behind and `/he/nav_cmd_vel` at zero publishers.
+- The first 30-second Orin diagnostic reached JSON rendering but exposed ROS
+  covariance comparison counts as NumPy `int64`, which standard `json` rejects.
+  The exit trap removed the probe and all safety checks remained closed/healthy.
+  Explicitly normalized count fields to Python `int` and added a NumPy-backed
+  `json.dumps` regression test. All 44 HE tests and Ruff pass on the VM; the
+  corrected Orin evidence run is pending.
 
 ## Decisions
 
