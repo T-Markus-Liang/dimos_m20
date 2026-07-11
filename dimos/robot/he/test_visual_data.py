@@ -23,6 +23,7 @@ from dimos.robot.he.visual_data import (
     should_drop_camera_info,
     stationary_trajectory_metrics,
     timestamp_alignment,
+    timing_series_quality,
     topic_rate,
     visual_fault_payload,
     write_visual_snapshot,
@@ -62,6 +63,25 @@ class TestHEVisualData(unittest.TestCase):
         self.assertEqual(metrics["reference_samples"], 4)
         self.assertEqual(metrics["pairs"], 2)
         self.assertAlmostEqual(metrics["absolute_median_ms"], 10.0)
+
+    def test_timing_series_reports_jitter_missing_and_transport_age(self) -> None:
+        metrics = timing_series_quality(
+            [1.0, 1.1, 1.2, 1.4],
+            [1.01, 1.11, 1.215, 1.415],
+        )
+        self.assertAlmostEqual(metrics["source_rate_hz"], 10.0)
+        self.assertEqual(metrics["estimated_missing_frames"], 1)
+        self.assertEqual(metrics["source_regressions"], 0)
+        self.assertEqual(metrics["source_duplicates"], 0)
+        self.assertAlmostEqual(metrics["transport_age_ms"]["signed_median"], 12.5)
+
+    def test_timing_series_rejects_unusable_sequences(self) -> None:
+        with self.assertRaises(ValueError):
+            timing_series_quality([1.0], [1.01])
+        with self.assertRaises(ValueError):
+            timing_series_quality([1.0, 1.0], [1.01, 1.02])
+        with self.assertRaises(ValueError):
+            timing_series_quality([1.0, 1.1], [1.01, 1.0])
 
     def test_depth_array_handles_padding(self) -> None:
         rows = np.array([[0, 100, 0xFFFF], [150, 4000, 0xFFFF]], dtype="<u2")
@@ -152,9 +172,7 @@ class TestHEVisualData(unittest.TestCase):
             self.assertAlmostEqual(metadata["rgb_absolute_offset_ms"], 1.0)
 
     def test_pointcloud_xyz_quality(self) -> None:
-        points = np.array(
-            [(0.0, 0.0, 0.0), (1.0, 2.0, 2.0), (np.nan, 0.0, 1.0)], dtype="<f4"
-        )
+        points = np.array([(0.0, 0.0, 0.0), (1.0, 2.0, 2.0), (np.nan, 0.0, 1.0)], dtype="<f4")
         fields = [
             types.SimpleNamespace(name=name, offset=offset, datatype=7, count=1)
             for name, offset in (("x", 0), ("y", 4), ("z", 8))

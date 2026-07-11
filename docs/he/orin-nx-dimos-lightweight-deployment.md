@@ -1636,3 +1636,18 @@ min/median/max 为 1346.7/1359.0/1366.7MiB，349 tasks 恒定，available 最低
 enabled/active、shadow static/inactive。短往返中的 runner-relative swap 增长约
 44MiB，低于 64MiB 门，保留为更长运行观察项。完整证据见
 `docs/he/evidence/2026-07-12_0448_shadow-systemd-cgroup.md`。
+
+## 28. 有界长时间视觉同步诊断（2026-07-12）
+
+既有 `diagnose-he-aurora.py` 为了计算深度时域稳定性，会保留采集到的 RGB、depth、IR
+和 point-cloud message，适合短采样，不适合几分钟以上的同步观测。新增
+`diagnose-he-visual-timing.py` 只保存五路输入的 source timestamp 和 ROS callback
+receipt timestamp，不保留 payload；默认每路最多 200000 个样本，持续时间限制为
+10-3600 秒，因此不会随相机字节流形成无界内存。
+
+输出分别记录 RGB、depth、IR、point cloud 和 IMU 的 source/receipt rate、interval
+median/P95/max、时间戳回退与重复、按中位周期估计的缺帧数、callback transport age，
+以及以 RGB 为参考的最近时间戳偏差。开始和结束都检查 `/he/nav_cmd_vel` 零发布者。
+该工具用于关闭长时软件时间同步证据缺口，不代表硬件同步，也不能替代车辆落地后的
+同步 rosbag、ATE/RPE、回环或重定位验证。VM 上 59 项 HE unittest、Ruff、blueprint
+registry 和 diff 检查通过；Orin 长时结果仍待部署实测。

@@ -82,6 +82,51 @@ def topic_rate(stamps: list[float]) -> float:
     return 1.0 / statistics.median(intervals)
 
 
+def timing_series_quality(stamps: list[float], receipts: list[float]) -> dict[str, Any]:
+    """Summarize source timing, callback timing, drops, and transport age."""
+    if len(stamps) != len(receipts) or len(stamps) < 2:
+        raise ValueError("matching stamp and receipt series need at least two samples")
+    stamp_deltas = np.diff(np.asarray(stamps, dtype=np.float64))
+    receipt_deltas = np.diff(np.asarray(receipts, dtype=np.float64))
+    positive_stamp_deltas = stamp_deltas[stamp_deltas > 0.0]
+    if not positive_stamp_deltas.size or np.any(receipt_deltas <= 0.0):
+        raise ValueError("source needs an increasing interval and receipts must increase")
+
+    median_stamp_delta = float(np.median(positive_stamp_deltas))
+    missing = sum(
+        max(0, round(float(delta) / median_stamp_delta) - 1)
+        for delta in positive_stamp_deltas
+        if delta > median_stamp_delta * 1.5
+    )
+    ages_ms = (np.asarray(receipts, dtype=np.float64) - np.asarray(stamps)) * 1000.0
+    absolute_ages_ms = np.abs(ages_ms)
+
+    return {
+        "samples": len(stamps),
+        "source_rate_hz": 1.0 / median_stamp_delta,
+        "source_interval_ms": {
+            "median": median_stamp_delta * 1000.0,
+            "p95": float(np.percentile(positive_stamp_deltas, 95)) * 1000.0,
+            "max": float(np.max(positive_stamp_deltas)) * 1000.0,
+        },
+        "receipt_rate_hz": 1.0 / float(np.median(receipt_deltas)),
+        "receipt_interval_ms": {
+            "median": float(np.median(receipt_deltas)) * 1000.0,
+            "p95": float(np.percentile(receipt_deltas, 95)) * 1000.0,
+            "max": float(np.max(receipt_deltas)) * 1000.0,
+        },
+        "source_regressions": int(np.count_nonzero(stamp_deltas < 0.0)),
+        "source_duplicates": int(np.count_nonzero(stamp_deltas == 0.0)),
+        "estimated_missing_frames": missing,
+        "transport_age_ms": {
+            "signed_median": float(np.median(ages_ms)),
+            "absolute_p95": float(np.percentile(absolute_ages_ms, 95)),
+            "absolute_max": float(np.max(absolute_ages_ms)),
+            "future_over_5ms": int(np.count_nonzero(ages_ms < -5.0)),
+        },
+    }
+
+
 def timestamp_alignment(reference: list[float], candidate: list[float]) -> dict[str, float | int]:
     """Measure each reference timestamp against its nearest candidate."""
     if not reference or not candidate:
@@ -140,9 +185,7 @@ def mono8_array(message: Any) -> np.ndarray:
     required = int(message.height) * int(message.step)
     if raw.size < required:
         raise ValueError("mono8 payload is truncated")
-    return np.ascontiguousarray(
-        raw[:required].reshape(message.height, message.step)[:, :row_bytes]
-    )
+    return np.ascontiguousarray(raw[:required].reshape(message.height, message.step)[:, :row_bytes])
 
 
 def bgr8_array(message: Any) -> np.ndarray:
@@ -374,9 +417,7 @@ def depth_ir_quality(
         "ir_mean_at_valid_depth": float(np.mean(valid_ir)) if valid_ir.size else None,
         "ir_mean_at_invalid_depth": float(np.mean(invalid_ir)) if invalid_ir.size else None,
         "depth_validity_to_ir_pearson": correlation(valid.astype(np.float64).ravel(), ir.ravel()),
-        "valid_depth_to_ir_pearson": correlation(
-            depth_mm[valid].astype(np.float64), valid_ir
-        ),
+        "valid_depth_to_ir_pearson": correlation(depth_mm[valid].astype(np.float64), valid_ir),
     }
 
 
@@ -419,9 +460,7 @@ def pointcloud_xyz_quality(message: Any) -> dict[str, Any]:
         "zero_xyz_ratio": float(np.mean(zero)),
         "usable_xyz_ratio": float(np.mean(usable)),
         "usable_range_m_percentiles": (
-            {str(p): float(np.percentile(ranges, p)) for p in (5, 50, 95)}
-            if ranges.size
-            else {}
+            {str(p): float(np.percentile(ranges, p)) for p in (5, 50, 95)} if ranges.size else {}
         ),
     }
 

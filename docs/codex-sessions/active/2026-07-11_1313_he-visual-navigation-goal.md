@@ -700,6 +700,13 @@ health while keeping real motion disconnected.
   final deployment integrity/read-only gates passed with Sense enabled/active,
   shadow static/inactive, and zero navigation publishers. Evidence and profiler
   snapshots are in `docs/he/evidence/2026-07-12_0448_shadow-systemd-cgroup.md`.
+- Added a bounded long-duration visual timing diagnostic for RGB, depth, IR,
+  point cloud and IMU. It retains only source/receipt timestamps, caps each
+  stream at 200,000 samples, rejects any navigation publisher, and reports
+  interval jitter, regressions/duplicates, estimated drops, callback age and
+  RGB-nearest cross-stream alignment. This avoids the payload retention in the
+  short depth-quality diagnostic. All 59 HE tests, Ruff, registry and diff
+  checks pass on VM; Orin timing evidence remains pending.
 - Pushed the probe, failed-getter fix, bounded DDS convergence and final
   evidence as `1655079a`, `b7b56853`, `a4af65e6` and `64cfeb4c`; Orin
   fast-forwarded cleanly and the macOS deployment mirror was synchronized.
@@ -753,6 +760,8 @@ health while keeping real motion disconnected.
   unhealthy and no planner costmap or motion command is released.
 - Aurora depth coverage, camera extrinsics, moving accuracy, loop closure and
   relocalization remain open gates. Real motion remains prohibited.
+- Long-duration software timestamp qualification now has a bounded tool but is
+  not yet closed by Orin evidence. Hardware synchronization remains unclaimed.
 - The enhanced diagnostic and effective-parameter A/B are complete. No tested
   setting resolves the stable spatial defect, so the canonical configuration is
   restored and RGB-D navigation admission remains failed. The SDK support-range

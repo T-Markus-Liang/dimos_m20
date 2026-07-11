@@ -66,6 +66,20 @@ Collect a bounded SLAM-input diagnostic without enabling motion:
   --samples 30 --timeout 15 --output /tmp/he-aurora-diagnostic.json
 ```
 
+For a longer synchronization run without retaining RGB, depth, IR or point
+cloud payloads in the diagnostic process:
+
+```bash
+.venv/bin/python dimos/robot/he/deployment/diagnose-he-visual-timing.py \
+  --duration 120 --output /tmp/he-visual-timing.json
+```
+
+The timing diagnostic keeps only bounded source/receipt timestamps (at most
+200,000 per stream by default), refuses to run with a navigation publisher,
+and reports source/receipt jitter, timestamp regressions and duplicates,
+estimated missing frames, callback age, and RGB-nearest cross-stream offsets.
+It does not replace a synchronized rosbag needed for moving ATE/RPE work.
+
 Query the vendor SDK's read-only support, temperature, laser-current and
 factory camera-parameter getters under automatic service restoration:
 
