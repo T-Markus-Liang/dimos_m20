@@ -1,0 +1,60 @@
+diff --git a/package.xml b/package.xml
+index 3012e12..c1b9fb5 100644
+--- a/package.xml
++++ b/package.xml
+@@ -1,5 +1,5 @@
+ <?xml version="1.0"?>
+-<package>
++<package format="3">
+   <name>rf2o_laser_odometry</name>
+   <version>0.1.0</version>
+   <description>
+@@ -24,15 +24,17 @@
+   <build_depend>cmake_modules</build_depend>
+   <build_depend>sensor_msgs</build_depend>
+   <build_depend>tf2_geometry_msgs</build_depend>
+-  <run_depend>geometry_msgs</run_depend>
+-  <run_depend>rclcpp</run_depend>
+-  <run_depend>std_msgs</run_depend>
+-  <run_depend>tf2</run_depend>
+-  <run_depend>tf2_ros</run_depend>  
+-  <run_depend>eigen</run_depend>
+-  <run_depend>cmake_modules</run_depend>
+-  <run_depend>sensor_msgs</run_depend>
+-  <run_depend>tf2_geometry_msgs</run_depend>
++  <build_depend>nav_msgs</build_depend>
++  <exec_depend>geometry_msgs</exec_depend>
++  <exec_depend>rclcpp</exec_depend>
++  <exec_depend>std_msgs</exec_depend>
++  <exec_depend>tf2</exec_depend>
++  <exec_depend>tf2_ros</exec_depend>
++  <exec_depend>eigen</exec_depend>
++  <exec_depend>cmake_modules</exec_depend>
++  <exec_depend>sensor_msgs</exec_depend>
++  <exec_depend>tf2_geometry_msgs</exec_depend>
++  <exec_depend>nav_msgs</exec_depend>
+   <export>
+     <build_type>ament_cmake</build_type>
+   </export>
+diff --git a/include/rf2o_laser_odometry/CLaserOdometry2DNode.h b/include/rf2o_laser_odometry/CLaserOdometry2DNode.h
+index 85bd6bf..2e2d899 100644
+--- a/include/rf2o_laser_odometry/CLaserOdometry2DNode.h
++++ b/include/rf2o_laser_odometry/CLaserOdometry2DNode.h
+@@ -76,7 +76,7 @@ CLaserOdometry2DNode::CLaserOdometry2DNode(): Node("CLaserOdometry2DNode")
+   tf_listener_ = std::make_shared<tf2_ros::TransformListener>(*buffer_);
+   odom_broadcaster = std::make_unique<tf2_ros::TransformBroadcaster>(this);
+   odom_pub  = this->create_publisher<nav_msgs::msg::Odometry>(odom_topic, 5);
+-  laser_sub = this->create_subscription<sensor_msgs::msg::LaserScan>(laser_scan_topic,rclcpp::QoS(rclcpp::KeepLast(1)).best_effort().durability_volatile(),
++  laser_sub = this->create_subscription<sensor_msgs::msg::LaserScan>(laser_scan_topic,rclcpp::QoS(rclcpp::KeepLast(10)).reliable().durability_volatile(),
+       std::bind(&CLaserOdometry2DNode::LaserCallBack, this, std::placeholders::_1));
+   //init pose??
+   if (init_pose_from_topic != "")
+@@ -91,7 +91,7 @@ CLaserOdometry2DNode::CLaserOdometry2DNode(): Node("CLaserOdometry2DNode")
+     initial_robot_pose.pose.pose.position.x = 0;
+     initial_robot_pose.pose.pose.position.y = 0;
+     initial_robot_pose.pose.pose.position.z = 0;
+-    initial_robot_pose.pose.pose.orientation.w = 0;
++    initial_robot_pose.pose.pose.orientation.w = 1;
+     initial_robot_pose.pose.pose.orientation.x = 0;
+     initial_robot_pose.pose.pose.orientation.y = 0;
+     initial_robot_pose.pose.pose.orientation.z = 0;

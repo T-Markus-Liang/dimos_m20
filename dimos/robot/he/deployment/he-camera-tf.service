@@ -1,0 +1,17 @@
+[Unit]
+Description=HE Aurora camera-to-base static transform
+After=aurora930.service odom-publisher.service
+Wants=aurora930.service odom-publisher.service
+
+[Service]
+Type=simple
+User=ubuntu
+Environment=HOME=/home/ubuntu
+ExecStart=/bin/bash -lc 'source /opt/ros/humble/setup.bash && exec ros2 run tf2_ros static_transform_publisher 0 0 0 -1.57 0 -1.57 camera_link0 depth_camera_link'
+Restart=on-failure
+RestartSec=3
+KillSignal=SIGTERM
+TimeoutStopSec=10
+
+[Install]
+WantedBy=multi-user.target

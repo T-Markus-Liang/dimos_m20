@@ -1,0 +1,11 @@
+twist_mux:
+  ros__parameters:
+    topics:
+      navigation:
+        topic: /he/nav_cmd_vel
+        timeout: 0.1
+        priority: 10
+      joystick:
+        topic: /controller/cmd_vel
+        timeout: 0.1
+        priority: 100

@@ -1,0 +1,49 @@
+--- a/peripherals/joystick_control.py
++++ b/peripherals/joystick_control.py
+@@ -39,7 +39,9 @@
+         self.disable_servo_control = self.get_parameter('disable_servo_control').value
+         self.machine = os.environ['MACHINE_TYPE']
+         self.get_logger().info('\033[1;32m%s\033[0m' % self.max_linear)
+-        self.servo_state_pub = self.create_publisher(SetPWMServoState, 'ros_robot_controller/pwm_servo/set_state', 1)
++        self.servo_state_pub = None
++        if not self.disable_servo_control:
++            self.servo_state_pub = self.create_publisher(SetPWMServoState, 'ros_robot_controller/pwm_servo/set_state', 1)
+         self.joy_sub = self.create_subscription(Joy, 'ros_robot_controller/joy', self.joy_callback, 1)
+         self.buzzer_pub = self.create_publisher(BuzzerState, 'ros_robot_controller/set_buzzer', 1)
+         self.mecanum_pub = self.create_publisher(Twist, 'controller/cmd_vel', 1)
+@@ -81,7 +83,8 @@
+                 data = SetPWMServoState()
+                 data.state = [servo_state]
+                 data.duration = 0.02
+-                self.servo_state_pub.publish(data)
++                if self.servo_state_pub is not None:
++                    self.servo_state_pub.publish(data)
+             else:
+                 R = 0.17706/math.tan(steering_angle)
+                 twist.angular.z = float(twist.linear.x / R)  
+@@ -92,7 +95,8 @@
+                 data = SetPWMServoState()
+                 data.state = [servo_state]
+                 data.duration = 0.02
+-                self.servo_state_pub.publish(data)
++                if self.servo_state_pub is not None:
++                    self.servo_state_pub.publish(data)
+ 
+         self.mecanum_pub.publish(twist)
+ 
+@@ -158,7 +162,8 @@
+         for key, value in axes.items(): 
+             if self.last_axes[key] != value:
+                 axes_changed = True
+-        if axes_changed:
++        motion_active = abs(axes['ly']) >= self.min_value or abs(axes['rx']) >= self.min_value
++        if axes_changed or motion_active:
+             try:
+                 self.axes_callback(axes)
+             except Exception as e:
+@@ -185,3 +190,4 @@
+ 
+ if __name__ == "__main__":
+     main()
++
+

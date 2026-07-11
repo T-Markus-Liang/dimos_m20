@@ -1,0 +1,21 @@
+[Unit]
+Description=HE DimOS sensor bridge
+After=aurora930.service he-camera-tf.service he-ld19.service odom-publisher.service
+Wants=aurora930.service he-camera-tf.service he-ld19.service odom-publisher.service
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/he/dimos_wd_m20
+Environment=HOME=/home/ubuntu
+Environment=PYTHONNOUSERSITE=1
+ExecStart=/bin/bash -lc 'source /opt/ros/humble/setup.bash && exec .venv/bin/dimos run he-sense-headless'
+Restart=on-failure
+RestartSec=10
+KillSignal=SIGTERM
+TimeoutStopSec=30
+MemoryHigh=1G
+MemoryMax=1280M
+
+[Install]
+WantedBy=multi-user.target

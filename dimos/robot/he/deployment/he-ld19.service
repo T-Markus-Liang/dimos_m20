@@ -1,0 +1,17 @@
+[Unit]
+Description=HE LD19 laser scanner
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+Environment=HOME=/home/ubuntu
+Environment=PYTHONNOUSERSITE=1
+ExecStart=/bin/bash -lc 'source /opt/ros/humble/setup.bash && source /home/ubuntu/he/ldlidar_ws/install/setup.bash && exec ros2 run ldlidar_stl_ros2 ldlidar_stl_ros2_node --ros-args -r __node:=he_ld19 -p product_name:=LDLiDAR_LD19 -p topic_name:=/scan -p frame_id:=lidar_frame -p port_name:=/dev/lidar -p port_baudrate:=230400 -p laser_scan_dir:=true -p enable_angle_crop_func:=false'
+Restart=on-failure
+RestartSec=3
+KillSignal=SIGTERM
+TimeoutStopSec=10
+
+[Install]
+WantedBy=multi-user.target

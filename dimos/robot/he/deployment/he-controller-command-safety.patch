@@ -1,0 +1,123 @@
+--- a/controller/odom_publisher_node.py
++++ b/controller/odom_publisher_node.py
+@@ -91,6 +91,9 @@
+         self.declare_parameter('linear_correction_factor', 1.00)
+         self.declare_parameter('linear_correction_factor_tank', 0.52)
+         self.declare_parameter('angular_correction_factor', 1.00)
++        self.declare_parameter('cmd_vel_timeout_s', 0.10)
++        self.declare_parameter('max_linear_mps', 0.10)
++        self.declare_parameter('max_angular_radps', 0.30)
+         self.declare_parameter('machine_type', os.environ['MACHINE_TYPE'])
+         
+ 
+@@ -98,6 +101,9 @@
+         self.pub_odom_topic = self.get_parameter('pub_odom_topic').value
+         self.base_frame_id = self.get_parameter('base_frame_id').value
+         self.odom_frame_id = self.get_parameter('odom_frame_id').value
++        self.cmd_vel_timeout_s = self.get_parameter('cmd_vel_timeout_s').value
++        self.max_linear_mps = self.get_parameter('max_linear_mps').value
++        self.max_angular_radps = self.get_parameter('max_angular_radps').value
+         
+         #self.machine_type = os.environ.get('MACHINE_TYPE', 'ROSOrin_Mecanum')
+         self.machine_type = self.get_parameter('machine_type').value
+@@ -136,6 +142,9 @@
+         self.create_subscription(Twist, 'controller/cmd_vel', self.cmd_vel_callback, 1)
+         self.create_subscription(Twist, '/app/cmd_vel', self.acker_cmd_vel_callback, 1)
+         self.create_subscription(Twist, 'cmd_vel', self.app_cmd_vel_callback, 1)
++        self.last_cmd_vel_time = time.monotonic()
++        self.cmd_vel_timed_out = True
++        self.create_timer(0.05, self.cmd_vel_watchdog)
+         self.create_service(Trigger, 'controller/load_calibrate_param', self.load_calibrate_param)
+         self.create_service(Trigger, '~/init_finish', self.get_node_state)
+         self.get_logger().info('\033[1;32m%s\033[0m' % 'start')
+@@ -146,8 +155,18 @@
+ 
+     def shutdown(self, signum, frame):
+         self.get_logger().info('\033[1;32m%s\033[0m' % 'shutdown')
++        self._apply_cmd_vel(Twist())
+         rclpy.shutdown()
+ 
++    def cmd_vel_watchdog(self):
++        if self.cmd_vel_timed_out:
++            return
++        if time.monotonic() - self.last_cmd_vel_time <= self.cmd_vel_timeout_s:
++            return
++        self.cmd_vel_timed_out = True
++        self._apply_cmd_vel(Twist())
++        self.get_logger().warning('cmd_vel timeout; motor stopped and steering centered')
++
+     def load_calibrate_param(self, request, response):
+         if self.machine_type == 'ROSOrin_Tank' or self.machine_type == 'ROSOrin_Tank_Pro':
+             self.linear_factor = self.get_parameter('~linear_correction_factor_tank').value or 0.12
+@@ -183,18 +202,18 @@
+         self.pose_pub.publish(pose)
+ 
+     def app_cmd_vel_callback(self, msg):
+-        if msg.linear.x > 0.2:
+-            msg.linear.x = 0.2
+-        if msg.linear.x < -0.2:
+-            msg.linear.x = -0.2
+-        if msg.linear.y > 0.2:
+-            msg.linear.y = 0.2
+-        if msg.linear.y < -0.2:
+-            msg.linear.y = -0.2
+-        if msg.angular.z > 0.5:
+-            msg.angular.z = 0.5
+-        if msg.angular.z < -0.5:
+-            msg.angular.z = -0.5
++        if msg.linear.x > self.max_linear_mps:
++            msg.linear.x = self.max_linear_mps
++        if msg.linear.x < -self.max_linear_mps:
++            msg.linear.x = -self.max_linear_mps
++        if msg.linear.y > self.max_linear_mps:
++            msg.linear.y = self.max_linear_mps
++        if msg.linear.y < -self.max_linear_mps:
++            msg.linear.y = -self.max_linear_mps
++        if msg.angular.z > self.max_angular_radps:
++            msg.angular.z = self.max_angular_radps
++        if msg.angular.z < -self.max_angular_radps:
++            msg.angular.z = -self.max_angular_radps
+         self.cmd_vel_callback(msg)
+ 
+     def acker_cmd_vel_callback(self, msg):
+@@ -214,6 +233,22 @@
+         self.cmd_vel_callback(msg)
+ 
+     def cmd_vel_callback(self, msg):
++        msg = self._bounded_cmd_vel(msg)
++        self.last_cmd_vel_time = time.monotonic()
++        self.cmd_vel_timed_out = False
++        self._apply_cmd_vel(msg)
++
++    def _bounded_cmd_vel(self, msg):
++        bounded = Twist()
++        values = (msg.linear.x, msg.linear.y, msg.angular.z)
++        if not all(math.isfinite(value) for value in values):
++            return bounded
++        bounded.linear.x = max(-self.max_linear_mps, min(self.max_linear_mps, msg.linear.x))
++        bounded.linear.y = max(-self.max_linear_mps, min(self.max_linear_mps, msg.linear.y))
++        bounded.angular.z = max(-self.max_angular_radps, min(self.max_angular_radps, msg.angular.z))
++        return bounded
++
++    def _apply_cmd_vel(self, msg):
+         if self.machine_type != 'ROSOrin_Acker':
+             if  'Mecanum' in self.machine_type:
+                 self.linear_x = msg.linear.x
+--- a/launch/odom_publisher.launch.py
++++ b/launch/odom_publisher.launch.py
+@@ -62,7 +62,15 @@
+             'base_frame_id': base_frame, 
+             'odom_frame_id': odom_frame,
+             'pub_odom_topic': True,
++            'cmd_vel_timeout_s': 0.10,
++            'max_linear_mps': 0.10,
++            'max_angular_radps': 0.30,
+             }],  
++        remappings=[
++            ('cmd_vel', '/he/final_cmd_vel'),
++            ('controller/cmd_vel', '/he/direct_controller_cmd_vel_disabled'),
++            ('/app/cmd_vel', '/he/direct_app_cmd_vel_disabled'),
++        ],
+     )
+ 
+     return LaunchDescription([

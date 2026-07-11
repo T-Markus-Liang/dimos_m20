@@ -1,0 +1,16 @@
+[Unit]
+Description=HE command priority mux
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+Environment=HOME=/home/ubuntu
+ExecStart=/bin/bash -lc 'source /opt/ros/humble/setup.bash && exec /opt/ros/humble/lib/twist_mux/twist_mux --ros-args --params-file /home/ubuntu/he/dimos_wd_m20/dimos/robot/he/deployment/he-twist-mux.yaml -r /cmd_vel_out:=/he/final_cmd_vel'
+Restart=on-failure
+RestartSec=1
+KillSignal=SIGTERM
+TimeoutStopSec=5
+
+[Install]
+WantedBy=multi-user.target

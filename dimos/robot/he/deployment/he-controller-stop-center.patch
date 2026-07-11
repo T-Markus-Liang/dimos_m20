@@ -1,0 +1,10 @@
+diff --git a/controller/ackermann.py b/controller/ackermann.py
+index b49e3db..5b3c84c 100644
+--- a/controller/ackermann.py
++++ b/controller/ackermann.py
+@@ -57,4 +57,4 @@ class AckermannChassis:
+                 data.append(msg)
+             msg = MotorsState()
+             msg.data = data
+-            return None, msg
++            return (servo_angle if reset_servo else None), msg
