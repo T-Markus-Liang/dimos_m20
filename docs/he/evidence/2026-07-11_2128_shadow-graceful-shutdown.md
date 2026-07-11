@@ -141,9 +141,27 @@ repeat module or manager cleanup. A focused idempotence test raises the related
 core selection to 50 passing tests; all 39 HE tests and static checks pass on
 the VM. Final Orin verification remains required.
 
+## Fifth Live Attempt And Timing Margin
+
+Commit `1d2dcf6a` passed the functional graceful-stop gate on Orin:
+
+- CLI reported `Stopped with SIGTERM` with no escalation;
+- no child-process assertion, worker error or traceback was logged;
+- exactly five module stops and one worker-manager shutdown were logged;
+- no DimOS, native SLAM, watchdog or Rerun port remained;
+- `/he/visual_odom` emitted and `/he/nav_cmd_vel` had zero publishers before stop.
+
+The end-to-end CLI command measured 5228ms, despite coordinator cleanup itself
+completing in about 2.52 seconds. Each of five module stop RPCs still reserved
+up to 100ms for caller-backend cleanup, consuming about 0.5 seconds of avoidable
+margin. That observation window is reduced to 10ms. This retains an opportunity
+for immediate cleanup while preserving the intended nonblocking behavior under
+load. The focused RPC threshold returns to 100ms; the same 50 core tests, 39 HE
+tests and static checks pass on the VM. One final Orin timing run is pending.
+
 ## Required Orin Evidence
 
-After the idempotent coordinator commit and fast-forward sync, start the
+After the reduced RPC cleanup-window commit and fast-forward sync, start the
 motion-free shadow blueprint, wait for both native processes and
 `/he/visual_odom`, then use normal
 `dimos stop` without `--force`. Record elapsed time and require:

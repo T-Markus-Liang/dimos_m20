@@ -1029,6 +1029,15 @@ process sweep。Python `resource_tracker` 会忽略 SIGTERM，通常要等父进
 的幂等状态，signal shutdown 与 loop finally 不会再重复停模块和 manager。50 项相关
 core 测试、39 项 HE 测试及静态检查已在 VM 通过，待第五轮 Orin 普通 stop 实测。
 
+第五轮在 `1d2dcf6a` 上已功能通过：CLI 报告 `Stopped with SIGTERM`，没有升级、异常
+或残留，日志只有 5 个模块 stop 和 1 轮 worker manager shutdown；停止前视觉里程计
+正常且导航发布者为 0。完整 CLI 命令耗时 5228ms，虽然 coordinator 本体约 2.52 秒
+已完成。剩余可避免成本是 5 个模块各自最多等待 100ms caller cleanup，累计约 0.5 秒。
+
+将该观察窗口缩短为 10ms，仍给立即完成的 cleanup 机会，同时保持繁忙 backend 下
+真正的非阻塞语义；RPC 测试时限恢复为 100ms。50 项 core、39 项 HE 及静态检查在
+VM 再次通过，待第六轮 Orin 时序复测确认低于 5 秒并保留全部清理结果。
+
 ## 16. 公开基准与视觉外参准入复核（2026-07-11）
 
 公开数值基准已从官方论文补齐到

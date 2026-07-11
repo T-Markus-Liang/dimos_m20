@@ -85,7 +85,7 @@ class RpcCall:
                     daemon=True,
                 )
                 cleanup_thread.start()
-                cleanup_thread.join(timeout=0.1)
+                cleanup_thread.join(timeout=0.01)
             return None
 
         result, unsub_fn = self._rpc.call_sync(

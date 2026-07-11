@@ -312,6 +312,14 @@ health while keeping real motion disconnected.
   post-exit watchdog retains orphan cleanup. Made coordinator stop lock-protected
   and idempotent. Fifty related core tests, 39 HE tests and static checks pass
   on VM; the fifth clean Orin lifecycle attempt is pending.
+- The fifth Orin attempt passed functionally: CLI reported normal SIGTERM stop,
+  logs had one shutdown round and no errors, and no process or port remained.
+  End-to-end CLI time was still 5228ms even though coordinator cleanup finished
+  in about 2.52 seconds.
+- Reduced the per-module asynchronous RPC cleanup observation from 100ms to
+  10ms, removing about 0.45 seconds of cumulative delay while retaining a
+  bounded immediate-cleanup opportunity. Fifty core tests, 39 HE tests and
+  static checks pass; the sixth Orin timing run is pending.
 
 ## Decisions
 
@@ -361,8 +369,8 @@ health while keeping real motion disconnected.
   persistence setting passed a full 600-second Orin soak with about 99.0%
   lower database growth. The 256MiB hard watchdog remains enabled.
 - Native child cleanup, lifecycle order, host RPC-client cleanup and non-parent
-  worker waits are fixed. The fourth Orin attempt exposed a redundant pre-exit
-  sweep and duplicate coordinator stop; its correction needs final Orin proof.
+  worker waits are fixed. The fifth Orin attempt is functionally clean; a final
+  timing run with the reduced RPC cleanup window remains pending.
 
 ## Resume Instructions
 
