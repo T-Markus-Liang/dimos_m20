@@ -433,6 +433,9 @@ health while keeping real motion disconnected.
   `docs/he/evidence/2026-07-12_0041_fresh-visual-faults.md`. Final live sensor
   and read-only gates passed at about 980MiB bridge memory; services were active
   with zero restarts and navigation publishers remained zero.
+- Extended the isolated proxy with `drop-camera-info`: RGB/depth remain fresh,
+  only RGB CameraInfo is withheld in the fault phase, and received/published
+  calibration counts are recorded. VM tests pass; Orin proof is pending.
 
 ## Decisions
 
@@ -498,11 +501,14 @@ health while keeping real motion disconnected.
 - Raw IMU orientation is unusable as published. Madgwick is runnable but failed
   the static admission gate, so the shadow chain remains RGB-D-only.
 - Static bad-but-fresh RGB/depth transitions and recovery are proven on Orin.
-  Moving tracking loss, CameraInfo-only loss and dynamic scenes remain open.
+  CameraInfo-only tooling is ready but not yet live-proven; moving tracking loss
+  and dynamic scenes remain open.
 
 ## Resume Instructions
 
 1. Read this log, ADR-001 and the final shadow soak evidence.
+- Run isolated `drop-camera-info`, verify image freshness plus zero fault-phase
+  RGB CameraInfo publishes, and record health recovery before restoring services.
 - Read the fresh-content fault evidence before changing health thresholds; do
   not treat blank-depth freshness fallback as explicit tracking-loss status.
 - Read the static IMU evidence before changing RTAB-Map inputs. Do not run an

@@ -18,6 +18,7 @@ from dimos.robot.he.visual_data import (
     occupancy_grid_metrics,
     pointcloud_xyz_quality,
     quaternion_distance_degrees,
+    should_drop_camera_info,
     stationary_trajectory_metrics,
     timestamp_alignment,
     topic_rate,
@@ -34,6 +35,11 @@ class TestHEVisualData(unittest.TestCase):
         self.assertEqual(visual_fault_payload(payload, "rgb", "blank-both"), bytes(3))
         with self.assertRaises(ValueError):
             visual_fault_payload(payload, "ir", "blank-rgb")
+
+        self.assertEqual(visual_fault_payload(payload, "rgb", "drop-camera-info"), payload)
+        self.assertTrue(should_drop_camera_info("rgb", "drop-camera-info"))
+        self.assertFalse(should_drop_camera_info("depth", "drop-camera-info"))
+        self.assertFalse(should_drop_camera_info("rgb", "blank-rgb"))
 
     def test_timestamp_alignment_uses_nearest_samples(self) -> None:
         metrics = timestamp_alignment([1.0, 2.0, 3.0], [0.995, 2.02, 3.005])

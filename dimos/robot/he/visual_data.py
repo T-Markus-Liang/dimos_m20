@@ -13,7 +13,7 @@ from typing import Any
 import cv2
 import numpy as np
 
-VISUAL_FAULT_MODES = {"blank-rgb", "blank-depth", "blank-both"}
+VISUAL_FAULT_MODES = {"blank-rgb", "blank-depth", "blank-both", "drop-camera-info"}
 
 
 def visual_fault_payload(payload: Any, stream: str, mode: str) -> bytes:
@@ -24,6 +24,15 @@ def visual_fault_payload(payload: Any, stream: str, mode: str) -> bytes:
         raise ValueError(f"unsupported visual stream: {stream}")
     blank = mode == "blank-both" or mode == f"blank-{stream}"
     return bytes(len(payload)) if blank else bytes(payload)
+
+
+def should_drop_camera_info(stream: str, mode: str) -> bool:
+    """Return whether the isolated RGB CameraInfo should be withheld."""
+    if mode not in VISUAL_FAULT_MODES:
+        raise ValueError(f"unsupported visual fault mode: {mode}")
+    if stream not in {"rgb", "depth"}:
+        raise ValueError(f"unsupported visual stream: {stream}")
+    return mode == "drop-camera-info" and stream == "rgb"
 
 
 def stamp_seconds(message: Any) -> float:

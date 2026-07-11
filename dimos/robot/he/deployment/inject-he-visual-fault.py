@@ -15,7 +15,11 @@ from rclpy.node import Node
 from rclpy.qos import QoSProfile, ReliabilityPolicy
 from sensor_msgs.msg import CameraInfo, Image
 
-from dimos.robot.he.visual_data import VISUAL_FAULT_MODES, visual_fault_payload
+from dimos.robot.he.visual_data import (
+    VISUAL_FAULT_MODES,
+    should_drop_camera_info,
+    visual_fault_payload,
+)
 
 
 class HEVisualFaultProxy(Node):
@@ -29,6 +33,8 @@ class HEVisualFaultProxy(Node):
         self.started_epoch: float | None = None
         self.events: list[dict[str, Any]] = []
         self.counts: Counter[tuple[str, str]] = Counter()
+        self.info_received: Counter[tuple[str, str]] = Counter()
+        self.info_published: Counter[tuple[str, str]] = Counter()
         qos = QoSProfile(depth=10, reliability=ReliabilityPolicy.RELIABLE)
         self.image_publishers = {
             "rgb": self.create_publisher(Image, "/he/fault/rgb/image_raw", qos),
@@ -102,7 +108,12 @@ class HEVisualFaultProxy(Node):
         self.counts[(phase, stream)] += 1
 
     def _camera_info(self, stream: str, message: CameraInfo) -> None:
+        phase = self.phase()
+        self.info_received[(phase, stream)] += 1
+        if phase == "fault" and should_drop_camera_info(stream, self.mode):
+            return
         self.info_publishers[stream].publish(message)
+        self.info_published[(phase, stream)] += 1
 
 
 def main() -> None:
@@ -142,6 +153,14 @@ def main() -> None:
             "image_counts": {
                 f"{phase}.{stream}": count
                 for (phase, stream), count in sorted(node.counts.items())
+            },
+            "camera_info_received_counts": {
+                f"{phase}.{stream}": count
+                for (phase, stream), count in sorted(node.info_received.items())
+            },
+            "camera_info_published_counts": {
+                f"{phase}.{stream}": count
+                for (phase, stream), count in sorted(node.info_published.items())
             },
         }
     finally:

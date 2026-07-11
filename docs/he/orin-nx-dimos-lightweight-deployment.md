@@ -1343,3 +1343,7 @@ Orin 已完成 `blank-rgb` 和 `blank-depth` 三阶段实测。blank RGB 后 0.2
 active/零重启、导航发布者为零。完整时间线、代理吞吐限制和原始 JSON 见
 `docs/he/evidence/2026-07-12_0041_fresh-visual-faults.md`。静态 bad-but-fresh
 RGB/depth 检查关闭；移动 tracking loss、CameraInfo 单独失效和动态场景仍未关闭。
+
+代理已扩展 `drop-camera-info`：RGB/depth payload 与 timestamp 全程透传，只在 fault
+阶段停止隔离 RGB CameraInfo 发布，并分别记录 received/published 计数。该模式仍需
+Orin live 验证后才能关闭 CameraInfo-only 缺口。

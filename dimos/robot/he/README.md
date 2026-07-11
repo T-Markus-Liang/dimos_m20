@@ -110,6 +110,9 @@ input overrides. It publishes no command and never writes to `/aurora/*`:
   --output /tmp/he-blank-rgb-fault.json
 ```
 
+Use `--mode drop-camera-info` to keep RGB/depth images fresh while withholding
+only the isolated RGB CameraInfo during the fault phase.
+
 The current RTAB-Map pilot can be checked or run without motion output:
 
 ```bash
