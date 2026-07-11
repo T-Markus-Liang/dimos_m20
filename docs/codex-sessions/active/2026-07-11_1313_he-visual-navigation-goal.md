@@ -725,7 +725,9 @@ health while keeping real motion disconnected.
 - Tested and rejected the two-thread point-cloud callback candidate: depth and
   point-cloud missing ratios worsened to 14.6/37.1% and point-cloud alignment
   P95 worsened to 124ms. Reverted to the qualified single-thread implementation;
-  Orin post-revert deployment is pending.
+  Orin post-revert deployment passed deployment integrity, read-only and live
+  sensor gates. Sense is active with zero restarts, shadow is inactive, all
+  Aurora modalities/calibrations are present and navigation publishers are zero.
 - Pushed the probe, failed-getter fix, bounded DDS convergence and final
   evidence as `1655079a`, `b7b56853`, `a4af65e6` and `64cfeb4c`; Orin
   fast-forwarded cleanly and the macOS deployment mirror was synchronized.

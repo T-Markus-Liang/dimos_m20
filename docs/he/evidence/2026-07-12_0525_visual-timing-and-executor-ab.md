@@ -104,5 +104,10 @@ is rejected and the single-thread executor is restored.
 - `2026-07-12_visual-timing-two-thread.json`:
   `b2099b0dee8987637ad98c421a45afe5a6172221746506f8337fc6348e54f482`
 
-The repository revert is VM-validated. Final Orin restoration and post-revert
-sensor/read-only gates are required before closeout.
+The revert was deployed to Orin at commit `2e5255924064bc566c3fe983e94b7e399f12f3d0`.
+The running bridge uses `SingleThreadedExecutor`; Sense is active with zero
+restarts and shadow is inactive. Deployment integrity, read-only and live sensor
+gates passed. The post-revert sensor sample measured RGB/depth/IR at
+15.63/13.16/15.38Hz, depth validity 25.8%, a 256000-point cloud, both camera
+calibrations and 44 IMU/odom samples. `/he/nav_cmd_vel` remained at zero
+publishers and `/odom_raw` remained explicitly untrusted.

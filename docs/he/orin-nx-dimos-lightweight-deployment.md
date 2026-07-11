@@ -1668,3 +1668,7 @@ Sense 后改善到 14.47/12.35Hz 和 1.6%/16.1%。但隔离点云仍缺失约 16
 driver 侧预限频，同时保留默认 point-cloud surface；不能通过降低验收阈值或隐藏模态
 解决。完整 10 分钟、订阅负载 A/B 和候选结果见
 `docs/he/evidence/2026-07-12_0525_visual-timing-and-executor-ab.md`。
+
+回退提交 `2e525592` 已部署到 Orin。最终部署完整性、只读和 live sensor gate 通过：
+Sense active/零重启、shadow inactive，RGB/depth/IR 为 15.63/13.16/15.38Hz，depth
+valid 25.8%，点云 256000 点，两路 CameraInfo 存在，导航发布者为零。单线程回退完成。
