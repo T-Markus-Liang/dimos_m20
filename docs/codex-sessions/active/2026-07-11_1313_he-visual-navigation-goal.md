@@ -713,16 +713,19 @@ health while keeping real motion disconnected.
   duration. The unchanged payload-free collector remains bounded; a paired
   Sense-concurrent versus isolated-subscriber A/B is required before assigning
   the gaps to Aurora/USB rather than diagnostic subscription pressure.
-- Completed the paired 120-second load A/B. With Sense concurrent, depth and
-  point-cloud span rates were 13.13/9.65Hz and estimated missing ratios were
-  10.8%/34.0%; with the timing diagnostic as the sole subscriber chain they
-  improved to 14.47/12.35Hz and 1.6%/16.1%. RGB/IR improved modestly and IMU was
-  unchanged. This proves bridge-side contention is material while leaving a
-  separate point-cloud/USB risk.
-- Prepared a minimal scheduler candidate: a fixed two-thread ROS executor with
-  the point-cloud subscription in its own mutually exclusive callback group.
-  Topic names, all default modalities, output rates, point-cloud stride and
-  Rerun are unchanged. All 60 HE tests pass; Orin A/B decides retention.
+- Completed a 600-second bounded timing run and paired 120-second subscriber
+  A/B. The diagnostic ended at 102.9MiB RSS with stable Sense/system memory,
+  zero swap growth/restarts/navigation publishers, and no timestamp regressions
+  or duplicates. RGB/depth/IR/point-cloud estimated missing ratios were about
+  7.0/16.5/6.8/34.7% over ten minutes.
+- Stopping Sense reduced depth/point-cloud missing ratios from 10.8/34.0% to
+  1.6/16.1%, proving bridge-side contention is material while leaving a
+  separate USB2/driver limitation. Exact RGB pairing was not universal, so
+  hardware synchronization remains unclaimed and admission remains failed.
+- Tested and rejected the two-thread point-cloud callback candidate: depth and
+  point-cloud missing ratios worsened to 14.6/37.1% and point-cloud alignment
+  P95 worsened to 124ms. Reverted to the qualified single-thread implementation;
+  Orin post-revert deployment is pending.
 - Pushed the probe, failed-getter fix, bounded DDS convergence and final
   evidence as `1655079a`, `b7b56853`, `a4af65e6` and `64cfeb4c`; Orin
   fast-forwarded cleanly and the macOS deployment mirror was synchronized.
@@ -777,7 +780,8 @@ health while keeping real motion disconnected.
 - Aurora depth coverage, camera extrinsics, moving accuracy, loop closure and
   relocalization remain open gates. Real motion remains prohibited.
 - Long-duration software timestamp qualification now has a bounded tool but is
-  not yet closed by Orin evidence. Hardware synchronization remains unclaimed.
+  characterized on Orin. It does not pass admission because camera/point-cloud
+  gaps remain; hardware synchronization remains unclaimed.
 - The enhanced diagnostic and effective-parameter A/B are complete. No tested
   setting resolves the stable spatial defect, so the canonical configuration is
   restored and RGB-D navigation admission remains failed. The SDK support-range

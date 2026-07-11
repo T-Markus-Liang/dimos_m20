@@ -1657,13 +1657,14 @@ registry 和 diff 检查通过；Orin 长时结果仍待部署实测。
 missing ratio，并使用实际 monotonic 运行时长。该修复不改变订阅或 payload 行为；
 需要用更新版本执行 Sense 并发与隔离单订阅者 A/B 后再给出同步准入结论。
 
-更新工具的相邻 120 秒 A/B 表明 HESensorBridge 负载是部分原因。Sense 并发时
-depth/point-cloud 的 span rate 为 13.13/9.65Hz，估计 missing ratio 为
-10.8%/34.0%；停止 Sense、只保留诊断订阅时改善到 14.47/12.35Hz 和 1.6%/16.1%。
-RGB/IR 也有较小改善，IMU 基本不变。隔离后点云仍缺帧，不能据此关闭 USB2/驱动风险。
+同场景相邻 120 秒 A/B 已证明 HESensorBridge 是部分负载来源。Sense 并发时
+depth/point-cloud span rate 为 13.13/9.65Hz、missing ratio 为 10.8%/34.0%；停止
+Sense 后改善到 14.47/12.35Hz 和 1.6%/16.1%。但隔离点云仍缺失约 16%，USB2/驱动
+风险没有关闭。
 
-源码确认 `_allowed()` 已位于 NumPy 点云转换前，但 ROS Python 在 callback 前仍需接收/
-反序列化完整大消息；原 `SingleThreadedExecutor` 会与图像、IMU 串行。候选改为固定
-2 线程 `MultiThreadedExecutor`，并仅把点云放入独立
-`MutuallyExclusiveCallbackGroup`。所有 topic、默认模态、输出频率、stride 和 Rerun
-配置不变。VM 60 项 HE 测试通过；必须完成同口径 Orin A/B 后才能决定保留或回退。
+两线程 Python executor 候选没有通过：depth/point-cloud missing ratio 进一步恶化到
+14.6%/37.1%，span rate 降到 12.57/9.22Hz，点云对 RGB 的 alignment P95 从 79ms
+恶化到 124ms。候选回退到单线程。下一软件优化必须在 Python 反序列化前进行 native/
+driver 侧预限频，同时保留默认 point-cloud surface；不能通过降低验收阈值或隐藏模态
+解决。完整 10 分钟、订阅负载 A/B 和候选结果见
+`docs/he/evidence/2026-07-12_0525_visual-timing-and-executor-ab.md`。

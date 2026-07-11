@@ -1,6 +1,5 @@
 """Unit tests for Aurora-to-DimOS message conversion."""
 
-from pathlib import Path
 import types
 import unittest
 
@@ -20,13 +19,6 @@ def header(frame_id: str = "camera") -> types.SimpleNamespace:
 
 
 class TestHESensorBridge(unittest.TestCase):
-    def test_pointcloud_deserialization_does_not_serialize_other_callbacks(self) -> None:
-        source = (Path(__file__).parent / "sensors.py").read_text()
-
-        self.assertIn("MultiThreadedExecutor(num_threads=2)", source)
-        self.assertIn("MutuallyExclusiveCallbackGroup()", source)
-        self.assertIn("callback_group=self._pointcloud_callback_group", source)
-
     def test_headless_blueprint_keeps_bounded_full_sensor_surface(self) -> None:
         atoms = {atom.module: atom for atom in he_sense_headless.blueprints}
 

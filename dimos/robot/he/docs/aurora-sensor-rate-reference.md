@@ -183,12 +183,11 @@ Aurora is also on a shared 480Mbps hub, which remains a throughput qualification
 risk but has no observed reset/stall evidence and does not alone explain the
 stable geometric mask.
 
-A 2026-07-12 timing A/B found that the existing single-threaded ROS executor
-also contributes to receive gaps: with Sense active, depth/point-cloud estimated
-missing ratios were 10.8%/34.0%; with Sense stopped and the diagnostic as the
-only subscription chain they fell to 1.6%/16.1%. RGB and IR improved more
-modestly. The candidate bridge therefore places point-cloud callbacks in a
-separate mutually exclusive callback group under a fixed two-thread executor.
-Topics, default modalities, 1Hz point-cloud output and stride 8 are unchanged.
-Retain this candidate only if the equivalent Orin test improves continuity
-without a material CPU, memory, swap or output-rate regression.
+The bounded long-duration timing diagnostic and subscriber-load A/B are in
+`docs/he/evidence/2026-07-12_0525_visual-timing-and-executor-ab.md`. A normal
+Sense run showed material depth and point-cloud gaps; stopping Sense reduced
+their estimated missing ratios from 10.8%/34.0% to 1.6%/16.1%. A two-thread
+Python executor candidate worsened them to 14.6%/37.1% and is rejected. Keep
+the single-thread bridge. The remaining optimization boundary is before Python
+point-cloud deserialization, and the shared USB2 path still needs a physical
+USB3-root A/B.

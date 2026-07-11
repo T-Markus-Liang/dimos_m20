@@ -1,0 +1,220 @@
+{
+  "captured_at": "2026-07-12T05:23:49+0800",
+  "duration_seconds": 120.00159793699277,
+  "frames": {
+    "depth": "depth_camera_link",
+    "imu": "imu_link",
+    "ir": "depth_camera_link",
+    "pointcloud": "depth_camera_link",
+    "rgb": "rgb_camera_link"
+  },
+  "navigation_publishers": 0,
+  "process_rss_mib": {
+    "current": 91.48046875,
+    "peak": 101.43359375
+  },
+  "rgb_nearest_timestamp_alignment": {
+    "depth": {
+      "absolute_max_ms": 151.0000228881836,
+      "absolute_median_ms": 0.0,
+      "absolute_p95_ms": 65.00005722045898,
+      "pairs": 1661,
+      "reference_samples": 1661,
+      "signed_median_ms": 0.0,
+      "within_10ms_ratio": 0.8621312462372065,
+      "within_1ms_ratio": 0.8621312462372065
+    },
+    "imu": {
+      "absolute_max_ms": 11.682271957397461,
+      "absolute_median_ms": 5.15139102935791,
+      "absolute_p95_ms": 10.129332542419434,
+      "pairs": 1660,
+      "reference_samples": 1661,
+      "signed_median_ms": -0.06270408630371094,
+      "within_10ms_ratio": 0.9337349397590361,
+      "within_1ms_ratio": 0.09939759036144578
+    },
+    "ir": {
+      "absolute_max_ms": 81.00008964538574,
+      "absolute_median_ms": 0.0,
+      "absolute_p95_ms": 59.00001525878906,
+      "pairs": 1661,
+      "reference_samples": 1661,
+      "signed_median_ms": 0.0,
+      "within_10ms_ratio": 0.9409993979530403,
+      "within_1ms_ratio": 0.9409993979530403
+    },
+    "pointcloud": {
+      "absolute_max_ms": 260.9999179840088,
+      "absolute_median_ms": 0.0,
+      "absolute_p95_ms": 124.00007247924805,
+      "pairs": 1661,
+      "reference_samples": 1661,
+      "signed_median_ms": 0.0,
+      "within_10ms_ratio": 0.6321493076459964,
+      "within_1ms_ratio": 0.6321493076459964
+    }
+  },
+  "streams": {
+    "depth": {
+      "estimated_missing_frames": 257,
+      "estimated_missing_ratio": 0.14552661381653453,
+      "receipt_interval_ms": {
+        "max": 348.3107089996338,
+        "median": 68.49086284637451,
+        "p95": 142.24766492843628
+      },
+      "receipt_rate_hz": 14.600487691956912,
+      "receipt_span_rate_hz": 12.572388177428278,
+      "receipt_span_seconds": 119.94538974761963,
+      "retained_samples": 1509,
+      "samples": 1509,
+      "source_duplicates": 0,
+      "source_interval_ms": {
+        "max": 353.0001640319824,
+        "median": 69.0000057220459,
+        "p95": 141.9999599456787
+      },
+      "source_rate_hz": 14.492752421330513,
+      "source_regressions": 0,
+      "source_span_rate_hz": 12.572533848529808,
+      "source_span_seconds": 119.94400000572205,
+      "total_samples": 1509,
+      "transport_age_ms": {
+        "absolute_max": 54.36444282531738,
+        "absolute_p95": 31.85710906982422,
+        "future_over_5ms": 0,
+        "signed_median": 19.097328186035156
+      },
+      "truncated": false
+    },
+    "imu": {
+      "estimated_missing_frames": 0,
+      "estimated_missing_ratio": 0.0,
+      "receipt_interval_ms": {
+        "max": 39.31570053100586,
+        "median": 21.345019340515137,
+        "p95": 27.936005592346188
+      },
+      "receipt_rate_hz": 46.84933679595655,
+      "receipt_span_rate_hz": 46.57527924853607,
+      "receipt_span_seconds": 119.97780990600586,
+      "retained_samples": 5589,
+      "samples": 5589,
+      "source_duplicates": 0,
+      "source_interval_ms": {
+        "max": 28.28669548034668,
+        "median": 21.341919898986816,
+        "p95": 22.590446472167965
+      },
+      "source_rate_hz": 46.85614062526183,
+      "source_regressions": 0,
+      "source_span_rate_hz": 46.574202409032154,
+      "source_span_seconds": 119.9805839061737,
+      "total_samples": 5589,
+      "transport_age_ms": {
+        "absolute_max": 20.044803619384766,
+        "absolute_p95": 8.011054992675772,
+        "future_over_5ms": 0,
+        "signed_median": 1.7168521881103516
+      },
+      "truncated": false
+    },
+    "ir": {
+      "estimated_missing_frames": 103,
+      "estimated_missing_ratio": 0.058323895809739526,
+      "receipt_interval_ms": {
+        "max": 211.0295295715332,
+        "median": 67.86024570465088,
+        "p95": 129.02433872222895
+      },
+      "receipt_rate_hz": 14.736168276671357,
+      "receipt_span_rate_hz": 13.856283548637778,
+      "receipt_span_seconds": 119.94558238983154,
+      "retained_samples": 1663,
+      "samples": 1663,
+      "source_duplicates": 0,
+      "source_interval_ms": {
+        "max": 210.00003814697266,
+        "median": 67.9999589920044,
+        "p95": 128.94995212554915
+      },
+      "source_rate_hz": 14.705891221457685,
+      "source_regressions": 0,
+      "source_span_rate_hz": 13.856466350302746,
+      "source_span_seconds": 119.94400000572205,
+      "total_samples": 1663,
+      "transport_age_ms": {
+        "absolute_max": 55.02676963806152,
+        "absolute_p95": 32.17902183532711,
+        "future_over_5ms": 0,
+        "signed_median": 19.353866577148438
+      },
+      "truncated": false
+    },
+    "pointcloud": {
+      "estimated_missing_frames": 653,
+      "estimated_missing_ratio": 0.3710227272727273,
+      "receipt_interval_ms": {
+        "max": 527.9943943023682,
+        "median": 74.34940338134766,
+        "p95": 224.93958473205566
+      },
+      "receipt_rate_hz": 13.450007054809456,
+      "receipt_span_rate_hz": 9.220931478062688,
+      "receipt_span_seconds": 119.94449830055237,
+      "retained_samples": 1107,
+      "samples": 1107,
+      "source_duplicates": 0,
+      "source_interval_ms": {
+        "max": 531.9998264312744,
+        "median": 73.50003719329834,
+        "p95": 221.50009870529175
+      },
+      "source_rate_hz": 13.60543529209505,
+      "source_regressions": 0,
+      "source_span_rate_hz": 9.220969785460191,
+      "source_span_seconds": 119.94400000572205,
+      "total_samples": 1107,
+      "transport_age_ms": {
+        "absolute_max": 68.0992603302002,
+        "absolute_p95": 47.92373180389405,
+        "future_over_5ms": 0,
+        "signed_median": 34.172773361206055
+      },
+      "truncated": false
+    },
+    "rgb": {
+      "estimated_missing_frames": 105,
+      "estimated_missing_ratio": 0.059456398640996604,
+      "receipt_interval_ms": {
+        "max": 208.50515365600586,
+        "median": 67.70849227905273,
+        "p95": 129.51562404632568
+      },
+      "receipt_rate_hz": 14.76919609845417,
+      "receipt_span_rate_hz": 13.839590339144138,
+      "receipt_span_seconds": 119.94574689865112,
+      "retained_samples": 1661,
+      "samples": 1661,
+      "source_duplicates": 0,
+      "source_interval_ms": {
+        "max": 213.99998664855957,
+        "median": 68.00007820129395,
+        "p95": 128.00002098083496
+      },
+      "source_rate_hz": 14.705865440916087,
+      "source_regressions": 0,
+      "source_span_rate_hz": 13.839791902227773,
+      "source_span_seconds": 119.94400000572205,
+      "total_samples": 1661,
+      "transport_age_ms": {
+        "absolute_max": 52.50072479248047,
+        "absolute_p95": 30.34830093383789,
+        "future_over_5ms": 0,
+        "signed_median": 17.312049865722656
+      },
+      "truncated": false
+    }
+  }
+}

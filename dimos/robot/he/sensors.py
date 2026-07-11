@@ -75,7 +75,6 @@ class HESensorBridge(Module):
         super().__init__(**config_args)
         self._node: Any | None = None
         self._executor: Any | None = None
-        self._pointcloud_callback_group: Any | None = None
         self._spin_thread: threading.Thread | None = None
         self._last_published: dict[str, float] = {}
 
@@ -90,8 +89,7 @@ class HESensorBridge(Module):
         try:
             from nav_msgs.msg import Odometry as RosOdometry
             import rclpy
-            from rclpy.callback_groups import MutuallyExclusiveCallbackGroup
-            from rclpy.executors import MultiThreadedExecutor
+            from rclpy.executors import SingleThreadedExecutor
             from rclpy.node import Node
             from rclpy.qos import qos_profile_sensor_data
             from sensor_msgs.msg import (
@@ -134,13 +132,11 @@ class HESensorBridge(Module):
                 qos_profile_sensor_data,
             )
         if self.config.enable_pointcloud:
-            self._pointcloud_callback_group = MutuallyExclusiveCallbackGroup()
             self._node.create_subscription(
                 RosPointCloud2,
                 self.config.pointcloud_topic,
                 self._on_pointcloud,
                 qos_profile_sensor_data,
-                callback_group=self._pointcloud_callback_group,
             )
         if self.config.enable_camera_info:
             self._node.create_subscription(
@@ -156,7 +152,7 @@ class HESensorBridge(Module):
                 qos_profile_sensor_data,
             )
 
-        self._executor = MultiThreadedExecutor(num_threads=2)
+        self._executor = SingleThreadedExecutor()
         self._executor.add_node(self._node)
         self._spin_thread = threading.Thread(target=self._spin_ros, daemon=True)
         self._spin_thread.start()
@@ -191,7 +187,6 @@ class HESensorBridge(Module):
         if self._node is not None:
             self._node.destroy_node()
             self._node = None
-        self._pointcloud_callback_group = None
 
     def _allowed(self, stream: str, max_hz: float) -> bool:
         if max_hz <= 0.0:
