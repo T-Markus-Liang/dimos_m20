@@ -445,6 +445,10 @@ health while keeping real motion disconnected.
   `docs/he/evidence/2026-07-12_0052_camera-info-fault.md`. Database hash was
   unchanged; repeated sensor/read-only gates passed, services stayed at zero
   restarts and navigation publishers remained zero.
+- Added direct RGB CameraInfo validation to the visual bridge and explicit
+  missing/invalid/stale localization-health reasons. Added a
+  `corrupt-camera-info` proxy mode that keeps publishing K/P with zero focal
+  lengths. All 48 HE tests and Ruff pass on the VM; live Orin proof is pending.
 
 ## Decisions
 

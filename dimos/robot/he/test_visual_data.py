@@ -10,6 +10,7 @@ import numpy as np
 
 from dimos.robot.he.visual_data import (
     bgr8_array,
+    corrupted_camera_intrinsics,
     depth_array,
     depth_ir_quality,
     depth_quality,
@@ -40,6 +41,9 @@ class TestHEVisualData(unittest.TestCase):
         self.assertTrue(should_drop_camera_info("rgb", "drop-camera-info"))
         self.assertFalse(should_drop_camera_info("depth", "drop-camera-info"))
         self.assertFalse(should_drop_camera_info("rgb", "blank-rgb"))
+
+        k, p = corrupted_camera_intrinsics([1.0] * 9, [1.0] * 12)
+        self.assertEqual((k[0], k[4], p[0], p[5]), (0.0, 0.0, 0.0, 0.0))
 
     def test_timestamp_alignment_uses_nearest_samples(self) -> None:
         metrics = timestamp_alignment([1.0, 2.0, 3.0], [0.995, 2.02, 3.005])

@@ -1354,3 +1354,7 @@ CameraInfo 同步缺失由 pose/TF freshness fail-closed 兜底。
 数据库 hash 不变，最终 sensor/read-only gates 通过、服务零重启、导航发布者为零。
 完整证据见 `docs/he/evidence/2026-07-12_0052_camera-info-fault.md`。静态
 CameraInfo-only 缺口关闭；malformed-but-present calibration 和移动同步仍未关闭。
+
+下一步增加 bridge 直接 CameraInfo 校验与 `corrupt-camera-info` 注入。校验覆盖
+dimensions、frame、K/P 长度与有限性、正焦距、主点范围和齐次矩阵项，并在 health
+输出 `camera_info_missing/invalid/stale`。Orin live 证据仍待完成。

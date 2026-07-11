@@ -68,6 +68,12 @@ class HEVisualSlamBridgeConfig(ModuleConfig):
     map_topic: str = "/he/visual_occupancy"
     path_topic: str = "/he/visual_path"
     odom_info_topic: str = "/he/visual_odom_info"
+    camera_info_topic: str = Field(
+        default_factory=lambda: os.getenv(
+            "HE_RTABMAP_CAMERA_INFO_TOPIC", "/aurora/rgb/camera_info"
+        )
+    )
+    camera_frame: str = "rgb_camera_link"
     map_frame: str = "he_map"
     odom_frame: str = "he_visual_odom"
     base_frame: str = "base_link"
@@ -92,7 +98,12 @@ class HEVisualSlamBridge(Module):
         self._spin_thread: threading.Thread | None = None
         self._tf_buffer: Any | None = None
         self._last_tf: tuple[np.ndarray[Any, Any], np.ndarray[Any, Any]] | None = None
-        self._tracking: dict[str, Any] = {"tracking_lost": True, "inliers": 0}
+        self._tracking: dict[str, Any] = {
+            "tracking_lost": True,
+            "inliers": 0,
+            "camera_info_seen": False,
+            "camera_info_valid": False,
+        }
 
     async def main(self) -> AsyncGenerator[None, None]:
         self._start_ros()
@@ -161,6 +172,33 @@ class HEVisualSlamBridge(Module):
         ]
         return Path(ts=_stamp_seconds(msg.header), frame_id=frame_id, poses=poses)
 
+    @staticmethod
+    def camera_info_status(msg: Any, expected_frame: str) -> dict[str, Any]:
+        width = int(msg.width)
+        height = int(msg.height)
+        if width <= 0 or height <= 0:
+            raise ValueError("CameraInfo dimensions must be positive")
+        if msg.header.frame_id != expected_frame:
+            raise ValueError(f"unexpected CameraInfo frame: {msg.header.frame_id}")
+        k = np.asarray(msg.k, dtype=np.float64)
+        p = np.asarray(msg.p, dtype=np.float64)
+        if k.size != 9 or p.size != 12 or not np.all(np.isfinite(k)) or not np.all(np.isfinite(p)):
+            raise ValueError("CameraInfo matrices must have finite 9/12 elements")
+        if min(k[0], k[4], p[0], p[5]) <= 0.0:
+            raise ValueError("CameraInfo focal lengths must be positive")
+        if not (0.0 <= k[2] < width and 0.0 <= k[5] < height):
+            raise ValueError("CameraInfo principal point is outside the image")
+        if not (math.isclose(k[8], 1.0) and math.isclose(p[10], 1.0)):
+            raise ValueError("CameraInfo homogeneous matrix terms are invalid")
+        return {
+            "camera_info_seen": True,
+            "camera_info_valid": True,
+            "camera_info_stamp": _stamp_seconds(msg.header),
+            "camera_info_frame": msg.header.frame_id,
+            "camera_info_fx": float(k[0]),
+            "camera_info_fy": float(k[4]),
+        }
+
     def _start_ros(self) -> None:
         try:
             from nav_msgs.msg import (
@@ -174,6 +212,7 @@ class HEVisualSlamBridge(Module):
             from rclpy.node import Node
             from rclpy.qos import qos_profile_sensor_data
             from rtabmap_msgs.msg import OdomInfo
+            from sensor_msgs.msg import CameraInfo
             from tf2_ros import Buffer, TransformListener
         except ImportError as exc:
             raise RuntimeError("HEVisualSlamBridge requires ROS 2 and RTAB-Map messages") from exc
@@ -192,6 +231,9 @@ class HEVisualSlamBridge(Module):
         )
         self._node.create_subscription(
             OdomInfo, self.config.odom_info_topic, self._on_odom_info, qos_profile_sensor_data
+        )
+        self._node.create_subscription(
+            CameraInfo, self.config.camera_info_topic, self._on_camera_info, qos_profile_sensor_data
         )
         self._tf_buffer = Buffer(cache_time=Duration(seconds=5.0))
         self._tf_listener = TransformListener(self._tf_buffer, self._node)
@@ -251,6 +293,20 @@ class HEVisualSlamBridge(Module):
             }
         )
 
+    def _on_camera_info(self, msg: Any) -> None:
+        try:
+            self._tracking.update(self.camera_info_status(msg, self.config.camera_frame))
+            self._tracking.pop("camera_info_error", None)
+        except ValueError as exc:
+            self._tracking.update(
+                {
+                    "camera_info_seen": True,
+                    "camera_info_valid": False,
+                    "camera_info_stamp": _stamp_seconds(msg.header),
+                    "camera_info_error": str(exc),
+                }
+            )
+
     def _publish_tf_status(self) -> None:
         status = {**self._tracking, "stamp": time.time(), "tf_ok": False}
         try:
@@ -286,6 +342,7 @@ class LocalizationHealth:
     pose_age_s: float | None = None
     map_age_s: float | None = None
     tf_age_s: float | None = None
+    camera_info_age_s: float | None = None
     inliers: int | None = None
     known_ratio: float | None = None
     free_ratio_of_known: float | None = None
@@ -331,6 +388,7 @@ def summarize_localization_health(samples: Sequence[Mapping[str, Any]]) -> dict[
         "max_pose_age_s": maximum("pose_age_s"),
         "max_map_age_s": maximum("map_age_s"),
         "max_tf_age_s": maximum("tf_age_s"),
+        "max_camera_info_age_s": maximum("camera_info_age_s"),
         "transitions": transitions,
     }
 
@@ -340,6 +398,7 @@ class HELocalizationHealthConfig(ModuleConfig):
     max_pose_age_s: float = Field(default=0.5, gt=0.0)
     max_map_age_s: float | None = Field(default=None, gt=0.0)
     max_tf_age_s: float = Field(default=1.0, gt=0.0)
+    max_camera_info_age_s: float = Field(default=1.0, gt=0.0)
     min_inliers: int = Field(default=20, ge=1)
     min_known_ratio: float = Field(default=0.10, ge=0.0, le=1.0)
     min_free_ratio_of_known: float = Field(default=0.10, ge=0.0, le=1.0)
@@ -408,6 +467,12 @@ class HELocalizationHealth(Module):
         status = self._status or {}
         tf_stamp = status.get("tf_stamp")
         tf_age = None if tf_stamp is None else max(0.0, now - float(tf_stamp))
+        camera_info_stamp = status.get("camera_info_stamp")
+        camera_info_age = (
+            None
+            if camera_info_stamp is None
+            else max(0.0, now - float(camera_info_stamp))
+        )
 
         if pose_age is None:
             reasons.append("pose_missing")
@@ -419,6 +484,13 @@ class HELocalizationHealth(Module):
             reasons.append("map_stale")
         if not status:
             reasons.append("status_missing")
+        if "camera_info_seen" in status:
+            if not status.get("camera_info_seen", False):
+                reasons.append("camera_info_missing")
+            elif not status.get("camera_info_valid", False):
+                reasons.append("camera_info_invalid")
+            elif camera_info_age is None or camera_info_age > self.config.max_camera_info_age_s:
+                reasons.append("camera_info_stale")
         if status.get("tracking_lost", True):
             reasons.append("tracking_lost")
         inliers = int(status.get("inliers", 0))
@@ -462,6 +534,7 @@ class HELocalizationHealth(Module):
             pose_age_s=pose_age,
             map_age_s=map_age,
             tf_age_s=tf_age,
+            camera_info_age_s=camera_info_age,
             inliers=inliers,
             known_ratio=known_ratio,
             free_ratio_of_known=free_ratio,
@@ -470,6 +543,7 @@ class HELocalizationHealth(Module):
                 "tf_rotation_jump_deg": status.get("tf_rotation_jump_deg"),
                 "odom_latency_ms": status.get("odom_latency_ms"),
                 "slam_rss_mb": runtime_status.get("rss_mb"),
+                "camera_info_error": status.get("camera_info_error"),
             },
         )
 

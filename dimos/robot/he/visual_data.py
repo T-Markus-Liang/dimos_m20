@@ -13,7 +13,13 @@ from typing import Any
 import cv2
 import numpy as np
 
-VISUAL_FAULT_MODES = {"blank-rgb", "blank-depth", "blank-both", "drop-camera-info"}
+VISUAL_FAULT_MODES = {
+    "blank-rgb",
+    "blank-depth",
+    "blank-both",
+    "drop-camera-info",
+    "corrupt-camera-info",
+}
 
 
 def visual_fault_payload(payload: Any, stream: str, mode: str) -> bytes:
@@ -33,6 +39,17 @@ def should_drop_camera_info(stream: str, mode: str) -> bool:
     if stream not in {"rgb", "depth"}:
         raise ValueError(f"unsupported visual stream: {stream}")
     return mode == "drop-camera-info" and stream == "rgb"
+
+
+def corrupted_camera_intrinsics(k: Any, p: Any) -> tuple[list[float], list[float]]:
+    """Return malformed-but-present camera matrices with zero focal lengths."""
+    corrupted_k = [float(value) for value in k]
+    corrupted_p = [float(value) for value in p]
+    if len(corrupted_k) != 9 or len(corrupted_p) != 12:
+        raise ValueError("CameraInfo K/P matrices must have 9/12 elements")
+    corrupted_k[0] = corrupted_k[4] = 0.0
+    corrupted_p[0] = corrupted_p[5] = 0.0
+    return corrupted_k, corrupted_p
 
 
 def stamp_seconds(message: Any) -> float:

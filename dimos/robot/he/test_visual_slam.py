@@ -66,7 +66,27 @@ def ros_map(data: list[int], width: int, height: int, stamp: float = 100.0):
     )
 
 
+def ros_camera_info(stamp: float = 100.0):
+    return types.SimpleNamespace(
+        header=header(stamp, "rgb_camera_link"),
+        width=640,
+        height=400,
+        k=[417.0, 0.0, 320.0, 0.0, 418.0, 192.0, 0.0, 0.0, 1.0],
+        p=[417.0, 0.0, 320.0, 0.0, 0.0, 418.0, 192.0, 0.0, 0.0, 0.0, 1.0, 0.0],
+    )
+
+
 class TestHEVisualSlamBridge(unittest.TestCase):
+    def test_camera_info_validation_accepts_canonical_and_rejects_bad_intrinsics(self) -> None:
+        status = HEVisualSlamBridge.camera_info_status(ros_camera_info(), "rgb_camera_link")
+        self.assertTrue(status["camera_info_valid"])
+        self.assertEqual(status["camera_info_fx"], 417.0)
+
+        invalid = ros_camera_info()
+        invalid.k[0] = 0.0
+        with self.assertRaises(ValueError):
+            HEVisualSlamBridge.camera_info_status(invalid, "rgb_camera_link")
+
     def test_odometry_conversion_preserves_frames_covariance_and_stamp(self) -> None:
         result = HEVisualSlamBridge.odometry_from_ros(ros_odom())
         self.assertEqual(result.frame_id, "he_visual_odom")
@@ -171,6 +191,23 @@ class TestHELocalizationHealth(unittest.TestCase):
         self.assertIn("pose_missing", result.reasons)
         self.assertIn("map_missing", result.reasons)
         self.assertIn("status_missing", result.reasons)
+
+    def test_camera_info_missing_invalid_and_stale_fail_closed(self) -> None:
+        evaluator = HELocalizationHealth()
+        evaluator._status = {"camera_info_seen": False}
+        self.assertIn("camera_info_missing", evaluator.evaluate(now=100.0).reasons)
+        evaluator._status = {
+            "camera_info_seen": True,
+            "camera_info_valid": False,
+            "camera_info_stamp": 100.0,
+        }
+        self.assertIn("camera_info_invalid", evaluator.evaluate(now=100.0).reasons)
+        evaluator._status = {
+            "camera_info_seen": True,
+            "camera_info_valid": True,
+            "camera_info_stamp": 98.0,
+        }
+        self.assertIn("camera_info_stale", evaluator.evaluate(now=100.0).reasons)
 
     def test_current_he_map_quality_remains_unhealthy(self) -> None:
         evaluator = HELocalizationHealth()
