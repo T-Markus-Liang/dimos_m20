@@ -156,6 +156,8 @@ health while keeping real motion disconnected.
   polling after temporary nodes had shut down. Replaced it with a two-second
   DDS settle; the existing final read-only gate remains the authoritative and
   stricter endpoint, process, command and port check.
+- Added a non-suppressing `ERR` trap to the read-only gate so the still-failing
+  final invocation reports the exact assertion instead of ending silently.
 
 ## Decisions
 
@@ -179,8 +181,8 @@ health while keeping real motion disconnected.
 
 ## Current State
 
-- VM, origin and Orin are synchronized at `01c81882`. The simplified static
-  closeout cleanup is under verification before its follow-up commit.
+- VM, origin and Orin are synchronized at `17341f9c`. The read-only failure
+  diagnostic is under verification before its follow-up commit.
 - The final static closeout passed all 29 HE tests, blueprint discovery,
   deployment integrity, isolated control dry-run, Aurora live quality and both
   read-only gates. `he-dimos-sense` is active with zero restarts.

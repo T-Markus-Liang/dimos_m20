@@ -77,3 +77,8 @@ gate. The duplicate polling was removed in favor of a two-second DDS settle.
 The authoritative final read-only gate already rejects test topics, unexpected
 Aurora subscription counts, navigation processes, unsafe command publishers
 and unexpected ports. This reduces the checker without weakening any gate.
+
+The closeout then reached the final gate but still ended without identifying
+which assertion failed. `verify-he-readonly.sh` now installs an `ERR` trap that
+prints the failing line and command. It does not catch or suppress the error and
+does not change any safety condition.

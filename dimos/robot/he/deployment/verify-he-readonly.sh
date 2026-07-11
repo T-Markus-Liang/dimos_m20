@@ -2,6 +2,7 @@
 source /opt/ros/humble/setup.bash
 source /home/ubuntu/ros2_ws/install/setup.bash
 set -euo pipefail
+trap 'printf "HE read-only gate failed at line %s: %s\n" "$LINENO" "$BASH_COMMAND" >&2' ERR
 
 required_services=(
   odom-publisher.service
