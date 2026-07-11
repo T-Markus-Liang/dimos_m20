@@ -74,7 +74,14 @@ Measure raw IMU quality, or compare a temporary filtered orientation topic:
 .venv/bin/python dimos/robot/he/deployment/diagnose-he-imu.py \
   --duration 30 --filtered-topic /he/imu/orientation_probe \
   --output /tmp/he-imu-filtered.json
+.venv/bin/python dimos/robot/he/deployment/diagnose-he-imu.py \
+  --duration 600 --output /tmp/he-imu-static-10min.json
 ```
+
+The report includes 60-second block-mean stability, non-overlapping Allan
+deviation at bounded cluster durations and the stationary gyro-mean integral.
+These are diagnostics only: one stationary pose cannot identify accelerometer
+bias, axis alignment, scale factor or temperature compensation.
 
 Preview or make a time-bounded raw dataset recording:
 

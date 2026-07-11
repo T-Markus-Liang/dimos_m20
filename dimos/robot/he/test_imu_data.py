@@ -6,7 +6,7 @@ import unittest
 
 import numpy as np
 
-from dimos.robot.he.imu_data import summarize_imu_samples
+from dimos.robot.he.imu_data import static_vector_stability, summarize_imu_samples
 
 
 class TestHEImuData(unittest.TestCase):
@@ -57,6 +57,35 @@ class TestHEImuData(unittest.TestCase):
             frame_ids={"imu_link"},
         )
         json.dumps(metrics)
+
+    def test_static_stability_reports_windows_and_allan_deviation(self) -> None:
+        stamps = [index * 0.1 for index in range(40)]
+        vectors = [[1.0, 2.0, 3.0]] * 20 + [[1.2, 2.0, 3.0]] * 20
+        metrics = static_vector_stability(
+            stamps,
+            vectors,
+            window_seconds=1.0,
+            cluster_seconds=(0.1, 0.5, 1.0),
+        )
+        self.assertEqual(metrics["complete_windows"], 4)
+        self.assertAlmostEqual(metrics["window_mean_span"][0], 0.2)
+        self.assertEqual(metrics["window_mean_span"][1:], [0.0, 0.0])
+        self.assertEqual(len(metrics["allan_deviation"]), 3)
+        self.assertGreater(metrics["allan_deviation"][-1]["value"][0], 0.0)
+
+    def test_static_stability_rejects_unpaired_or_nonfinite_data(self) -> None:
+        with self.assertRaises(ValueError):
+            static_vector_stability([0.0, 1.0], [[0.0, 0.0, 0.0]])
+        with self.assertRaises(ValueError):
+            static_vector_stability(
+                [0.0, 1.0],
+                [[0.0, 0.0, 0.0], [math.nan, 0.0, 0.0]],
+            )
+        with self.assertRaises(ValueError):
+            static_vector_stability(
+                [0.0, 0.0],
+                [[0.0, 0.0, 0.0], [0.0, 0.0, 0.0]],
+            )
 
 
 if __name__ == "__main__":

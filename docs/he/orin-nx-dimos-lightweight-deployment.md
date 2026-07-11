@@ -1322,6 +1322,15 @@ Madgwick 作为常驻子进程。下一步必须先完成 IMU bias/noise/axis、
 `docs/he/evidence/2026-07-12_0024_imu-qualification.md` 和同名 JSON。采样后的 live
 sensor/read-only gates 均通过，两服务 active/零重启，导航发布者为零。
 
+控制板驱动审计确认固件以 6 个 float 直接上传 ax/ay/az/gx/gy/gz；SDK 不做比例
+换算，ROS 节点仅将 acceleration 从 g 转为 m/s2、gyro 从 deg/s 转为 rad/s。驱动没有
+零偏、温漂、尺度或轴向标定，也没有发布传感器型号和量程元数据。因此静止 x 轴约
+0.033rad/s 不是 ROS 单位漏转换，但还不能区分板载 IMU 固有偏置、温度影响或安装轴
+问题。诊断现已增加 60 秒分段均值、多个 cluster duration 的 non-overlapping Allan
+deviation 和静止 gyro 均值积分量；这些只量化一姿态时域稳定性，不会自动生成或应用
+补偿。10 分钟 Orin 静态基线仍待部署采集，六面加速度计/陀螺标定和物理轴向核对仍需
+现场操作。
+
 ## 20. Fresh visual fault 注入工具（2026-07-12）
 
 为验证“图像 timestamp 持续更新但内容失效”的健康门，新增只向

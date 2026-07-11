@@ -481,6 +481,16 @@ health while keeping real motion disconnected.
   Downloads mirror. Post-sync checks kept `HEConnection.enabled=False`, the
   sensor service active with zero restarts, no SLAM/fault process and zero
   `/he/nav_cmd_vel` publishers.
+- Audited the live control-board IMU path. Firmware supplies six float values,
+  the SDK applies no scaling, and the ROS driver converts g to m/s2 and deg/s to
+  rad/s but has no bias, temperature, scale or axis calibration and publishes
+  no sensor-model/range metadata. The static 0.033rad/s x mean is therefore not
+  a missing ROS unit conversion.
+- Extended the bounded IMU diagnostic with 60-second block-mean stability,
+  non-overlapping Allan deviation at bounded cluster durations and the
+  stationary gyro-mean integral. Added fail-closed input validation and two
+  focused tests; the five IMU helper tests and focused Ruff pass on the VM.
+  The 10-minute Orin static evidence run is pending.
 
 ## Decisions
 
