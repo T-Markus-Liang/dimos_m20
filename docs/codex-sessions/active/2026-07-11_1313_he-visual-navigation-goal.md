@@ -802,6 +802,15 @@ health while keeping real motion disconnected.
   Four focused and all 64 HE tests, Ruff, blueprint registry and diff checks
   pass. The thresholds are provisional shadow interlocks; Orin evidence remains
   pending and physical calibration/vendor evidence still controls admission.
+- Deployed depth-quality health candidate `d8650a7f`. Coordinator logs proved a
+  pLCM dictionary connection from HESensorBridge to HELocalizationHealth. In 906
+  static samples, global/center/bottom median coverage was
+  26.03/19.16/5.64%; every sample added only the bottom coverage reason and the
+  maximum metric age was 0.433s. A four-second Aurora outage added
+  `depth_quality_stale` after 0.859s and cleared it after recovery; final age was
+  0.022s. Shadow peaked near 1408MiB, available memory stayed near 2.78GiB,
+  tegrastats swap was flat, services did not restart and all motion gates stayed
+  closed. Both runs restored Sense and passed deployment/read-only gates.
 
 ## Decisions
 
@@ -871,8 +880,9 @@ health while keeping real motion disconnected.
   CLI SIGTERM grace with one shutdown round, no error and no residue.
 - The map-load contract and static same-scene read-only reload are verified on
   Orin. Moving/displaced-start relocalization and loop closure remain open.
-- Real health-transition instrumentation and total Aurora input outage/recovery
-  are verified on Orin. Partial and bad-but-fresh input faults remain open.
+- Real health-transition instrumentation, total Aurora outage/recovery and
+  current bad-but-fresh partial depth coverage are verified on Orin. Dynamic
+  scene and moving tracking failures remain open.
 - Raw IMU orientation is unusable as published. Madgwick is runnable but failed
   the static admission gate. A 598-second raw run also proved a stable but large
   x gyro offset, so the shadow chain remains RGB-D-only.

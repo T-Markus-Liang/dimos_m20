@@ -169,6 +169,14 @@ produce pose. This threshold is a conservative shadow interlock; physical target
 calibration, mounting qualification and vendor specifications must replace or
 confirm it before navigation approval.
 
+Orin qualification confirmed the intended behavior. Across 906 static health
+samples, global/center valid depth were 26.03/19.16% median while bottom-third
+coverage was only 5.64%; every sample added `depth_bottom_coverage_low` without
+mislabeling global or center coverage. A four-second Aurora outage added
+`depth_quality_stale` after 0.859s and cleared it after stream recovery. Shadow
+resource and read-only gates passed. See
+`evidence/2026-07-12_0728_depth-quality-localization-health.md`.
+
 Static Orin fault qualification proved the contract with real runner values.
 An 8GiB test threshold added `system_memory_low` to all 184 health samples;
 restoring the 1GiB default removed that reason from all 187 samples while the

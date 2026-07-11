@@ -1767,4 +1767,15 @@ closed：指标缺失、字段/范围无效、超过 1 秒未更新，或任一�
 10% 是 shadow 阶段保守阻断线，用于确保已观察到的 bottom-third 6.73% 缺陷不会被
 pose 输出掩盖；它不是厂商精度规格，也不代表达到 10% 即可导航。静态标定板、相机
 俯仰/高度、USB3 A/B 和厂商回复完成后必须重新评估阈值。VM 64 项 HE unittest、
-Ruff、blueprint registry 和 diff 检查已通过；Orin 实际原因、资源和故障恢复仍待验证。
+Ruff、blueprint registry 和 diff 检查已通过。
+
+Orin 45 秒 shadow 实测采集 906 个 health 样本：global/center/bottom median 分别为
+26.03/19.16/5.64%，bottom 范围 4.41%-6.60%；全部样本只对 depth 增加
+`depth_bottom_coverage_low`，最大指标年龄 0.433 秒。受控停止 Aurora 4 秒后，
+`depth_quality_stale` 在 0.859 秒出现，流恢复后清除，最终指标年龄 0.022 秒。
+
+shadow cgroup 约 1408MiB，available 约 2.78GiB，swap 在切换阶段增加 8.75MiB 后
+保持 580MiB，GR3D 最高 11%，Tj 最高 64.718C，服务零重启。两个测试都正常返回
+Sense，最终部署完整性和只读门通过。完整证据见
+`docs/he/evidence/2026-07-12_0728_depth-quality-localization-health.md`。当前 bottom
+coverage 仍不通过，不得据此开放导航或降低阈值。
