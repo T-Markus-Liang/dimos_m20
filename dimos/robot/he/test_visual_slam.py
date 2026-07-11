@@ -518,6 +518,26 @@ class TestHERTABMapRuntimeBounds(unittest.TestCase):
         self.assertIn('"RGBD/AngularUpdate": "0.1"', config)
         self.assertIn('"Mem/NotLinkedNodesKept": "false"', config)
 
+    def test_shadow_systemd_mode_is_bounded_static_and_restorable(self) -> None:
+        shadow_unit = (DEPLOYMENT_DIR / "he-dimos-shadow.service").read_text()
+        sense_unit = (DEPLOYMENT_DIR / "he-dimos-sense.service").read_text()
+        switch = (DEPLOYMENT_DIR / "switch-he-dimos-mode.sh").read_text()
+        shadow_gate = (DEPLOYMENT_DIR / "verify-he-shadow-readonly.sh").read_text()
+
+        self.assertIn("Conflicts=he-dimos-sense.service", shadow_unit)
+        self.assertIn("Conflicts=he-dimos-shadow.service", sense_unit)
+        self.assertIn("MemoryHigh=2G", shadow_unit)
+        self.assertIn("MemoryMax=2560M", shadow_unit)
+        self.assertIn("Restart=no", shadow_unit)
+        self.assertNotIn("[Install]", shadow_unit)
+        self.assertIn("dimos run he-visual-slam-shadow", shadow_unit)
+        self.assertNotIn("--daemon", shadow_unit)
+        self.assertNotIn("--force", switch)
+        self.assertIn("restore_sense", switch)
+        self.assertIn("verify-he-shadow-readonly.sh", switch)
+        self.assertIn("Publisher count: 0", shadow_gate)
+        self.assertIn("swap_growth_high", shadow_gate)
+
     def test_watchdog_default_and_configuration_boundaries(self) -> None:
         result = self.watchdog("--check")
         self.assertEqual(result.returncode, 0, result.stderr)

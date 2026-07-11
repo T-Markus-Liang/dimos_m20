@@ -676,6 +676,15 @@ health while keeping real motion disconnected.
   static soak report in `832e842f`, pushed the evidence and fast-forwarded Orin.
   The running state remains the restored Sense service; no shadow or navigation
   process is left active.
+- Added a static `he-dimos-shadow.service` and reciprocal conflict with the
+  enabled Sense service so the two host-global coordinators cannot run
+  concurrently. The shadow cgroup is bounded at 2GiB high/2.5GiB maximum,
+  `OOMPolicy=stop` and 512 tasks; it runs foreground with no restart policy.
+- Added a single mode switch and shadow-specific read-only gate. Failed shadow
+  startup/admission restores Sense automatically, normal return reruns the
+  existing read-only gate, and no force-stop path is exposed. VM validation
+  passed 25 visual-SLAM and 50 focused HE tests, unit verification, shell syntax
+  and diff checks; Orin installation and service-level soak remain pending.
 - Pushed the probe, failed-getter fix, bounded DDS convergence and final
   evidence as `1655079a`, `b7b56853`, `a4af65e6` and `64cfeb4c`; Orin
   fast-forwarded cleanly and the macOS deployment mirror was synchronized.
@@ -760,8 +769,9 @@ health while keeping real motion disconnected.
   still open.
 - Shadow resource-health hardening is deployed and statically qualified. The
   optimized six-worker/128MB dual-path shadow is now deployed and passed static
-  function/resource soak. Separate coordinator/systemd service isolation,
-  physical calibration and every moving qualification gate remain open.
+  function/resource soak. Service isolation is implemented and VM-validated
+  but still requires Orin installation and cgroup qualification. Physical
+  calibration and every moving qualification gate remain open.
 
 ## Resume Instructions
 
@@ -790,6 +800,8 @@ health while keeping real motion disconnected.
 8. Preserve the verified normal shadow shutdown path; do not replace it with
    `--force` in deployment procedures.
 9. Do not enable motion or restore LD19.
+10. Install and qualify the static shadow systemd unit on Orin, then return to
+    the enabled Sense service and preserve zero navigation publishers.
 
 ## Open Questions
 

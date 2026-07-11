@@ -181,8 +181,24 @@ started. Missing or invalid resource fields are unhealthy rather than zero.
 The Coordinator RPC remains host-global, so a complete Sense coordinator and a
 complete shadow coordinator cannot run concurrently. The shadow blueprint now
 contains `HESensorBridge` itself: one coordinator runs the native full-rate ROS
-SLAM path and the sampled sensor-to-Rerun path simultaneously. Deployment still
-stops Sense under an EXIT restore trap and restores it after shadow stops.
+SLAM path and the sampled sensor-to-Rerun path simultaneously. Deployment uses
+mutually exclusive systemd services and restores Sense if shadow admission
+fails.
+
+Use the service-mode switch on Orin instead of starting a second coordinator
+manually:
+
+```bash
+sudo dimos/robot/he/deployment/switch-he-dimos-mode.sh shadow
+sudo dimos/robot/he/deployment/switch-he-dimos-mode.sh status
+sudo dimos/robot/he/deployment/switch-he-dimos-mode.sh sense
+```
+
+`he-dimos-sense.service` remains enabled and is the normal boot mode.
+`he-dimos-shadow.service` is static, has no automatic restart, and cannot be
+enabled. Its complete process tree is bounded by `MemoryHigh=2G`,
+`MemoryMax=2560M`, `OOMPolicy=stop`, and `TasksMax=512`. The switch validates
+the read-only gate after startup and automatically returns to Sense on failure.
 
 The combined shadow uses a 128MB latest-only Rerun window. The lightweight
 native runner manager shares the non-dedicated worker pool; the sensor bridge,
@@ -210,9 +226,9 @@ restricted; run repeated snapshots at fixed intervals for comparable soak
 evidence rather than adding a resident monitor to the sensor service.
 
 `he_sense_headless` uses a 128MB Rerun recording window while retaining all
-eight latest-only entities. The teleop and visual-SLAM blueprints keep their
-existing 256MB limits; this scoped setting must not be generalized without
-separate runtime evidence.
+eight latest-only entities. The optimized combined visual-SLAM shadow also uses
+128MB after its separate 10-minute resource qualification; teleop remains at
+256MB. These scoped settings must not be generalized without runtime evidence.
 
 The version-controlled deployment plan is
 [Orin NX lightweight deployment](../../../docs/he/orin-nx-dimos-lightweight-deployment.md).

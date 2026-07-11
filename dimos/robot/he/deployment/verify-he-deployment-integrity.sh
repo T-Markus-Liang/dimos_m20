@@ -14,12 +14,14 @@ compare() {
 }
 
 compare "$deployment/he-dimos-sense.service" /etc/systemd/system/he-dimos-sense.service
+compare "$deployment/he-dimos-shadow.service" /etc/systemd/system/he-dimos-shadow.service
 compare "$deployment/he-camera-tf.service" /etc/systemd/system/he-camera-tf.service
 compare "$deployment/he-twist-mux.service" /etc/systemd/system/he-twist-mux.service
 compare \
   "$deployment/odom-publisher-he.conf" \
   /etc/systemd/system/odom-publisher.service.d/he-command-mux.conf
 test ! -e /etc/systemd/system/he-ld19.service
+test "$(systemctl is-enabled he-dimos-shadow.service || true)" = static
 
 (
   cd "$ros_root/src/driver/controller"

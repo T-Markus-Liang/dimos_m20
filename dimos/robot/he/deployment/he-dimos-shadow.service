@@ -1,8 +1,8 @@
 [Unit]
-Description=HE DimOS sensor bridge
+Description=HE DimOS integrated visual SLAM shadow
 After=aurora930.service he-camera-tf.service odom-publisher.service
 Wants=aurora930.service he-camera-tf.service odom-publisher.service
-Conflicts=he-dimos-shadow.service
+Conflicts=he-dimos-sense.service
 
 [Service]
 Type=simple
@@ -10,13 +10,13 @@ User=ubuntu
 WorkingDirectory=/home/ubuntu/he/dimos_wd_m20
 Environment=HOME=/home/ubuntu
 Environment=PYTHONNOUSERSITE=1
-ExecStart=/bin/bash -lc 'source /opt/ros/humble/setup.bash && exec .venv/bin/dimos run he-sense-headless'
-Restart=on-failure
-RestartSec=10
+Environment=HE_RTABMAP_MODE=mapping
+ExecStart=/bin/bash -lc 'source /opt/ros/humble/setup.bash && exec .venv/bin/dimos run he-visual-slam-shadow'
+Restart=no
 KillSignal=SIGTERM
 TimeoutStopSec=30
-MemoryHigh=1G
-MemoryMax=1280M
-
-[Install]
-WantedBy=multi-user.target
+MemoryAccounting=yes
+MemoryHigh=2G
+MemoryMax=2560M
+OOMPolicy=stop
+TasksMax=512

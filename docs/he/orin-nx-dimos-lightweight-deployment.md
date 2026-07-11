@@ -1590,3 +1590,34 @@ CameraInfo 约 0.96Hz、odom/IMU 约 16Hz。native SLAM 和 Rerun 同时工作�
 普通 SIGTERM、无残留、Sense 恢复、live sensor/read-only gate 和 macOS `9877` 连接
 均通过。因此保留 6-worker/128MB 组合，完整证据见
 `docs/he/evidence/2026-07-12_0411_dual-path-shadow-soak.md`。
+
+## 27. Shadow systemd cgroup 隔离（2026-07-12）
+
+双路径 shadow 的 10 分钟资源验收覆盖了受 tag 标记的 13 个进程，但此前仍依赖临时
+shell 和 EXIT trap 停止 Sense、启动 shadow。为避免现场误并发两个 host-global DimOS
+Coordinator，并让 systemd 对完整进程树执行硬资源边界，新增两个互斥运行模式：
+
+- `he-dimos-sense.service`：默认 enabled/active 的常驻传感模式；
+- `he-dimos-shadow.service`：没有 `[Install]` 的 static 服务，只允许显式切换；
+- 两个 unit 通过双向 `Conflicts=` 保证不能同时运行；
+- shadow 前台运行，`Restart=no`，避免失败后自动创建新的 mapping 数据库；
+- shadow 整个 cgroup 使用 `MemoryHigh=2G`、`MemoryMax=2560M`、
+  `OOMPolicy=stop` 和 `TasksMax=512`。
+
+部署后只使用受控入口：
+
+```bash
+sudo dimos/robot/he/deployment/switch-he-dimos-mode.sh shadow
+sudo dimos/robot/he/deployment/switch-he-dimos-mode.sh status
+sudo dimos/robot/he/deployment/switch-he-dimos-mode.sh sense
+```
+
+切到 shadow 前先执行常规只读门。shadow active 后，专用门核对 Sense inactive、shadow
+static/零重启、`/he/nav_cmd_vel` 零发布者、无运动/GUI/仿真进程、native RTAB-Map
+进程存在、9877 为唯一 DimOS 监听端口、cgroup memory 未触及硬上限，以及 localization
+health 中没有 stale/invalid/resource failure。任一步失败都会停止 shadow 并恢复 Sense。
+恢复 Sense 时再次执行常规只读门。脚本不提供 `--force` 路径。
+
+这项变更只建立服务级隔离和故障恢复，不改变已验收的 6-worker/128MB shadow 参数，
+也不开放控制链。安装后的 Orin 实测还必须确认 systemd 属性、生效 cgroup、无 OOM/
+重启/swap 增长、普通 SIGTERM 清理和 Sense 恢复，才能关闭本节部署门。

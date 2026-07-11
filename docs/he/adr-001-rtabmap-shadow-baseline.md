@@ -188,6 +188,17 @@ remained present, native RSS ended at 430.81MB, runtime status age stayed below
 `pose_stale` samples recovered without intervention and remain a longer/moving
 test signal. See `evidence/2026-07-12_0411_dual-path-shadow-soak.md`.
 
+The integrated shadow is deployed as a separate static systemd service rather
+than an enabled boot service. It conflicts reciprocally with the normal enabled
+Sense service, runs in the foreground with `Restart=no`, and bounds the complete
+coordinator/native process cgroup with `MemoryHigh=2G`, `MemoryMax=2560M`,
+`OOMPolicy=stop`, and `TasksMax=512`. The mode switch admits shadow only after
+the normal read-only gate, waits for the shadow-specific read-only/resource
+gate, and restores Sense automatically if startup or admission fails. Normal
+shutdown uses SIGTERM and systemd cgroup cleanup; no force-stop path is part of
+the procedure. These limits are deployment containment, not evidence that
+multi-hour or moving workloads fit the budget.
+
 Real navigation remains prohibited until moving ATE/RPE, loop closure,
 relocalization, map quality, camera extrinsics, tracking-loss detection,
 resource soak and control safety gates pass after a new vehicle-down safety
