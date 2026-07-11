@@ -1706,3 +1706,16 @@ SLAM 继续直接使用 raw depth，不得使用 sampled point cloud 替代全�
 实际为 0.993Hz、最长间隔 2.652 秒。因此正式值采用 1.2Hz，但 Rerun 目标仍为约 1Hz，
 不提高 SLAM 原始输入或远端可视化带宽目标。完整 120 秒 timing、资源、service
 stop/no-residue 和 shadow 往返仍作为部署验收项。
+
+最终 125 秒 sampled 测试为 1.014Hz，最长间隔 2.648 秒。随后 120 秒 raw timing 的
+RGB/depth/IR/point-cloud/IMU 为 14.52/12.10/13.38/13.24/46.67Hz，point-cloud
+missing ratio 约 10.0%，优于额外 Python typed consumer 的 20.7%。249 秒资源窗口中
+Sense 和 throttle 内存前后分别约 930MiB 和 21MiB，swap 零增长、服务零重启，Tj
+最高 62.656C。
+
+完整 shadow gate 在约 1389MiB cgroup memory 下通过，visual odometry 约 8.6Hz；
+RTAB-Map 仍直接使用 raw RGB/depth，HESensorBridge 使用 sampled point cloud。返回
+Sense 后无 RTAB-Map 或临时 throttle 残留。第一次 shadow admission 曾遇到一次
+`/he/visual_odom` CLI readiness timeout，并暴露恢复成功会掩盖原失败码的问题；
+`switch-he-dimos-mode.sh` 已改为恢复 Sense 后保留非零状态，未放宽 gate。完整证据见
+`docs/he/evidence/2026-07-12_0635_native-pointcloud-throttle-qualification.md`。

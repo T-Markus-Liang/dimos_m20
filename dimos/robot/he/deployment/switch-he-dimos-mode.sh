@@ -48,6 +48,12 @@ restore_sense() {
   wait_gate "$deployment/verify-he-readonly.sh"
 }
 
+restore_sense_on_error() {
+  local status=$?
+  restore_sense
+  exit "$status"
+}
+
 case "$mode" in
   check)
     bash -n "$deployment/switch-he-dimos-mode.sh"
@@ -59,7 +65,7 @@ case "$mode" in
     ;;
   shadow)
     bash "$deployment/verify-he-readonly.sh"
-    trap restore_sense ERR
+    trap restore_sense_on_error ERR
     systemctl start he-dimos-shadow.service
     wait_active he-dimos-shadow.service 30
     wait_gate "$deployment/verify-he-shadow-readonly.sh"

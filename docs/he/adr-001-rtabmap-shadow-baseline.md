@@ -53,6 +53,11 @@ localization unhealthy and withholds `global_costmap` from planners.
   missing-TF or bad-sync warnings after tuning synchronization to 20ms.
 - Raw evidence is under `docs/he/evidence/2026-07-11_1418_rtabmap-*` and
   `docs/he/evidence/2026-07-11_1430_rtabmap-static-map.json`.
+- The visualization-only point-cloud path now uses a native serialized 1.2Hz
+  throttle and a 1.3Hz HESensorBridge guard. A 120-second raw timing run retained
+  13.24Hz point cloud and the service-level shadow gate passed without changing
+  RTAB-Map's raw RGB/depth inputs. See
+  `evidence/2026-07-12_0635_native-pointcloud-throttle-qualification.md`.
 
 ## Alternatives
 

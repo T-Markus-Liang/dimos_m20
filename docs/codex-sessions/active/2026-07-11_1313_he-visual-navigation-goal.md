@@ -752,6 +752,19 @@ health while keeping real motion disconnected.
   60 HE tests, Ruff, blueprint registry, shell syntax, systemd verification and
   diff checks. Final Orin 120-second timing/resource and shadow round trip remain
   pending; Sense is active and the canonical 1.0Hz service was restored meanwhile.
+- Committed and deployed the selected 1.2Hz/1.3Hz limits as `eee19da2`. A final
+  125-second sampled run delivered 1.014Hz with a 2.648s maximum interval. The
+  following raw timing run measured RGB/depth/IR/point-cloud/IMU at
+  14.52/12.10/13.38/13.24/46.67Hz, with 10.0% raw point-cloud estimated missing.
+  Sense/throttle memory was stable near 930/21MiB, swap did not grow, services
+  did not restart and Tj peaked at 62.656C.
+- The first service-level shadow admission hit an intermittent CLI timeout on
+  `/he/visual_odom` and exposed that successful Sense recovery masked the
+  original non-zero status. Direct diagnosis then proved one best-effort odom
+  publisher at about 8.6Hz and a complete shadow gate passed at 1389MiB cgroup
+  memory. Added `restore_sense_on_error` so recovery preserves the failure exit
+  status; all 60 HE tests and static checks pass. Final deployment of this
+  orchestration fix and a clean wrapper round trip remain pending.
 
 ## Decisions
 
@@ -803,8 +816,10 @@ health while keeping real motion disconnected.
 - Long-duration software timestamp qualification now has a bounded tool but is
   characterized on Orin. It does not pass admission because camera/point-cloud
   gaps remain; hardware synchronization remains unclaimed.
-- Serialized point-cloud pre-throttling is implemented and VM-validated as a
-  candidate, not accepted until equivalent Orin timing/resource/shadow evidence.
+- Serialized point-cloud pre-throttling at 1.2Hz with a 1.3Hz Python guard is
+  accepted for the sampled visualization branch after Orin timing, resource and
+  direct shadow qualification. The mode-switch failure-code fix still requires
+  deployment and one final wrapper round trip.
 - The enhanced diagnostic and effective-parameter A/B are complete. No tested
   setting resolves the stable spatial defect, so the canonical configuration is
   restored and RGB-D navigation admission remains failed. The SDK support-range
