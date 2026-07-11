@@ -1500,3 +1500,29 @@ Rerun worker PSS 中位下降 178.117MiB，最大 anonymous mapping 中位下降
 因此保留 `he_sense_headless=128MB`；teleop、visual-SLAM 和全局 worker policy 保持
 不变。完整 A/B 与边界见
 `docs/he/evidence/2026-07-12_0302_he-sense-memory-ab.md`。
+
+## 25. Shadow 资源健康 fail-closed 门（2026-07-12）
+
+审计发现既有 `HELocalizationHealth` 只检查 RTAB-Map 进程组 RSS 是否超过 768MB，
+但 `slam_runtime_status` 本身没有时效门；缺失或 NaN RSS 会通过默认 0 避开超限。
+同时目标要求 shadow 后至少保留 1GiB available memory，且不能依赖持续 swap，原状态
+并未携带这两项系统证据。
+
+`HERTABMapShadowRunner` 现每秒随既有 runtime status 发布：
+
+- `rss_mb`：native shadow 进程组 RSS；
+- `system_available_mb`：`/proc/meminfo` 的 `MemAvailable`；
+- `swap_used_mb`：扣除 `SwapFree` 和 `SwapCached` 后的系统 swap 使用量；
+- `swap_growth_mb`：相对本次 runner 启动首个有效样本的非负增长。
+
+默认 health 门为：runtime status 最长 2.5 秒、RSS 不超过 768MB、system available
+不少于 1024MB、swap growth 不超过 64MB。缺字段、非有限值和负值均 fail-closed，
+分别输出 `runtime_status_invalid/stale`、`slam_memory_invalid/high`、
+`system_memory_invalid/low`、`swap_usage_invalid`、`swap_growth_invalid/high`。
+`LocalizationHealth.details`
+保留原始资源值，benchmark summary 新增最大 runtime status age。
+
+该实现没有新增常驻模块或依赖，也没有改变 RTAB-Map、数据库、传感器或控制参数。
+VM 上 visual-SLAM 24 项和全部 HE 56 项 unittest、Ruff、diff 检查通过。Orin 静态
+shadow 的真实字段、正常基线以及合成资源 fault/recovery 尚待部署后验证；验证期间继续
+保持无 `MovementManager`、无 `HEConnection`、`/he/nav_cmd_vel` 零发布者。

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import math
 import os
 from pathlib import Path
 import signal
@@ -24,6 +25,7 @@ from dimos.robot.he.visual_slam import (
     HEVisualMapAdapter,
     HEVisualSlamBridge,
     summarize_localization_health,
+    system_memory_status,
 )
 
 DEPLOYMENT_DIR = Path(__file__).parent / "deployment"
@@ -74,6 +76,24 @@ def ros_camera_info(stamp: float = 100.0):
         k=[417.0, 0.0, 320.0, 0.0, 418.0, 192.0, 0.0, 0.0, 1.0],
         p=[417.0, 0.0, 320.0, 0.0, 0.0, 418.0, 192.0, 0.0, 0.0, 0.0, 1.0, 0.0],
     )
+
+
+def runtime_status(
+    stamp: float = 100.0,
+    *,
+    process_alive: bool = True,
+    rss_mb: float = 470.0,
+    system_available_mb: float = 2048.0,
+    swap_growth_mb: float = 0.0,
+) -> dict[str, float | bool]:
+    return {
+        "stamp": stamp,
+        "process_alive": process_alive,
+        "rss_mb": rss_mb,
+        "system_available_mb": system_available_mb,
+        "swap_used_mb": 500.0,
+        "swap_growth_mb": swap_growth_mb,
+    }
 
 
 class TestHEVisualSlamBridge(unittest.TestCase):
@@ -170,6 +190,7 @@ class TestHELocalizationHealth(unittest.TestCase):
                 "reasons": ("map_known_ratio_low",),
                 "pose_age_s": 0.1,
                 "tf_age_s": 0.1,
+                "runtime_status_age_s": 0.1,
             },
             {
                 "received_at": 2.0,
@@ -178,6 +199,7 @@ class TestHELocalizationHealth(unittest.TestCase):
                 "reasons": ("pose_stale", "tf_stale", "map_known_ratio_low"),
                 "pose_age_s": 1.1,
                 "tf_age_s": 1.1,
+                "runtime_status_age_s": 1.1,
             },
             {
                 "received_at": 3.0,
@@ -186,6 +208,7 @@ class TestHELocalizationHealth(unittest.TestCase):
                 "reasons": ("map_known_ratio_low",),
                 "pose_age_s": 0.1,
                 "tf_age_s": 0.1,
+                "runtime_status_age_s": 0.1,
             },
         ]
 
@@ -195,6 +218,7 @@ class TestHELocalizationHealth(unittest.TestCase):
         self.assertEqual(summary["healthy_samples"], 0)
         self.assertEqual(summary["reason_counts"]["pose_stale"], 1)
         self.assertEqual(summary["max_pose_age_s"], 1.1)
+        self.assertEqual(summary["max_runtime_status_age_s"], 1.1)
         self.assertEqual(len(summary["transitions"]), 3)
         self.assertEqual(summary["transitions"][1]["reasons"][0], "pose_stale")
 
@@ -236,7 +260,7 @@ class TestHELocalizationHealth(unittest.TestCase):
             "tf_ok": True,
             "tf_stamp": 100.0,
         }
-        evaluator._runtime_status = {"process_alive": True, "rss_mb": 470.0}
+        evaluator._runtime_status = runtime_status()
         result = evaluator.evaluate(now=100.1)
         self.assertFalse(result.healthy)
         self.assertIn("map_known_ratio_low", result.reasons)
@@ -254,7 +278,7 @@ class TestHELocalizationHealth(unittest.TestCase):
             "tf_ok": True,
             "tf_stamp": 100.0,
         }
-        evaluator._runtime_status = {"process_alive": True, "rss_mb": 470.0}
+        evaluator._runtime_status = runtime_status()
         self.assertTrue(evaluator.evaluate(now=100.1).healthy)
 
     def test_latched_map_age_is_diagnostic_unless_explicitly_gated(self) -> None:
@@ -267,7 +291,7 @@ class TestHELocalizationHealth(unittest.TestCase):
             "tf_ok": True,
             "tf_stamp": 100.0,
         }
-        evaluator._runtime_status = {"process_alive": True, "rss_mb": 470.0}
+        evaluator._runtime_status = runtime_status()
         self.assertTrue(evaluator.evaluate(now=100.1).healthy)
 
         gated = HELocalizationHealth(max_map_age_s=3.0)
@@ -289,7 +313,7 @@ class TestHELocalizationHealth(unittest.TestCase):
             "tf_translation_jump_m": 1.0,
             "tf_rotation_jump_deg": 40.0,
         }
-        evaluator._runtime_status = {"process_alive": False, "rss_mb": 900.0}
+        evaluator._runtime_status = runtime_status(process_alive=False, rss_mb=900.0)
         reasons = evaluator.evaluate(now=100.0).reasons
         self.assertIn("pose_stale", reasons)
         self.assertIn("tracking_lost", reasons)
@@ -298,6 +322,53 @@ class TestHELocalizationHealth(unittest.TestCase):
         self.assertIn("tf_rotation_jump", reasons)
         self.assertIn("slam_process_down", reasons)
         self.assertIn("slam_memory_high", reasons)
+
+    def test_runtime_status_and_resource_faults_fail_closed(self) -> None:
+        evaluator = HELocalizationHealth()
+        evaluator._runtime_status = runtime_status(
+            stamp=90.0,
+            rss_mb=math.nan,
+            system_available_mb=900.0,
+            swap_growth_mb=65.0,
+        )
+
+        reasons = evaluator.evaluate(now=100.0).reasons
+
+        self.assertIn("runtime_status_stale", reasons)
+        self.assertIn("slam_memory_invalid", reasons)
+        self.assertIn("system_memory_low", reasons)
+        self.assertIn("swap_growth_high", reasons)
+
+        evaluator._runtime_status = runtime_status()
+        recovered = evaluator.evaluate(now=100.1)
+        self.assertNotIn("runtime_status_stale", recovered.reasons)
+        self.assertNotIn("slam_memory_invalid", recovered.reasons)
+        self.assertNotIn("system_memory_low", recovered.reasons)
+        self.assertNotIn("swap_growth_high", recovered.reasons)
+
+    def test_missing_resource_fields_are_invalid(self) -> None:
+        evaluator = HELocalizationHealth()
+        evaluator._runtime_status = {"stamp": 100.0, "process_alive": True}
+
+        reasons = evaluator.evaluate(now=100.1).reasons
+
+        self.assertIn("slam_memory_invalid", reasons)
+        self.assertIn("system_memory_invalid", reasons)
+        self.assertIn("swap_usage_invalid", reasons)
+        self.assertIn("swap_growth_invalid", reasons)
+
+    def test_proc_memory_parser_reports_available_and_swap_used(self) -> None:
+        result = system_memory_status(
+            "MemAvailable: 2097152 kB\n"
+            "SwapTotal: 1048576 kB\n"
+            "SwapFree: 786432 kB\n"
+            "SwapCached: 65536 kB\n"
+        )
+
+        self.assertEqual(result["system_available_mb"], 2048.0)
+        self.assertEqual(result["swap_used_mb"], 192.0)
+        with self.assertRaises(ValueError):
+            system_memory_status("MemAvailable: 1 kB\n")
 
 
 class TestHEVisualMapAdapter(unittest.TestCase):

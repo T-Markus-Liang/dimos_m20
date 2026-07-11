@@ -603,6 +603,19 @@ health while keeping real motion disconnected.
   service restart because that commit changed documentation only. The final
   closeout audit retains the running 128MB process, zero restarts, remote port
   availability and closed motion gate.
+- Audited the shadow resource-health contract after the HE Sense memory
+  closeout. Existing health correctly bounded RTAB-Map process-group RSS, but
+  did not reject stale runtime evidence, treated missing/NaN RSS as zero, and
+  did not carry the goal's 1GiB available-memory or no-sustained-swap evidence.
+- Extended the existing runner status without adding a module or dependency:
+  it now reports system available memory, swap used and swap growth relative to
+  runner startup. Health defaults fail closed at 2.5s status age, 768MB RSS,
+  1GiB available memory and 64MB swap growth, with distinct invalid/high/low
+  reasons and resource values retained in details.
+- Added procfs parser, resource fault/recovery, missing-field and summary-age
+  tests. All 24 visual-SLAM and 56 HE unittest cases, focused Ruff and diff
+  checks passed on VM. Orin deployment and real static shadow evidence remain
+  pending at this log update.
 - Pushed the probe, failed-getter fix, bounded DDS convergence and final
   evidence as `1655079a`, `b7b56853`, `a4af65e6` and `64cfeb4c`; Orin
   fast-forwarded cleanly and the macOS deployment mirror was synchronized.
@@ -685,6 +698,9 @@ health while keeping real motion disconnected.
   870MiB steady cgroup memory. Teleop, visual-SLAM, worker policy and all
   control modules remain unchanged; moving and physical-calibration gates are
   still open.
+- Shadow resource-health hardening is implemented and VM-verified but not yet
+  deployed. The next action is a motion-disabled Orin shadow run proving valid
+  live fields plus bounded synthetic resource-fault transitions and recovery.
 
 ## Resume Instructions
 

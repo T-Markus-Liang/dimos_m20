@@ -146,6 +146,14 @@ publisher sample remained zero. This closes the stationary active-database
 growth defect for shadow evaluation; it does not close moving-map quality,
 long-duration field operation or real-navigation gates.
 
+The runtime status contract is now fail-closed as well as bounded. The runner
+publishes its process-group RSS, system available memory, current swap use and
+swap growth relative to runner startup once per second. Localization health
+rejects status older than 2.5 seconds, missing/non-finite/negative resource
+values, RSS above 768MB, available memory below 1GiB or swap growth above
+64MB. These thresholds protect the shadow baseline from stale monitoring and
+system pressure; they do not replace the database watchdog or systemd limits.
+
 Real navigation remains prohibited until moving ATE/RPE, loop closure,
 relocalization, map quality, camera extrinsics, tracking-loss detection,
 resource soak and control safety gates pass after a new vehicle-down safety

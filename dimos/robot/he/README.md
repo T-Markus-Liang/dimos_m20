@@ -172,6 +172,12 @@ It publishes only `/he/visual_*` pose/map/status topics plus the isolated
 with `dimos run he-visual-slam-shadow`; it remains unhealthy while the map
 known-space ratio is below 10% and never includes a motion-output module.
 
+Localization health also treats its one-second SLAM runtime evidence as a
+fail-closed input. The default resource gates require status no older than
+2.5s, finite non-negative process-group RSS below 768MB, at least 1GiB system
+available memory, and no more than 64MB swap growth since the shadow runner
+started. Missing or invalid resource fields are unhealthy rather than zero.
+
 See [Chassis characterization](docs/chassis-characterization-2026-07-11.md) for
 the measured command-chain limits, latency, precision, and feedback gaps.
 

@@ -47,6 +47,23 @@ def _stamp_seconds(header: Any) -> float:
     return float(header.stamp.sec) + float(header.stamp.nanosec) / 1_000_000_000.0
 
 
+def system_memory_status(text: str) -> dict[str, float]:
+    """Parse the system memory fields needed by the shadow resource gate."""
+    fields: dict[str, int] = {}
+    for line in text.splitlines():
+        parts = line.split()
+        if len(parts) == 3 and parts[0].endswith(":") and parts[2] == "kB":
+            fields[parts[0][:-1]] = int(parts[1])
+    required = ("MemAvailable", "SwapTotal", "SwapFree", "SwapCached")
+    if any(name not in fields for name in required):
+        raise ValueError("procfs memory status is missing required fields")
+    swap_used_kb = max(0, fields["SwapTotal"] - fields["SwapFree"] - fields["SwapCached"])
+    return {
+        "system_available_mb": fields["MemAvailable"] / 1024.0,
+        "swap_used_mb": swap_used_kb / 1024.0,
+    }
+
+
 def _validated_quaternion(value: Any) -> list[float]:
     quaternion = np.asarray([value.x, value.y, value.z, value.w], dtype=np.float64)
     norm = float(np.linalg.norm(quaternion))
@@ -383,6 +400,7 @@ class LocalizationHealth:
     map_age_s: float | None = None
     tf_age_s: float | None = None
     camera_info_age_s: float | None = None
+    runtime_status_age_s: float | None = None
     inliers: int | None = None
     known_ratio: float | None = None
     free_ratio_of_known: float | None = None
@@ -429,6 +447,7 @@ def summarize_localization_health(samples: Sequence[Mapping[str, Any]]) -> dict[
         "max_map_age_s": maximum("map_age_s"),
         "max_tf_age_s": maximum("tf_age_s"),
         "max_camera_info_age_s": maximum("camera_info_age_s"),
+        "max_runtime_status_age_s": maximum("runtime_status_age_s"),
         "transitions": transitions,
     }
 
@@ -445,7 +464,10 @@ class HELocalizationHealthConfig(ModuleConfig):
     max_tf_translation_jump_m: float = Field(default=0.5, gt=0.0)
     max_tf_rotation_jump_deg: float = Field(default=30.0, gt=0.0)
     max_latency_ms: float = Field(default=250.0, gt=0.0)
+    max_runtime_status_age_s: float = Field(default=2.5, gt=0.0)
     max_slam_rss_mb: float = Field(default=768.0, gt=0.0)
+    min_system_available_mb: float = Field(default=1024.0, gt=0.0)
+    max_swap_growth_mb: float = Field(default=64.0, ge=0.0)
 
 
 class HELocalizationHealth(Module):
@@ -548,12 +570,58 @@ class HELocalizationHealth(Module):
             reasons.append("slam_latency_high")
 
         runtime_status = self._runtime_status or {}
+        runtime_status_age = None
         if not runtime_status:
             reasons.append("runtime_status_missing")
-        elif not runtime_status.get("process_alive", False):
-            reasons.append("slam_process_down")
-        if float(runtime_status.get("rss_mb", 0.0)) > self.config.max_slam_rss_mb:
-            reasons.append("slam_memory_high")
+        else:
+            runtime_stamp = runtime_status.get("stamp")
+            try:
+                runtime_stamp = float(runtime_stamp)
+            except (TypeError, ValueError):
+                runtime_stamp = math.nan
+            if not math.isfinite(runtime_stamp):
+                reasons.append("runtime_status_invalid")
+            else:
+                runtime_status_age = max(0.0, now - runtime_stamp)
+                if runtime_status_age > self.config.max_runtime_status_age_s:
+                    reasons.append("runtime_status_stale")
+            if runtime_status.get("process_alive") is not True:
+                reasons.append("slam_process_down")
+
+            resource_limits = (
+                ("rss_mb", "slam_memory_invalid", "slam_memory_high", self.config.max_slam_rss_mb),
+                (
+                    "swap_growth_mb",
+                    "swap_growth_invalid",
+                    "swap_growth_high",
+                    self.config.max_swap_growth_mb,
+                ),
+            )
+            for key, invalid_reason, high_reason, limit in resource_limits:
+                try:
+                    value = float(runtime_status.get(key))
+                except (TypeError, ValueError):
+                    value = math.nan
+                if not math.isfinite(value) or value < 0.0:
+                    reasons.append(invalid_reason)
+                elif value > limit:
+                    reasons.append(high_reason)
+
+            try:
+                swap_used_mb = float(runtime_status.get("swap_used_mb"))
+            except (TypeError, ValueError):
+                swap_used_mb = math.nan
+            if not math.isfinite(swap_used_mb) or swap_used_mb < 0.0:
+                reasons.append("swap_usage_invalid")
+
+            try:
+                available_mb = float(runtime_status.get("system_available_mb"))
+            except (TypeError, ValueError):
+                available_mb = math.nan
+            if not math.isfinite(available_mb) or available_mb < 0.0:
+                reasons.append("system_memory_invalid")
+            elif available_mb < self.config.min_system_available_mb:
+                reasons.append("system_memory_low")
 
         known_ratio = None
         free_ratio = None
@@ -575,6 +643,7 @@ class HELocalizationHealth(Module):
             map_age_s=map_age,
             tf_age_s=tf_age,
             camera_info_age_s=camera_info_age,
+            runtime_status_age_s=runtime_status_age,
             inliers=inliers,
             known_ratio=known_ratio,
             free_ratio_of_known=free_ratio,
@@ -583,6 +652,9 @@ class HELocalizationHealth(Module):
                 "tf_rotation_jump_deg": status.get("tf_rotation_jump_deg"),
                 "odom_latency_ms": status.get("odom_latency_ms"),
                 "slam_rss_mb": runtime_status.get("rss_mb"),
+                "system_available_mb": runtime_status.get("system_available_mb"),
+                "swap_used_mb": runtime_status.get("swap_used_mb"),
+                "swap_growth_mb": runtime_status.get("swap_growth_mb"),
                 "camera_info_error": status.get("camera_info_error"),
             },
         )
@@ -649,6 +721,7 @@ class HERTABMapShadowRunner(Module):
         super().__init__(**config_args)
         self._process: subprocess.Popen[bytes] | None = None
         self._monitor_task: asyncio.Task[None] | None = None
+        self._baseline_swap_used_mb: float | None = None
 
     async def main(self) -> AsyncGenerator[None, None]:
         runner = self.config.runner or str(
@@ -671,17 +744,24 @@ class HERTABMapShadowRunner(Module):
 
     async def _monitor(self) -> None:
         while self._process is not None and self._process.poll() is None:
+            resources = self._system_resources()
             self.slam_runtime_status.publish(
                 {
                     "stamp": time.time(),
                     "process_alive": True,
                     "rss_mb": self._process_group_rss_mb(self._process.pid),
+                    **resources,
                 }
             )
             await asyncio.sleep(1.0)
         if self._process is not None:
             self.slam_runtime_status.publish(
-                {"stamp": time.time(), "process_alive": False, "rss_mb": 0.0}
+                {
+                    "stamp": time.time(),
+                    "process_alive": False,
+                    "rss_mb": 0.0,
+                    **self._system_resources(),
+                }
             )
             logger.error("HE RTAB-Map shadow runner exited with %s", self._process.returncode)
 
@@ -700,6 +780,23 @@ class HERTABMapShadowRunner(Module):
             except (FileNotFoundError, IndexError, PermissionError, ValueError):
                 continue
         return resident_pages * page_size / (1024.0 * 1024.0)
+
+    def _system_resources(self) -> dict[str, float | None]:
+        try:
+            resources = system_memory_status(FilePath("/proc/meminfo").read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            return {
+                "system_available_mb": None,
+                "swap_used_mb": None,
+                "swap_growth_mb": None,
+            }
+        swap_used_mb = resources["swap_used_mb"]
+        if self._baseline_swap_used_mb is None:
+            self._baseline_swap_used_mb = swap_used_mb
+        return {
+            **resources,
+            "swap_growth_mb": max(0.0, swap_used_mb - self._baseline_swap_used_mb),
+        }
 
     def _stop_process_group(self) -> None:
         process = self._process
