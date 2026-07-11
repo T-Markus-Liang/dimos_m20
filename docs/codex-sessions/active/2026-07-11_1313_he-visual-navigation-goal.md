@@ -581,6 +581,23 @@ health while keeping real motion disconnected.
   all default sensor modalities. All 53 HE unittests, focused Ruff, blueprint
   registry generation and diff checks passed on VM; Orin had not yet restarted
   onto this setting at this log update.
+- Committed the scoped setting and baseline snapshot as `40c563a5`, pushed it,
+  fast-forwarded Orin and restarted only `he-dimos-sense.service`. The new main
+  PID became 201141, port 9877 recovered, service restarts remained zero and
+  the immediate live sensor/read-only gates passed.
+- Completed 11 candidate snapshots from 02:48:59 through 02:59:24 CST. Median
+  cgroup memory fell by 130.895MiB (13.1%) to 870.500MiB; maximum fell to
+  872.691MiB, leaving 151.309MiB below `MemoryHigh`. Rerun worker median PSS
+  fell by 178.117MiB and its largest anonymous mapping by 188.082MiB. Both A/B
+  runs had zero swap growth and zero service restarts.
+- A 60-point-cloud-sample post-run diagnostic measured RGB/depth/IR/point
+  cloud/IMU at 14.599/14.286/14.925/13.333/46.820Hz, with 25.941% median depth
+  validity and both calibrations present. Port 9877 remained reachable from
+  macOS and the isolated final read-only gate passed with zero navigation
+  publishers.
+- One combined diagnostic command triggered a read-only false positive because
+  its own later pgrep arguments contained forbidden process names. Re-running
+  the gate alone passed and confirmed no localization/navigation process.
 - Pushed the probe, failed-getter fix, bounded DDS convergence and final
   evidence as `1655079a`, `b7b56853`, `a4af65e6` and `64cfeb4c`; Orin
   fast-forwarded cleanly and the macOS deployment mirror was synchronized.
@@ -658,10 +675,11 @@ health while keeping real motion disconnected.
 - Structural malformed/missing CameraInfo and runtime drift beyond the approved
   intrinsic tolerance are proven. Physical target calibration and physical
   camera-to-base/camera-to-IMU extrinsics remain open.
-- The canonical 256MB baseline is complete. The 128MB source change is ready
-  for commit; Orin pull, controlled service restart and 10-minute soak remain
-  pending. Teleop, visual-SLAM, worker policy and all control modules are
-  unchanged.
+- The HE Sense memory A/B is complete and supports retaining 128MB. The running
+  Orin service is active at the candidate commit with zero restarts and about
+  870MiB steady cgroup memory. Teleop, visual-SLAM, worker policy and all
+  control modules remain unchanged; moving and physical-calibration gates are
+  still open.
 
 ## Resume Instructions
 
