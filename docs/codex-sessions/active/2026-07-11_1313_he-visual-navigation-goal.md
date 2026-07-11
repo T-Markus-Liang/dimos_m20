@@ -7,9 +7,9 @@
 - Project: dimos-wd-m20
 - Workspace: VM `/home/markus/work/dimos_wd_m20`; Orin `/home/ubuntu/he/dimos_wd_m20`
 - Task: research, benchmark, select and integrate a visual SLAM navigation foundation for HE
-- Status: active - HE Sense memory optimization in progress; physical
-  calibration and moving gates pending
-- Branch if relevant: `codex/he-orin`; evidence closeout based on `c14578fd`
+- Status: active - static dual-path shadow and resource gates qualified;
+  physical calibration, service isolation and moving gates pending
+- Branch if relevant: `codex/he-orin`; use `git rev-parse HEAD` for current identity
 
 ## User Request Summary
 
@@ -672,6 +672,10 @@ health while keeping real motion disconnected.
 - Optimized shadow stopped with ordinary SIGTERM and no error/native residue.
   Sense restoration, live sensor gate, final read-only gate and remote port
   9877 connectivity all passed with zero service restarts.
+- Preserved the failed-v1 and passing-v2 comparison, full v2 health/runtime and
+  static soak report in `832e842f`, pushed the evidence and fast-forwarded Orin.
+  The running state remains the restored Sense service; no shadow or navigation
+  process is left active.
 - Pushed the probe, failed-getter fix, bounded DDS convergence and final
   evidence as `1655079a`, `b7b56853`, `a4af65e6` and `64cfeb4c`; Orin
   fast-forwarded cleanly and the macOS deployment mirror was synchronized.
