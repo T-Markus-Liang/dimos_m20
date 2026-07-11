@@ -74,6 +74,14 @@ class HEVisualSlamBridgeConfig(ModuleConfig):
         )
     )
     camera_frame: str = "rgb_camera_link"
+    camera_width: int = 640
+    camera_height: int = 400
+    camera_fx: float = 417.2416687011719
+    camera_fy: float = 418.11663818359375
+    camera_cx: float = 320.1966552734375
+    camera_cy: float = 191.82748413085938
+    camera_focal_relative_tolerance: float = Field(default=0.02, gt=0.0)
+    camera_principal_tolerance_px: float = Field(default=2.0, gt=0.0)
     map_frame: str = "he_map"
     odom_frame: str = "he_visual_odom"
     base_frame: str = "base_link"
@@ -173,7 +181,13 @@ class HEVisualSlamBridge(Module):
         return Path(ts=_stamp_seconds(msg.header), frame_id=frame_id, poses=poses)
 
     @staticmethod
-    def camera_info_status(msg: Any, expected_frame: str) -> dict[str, Any]:
+    def camera_info_status(
+        msg: Any,
+        expected_frame: str,
+        expected: Mapping[str, float] | None = None,
+        focal_relative_tolerance: float = 0.02,
+        principal_tolerance_px: float = 2.0,
+    ) -> dict[str, Any]:
         width = int(msg.width)
         height = int(msg.height)
         if width <= 0 or height <= 0:
@@ -190,6 +204,16 @@ class HEVisualSlamBridge(Module):
             raise ValueError("CameraInfo principal point is outside the image")
         if not (math.isclose(k[8], 1.0) and math.isclose(p[10], 1.0)):
             raise ValueError("CameraInfo homogeneous matrix terms are invalid")
+        if expected is not None:
+            if width != int(expected["width"]) or height != int(expected["height"]):
+                raise ValueError("CameraInfo dimensions differ from the approved baseline")
+            for name, actual in (("fx", k[0]), ("fy", k[4])):
+                target = float(expected[name])
+                if abs(float(actual) - target) / target > focal_relative_tolerance:
+                    raise ValueError(f"CameraInfo {name} differs from the approved baseline")
+            for name, actual in (("cx", k[2]), ("cy", k[5])):
+                if abs(float(actual) - float(expected[name])) > principal_tolerance_px:
+                    raise ValueError(f"CameraInfo {name} differs from the approved baseline")
         return {
             "camera_info_seen": True,
             "camera_info_valid": True,
@@ -295,7 +319,23 @@ class HEVisualSlamBridge(Module):
 
     def _on_camera_info(self, msg: Any) -> None:
         try:
-            self._tracking.update(self.camera_info_status(msg, self.config.camera_frame))
+            expected = {
+                "width": self.config.camera_width,
+                "height": self.config.camera_height,
+                "fx": self.config.camera_fx,
+                "fy": self.config.camera_fy,
+                "cx": self.config.camera_cx,
+                "cy": self.config.camera_cy,
+            }
+            self._tracking.update(
+                self.camera_info_status(
+                    msg,
+                    self.config.camera_frame,
+                    expected,
+                    self.config.camera_focal_relative_tolerance,
+                    self.config.camera_principal_tolerance_px,
+                )
+            )
             self._tracking.pop("camera_info_error", None)
         except ValueError as exc:
             self._tracking.update(

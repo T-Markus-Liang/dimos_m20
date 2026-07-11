@@ -457,6 +457,10 @@ health while keeping real motion disconnected.
   `docs/he/evidence/2026-07-12_0107_camera-info-health-gate.md`. Both database
   hashes were unchanged. Final sensor/read-only gates passed at about 866MiB
   bridge memory, services had zero restarts and navigation publishers were zero.
+- Added a versioned HE runtime intrinsic baseline with 2% focal and 2px
+  principal-point tolerances, plus `shift-camera-intrinsics` fault injection.
+  This detects runtime drift but does not claim physical calibration accuracy;
+  VM verification and live Orin proof are pending.
 
 ## Decisions
 

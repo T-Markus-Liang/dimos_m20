@@ -87,6 +87,19 @@ class TestHEVisualSlamBridge(unittest.TestCase):
         with self.assertRaises(ValueError):
             HEVisualSlamBridge.camera_info_status(invalid, "rgb_camera_link")
 
+        shifted = ros_camera_info()
+        shifted.k[0] *= 1.1
+        expected = {
+            "width": 640,
+            "height": 400,
+            "fx": 417.0,
+            "fy": 418.0,
+            "cx": 320.0,
+            "cy": 192.0,
+        }
+        with self.assertRaisesRegex(ValueError, "approved baseline"):
+            HEVisualSlamBridge.camera_info_status(shifted, "rgb_camera_link", expected)
+
     def test_odometry_conversion_preserves_frames_covariance_and_stamp(self) -> None:
         result = HEVisualSlamBridge.odometry_from_ros(ros_odom())
         self.assertEqual(result.frame_id, "he_visual_odom")

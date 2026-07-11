@@ -18,6 +18,7 @@ from sensor_msgs.msg import CameraInfo, Image
 from dimos.robot.he.visual_data import (
     VISUAL_FAULT_MODES,
     corrupted_camera_intrinsics,
+    shifted_camera_intrinsics,
     should_drop_camera_info,
     visual_fault_payload,
 )
@@ -116,6 +117,9 @@ class HEVisualFaultProxy(Node):
             return
         if phase == "fault" and self.mode == "corrupt-camera-info" and stream == "rgb":
             message.k, message.p = corrupted_camera_intrinsics(message.k, message.p)
+            self.info_corrupted[(phase, stream)] += 1
+        if phase == "fault" and self.mode == "shift-camera-intrinsics" and stream == "rgb":
+            message.k, message.p = shifted_camera_intrinsics(message.k, message.p)
             self.info_corrupted[(phase, stream)] += 1
         self.info_publishers[stream].publish(message)
         self.info_published[(phase, stream)] += 1

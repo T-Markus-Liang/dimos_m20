@@ -19,6 +19,7 @@ VISUAL_FAULT_MODES = {
     "blank-both",
     "drop-camera-info",
     "corrupt-camera-info",
+    "shift-camera-intrinsics",
 }
 
 
@@ -50,6 +51,23 @@ def corrupted_camera_intrinsics(k: Any, p: Any) -> tuple[list[float], list[float
     corrupted_k[0] = corrupted_k[4] = 0.0
     corrupted_p[0] = corrupted_p[5] = 0.0
     return corrupted_k, corrupted_p
+
+
+def shifted_camera_intrinsics(k: Any, p: Any) -> tuple[list[float], list[float]]:
+    """Return structurally valid intrinsics shifted beyond the approved tolerances."""
+    shifted_k = [float(value) for value in k]
+    shifted_p = [float(value) for value in p]
+    if len(shifted_k) != 9 or len(shifted_p) != 12:
+        raise ValueError("CameraInfo K/P matrices must have 9/12 elements")
+    shifted_k[0] *= 1.1
+    shifted_k[4] *= 1.1
+    shifted_p[0] *= 1.1
+    shifted_p[5] *= 1.1
+    shifted_k[2] += 10.0
+    shifted_k[5] += 10.0
+    shifted_p[2] += 10.0
+    shifted_p[6] += 10.0
+    return shifted_k, shifted_p
 
 
 def stamp_seconds(message: Any) -> float:

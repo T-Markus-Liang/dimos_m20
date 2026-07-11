@@ -114,6 +114,8 @@ Use `--mode drop-camera-info` to keep RGB/depth images fresh while withholding
 only the isolated RGB CameraInfo during the fault phase.
 Use `--mode corrupt-camera-info` to keep publishing calibration messages with
 zero RGB focal lengths and verify the explicit health validator.
+Use `--mode shift-camera-intrinsics` to publish structurally valid K/P values
+outside the approved HE runtime baseline tolerance.
 
 The current RTAB-Map pilot can be checked or run without motion output:
 

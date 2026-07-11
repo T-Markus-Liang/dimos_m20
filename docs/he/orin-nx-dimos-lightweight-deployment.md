@@ -1365,3 +1365,7 @@ dimensions、frame、K/P 长度与有限性、正焦距、主点范围和齐次�
 数据库 hash 不变，最终 sensor/read-only gates 通过。完整证据见
 `docs/he/evidence/2026-07-12_0107_camera-info-health-gate.md`。静态 missing 和结构性
 malformed CameraInfo 已关闭；plausible-but-wrong 数值与物理外参仍需标定基线验证。
+
+新增版本化运行内参基线：640x400、fx/fy 417.2417/418.1166、cx/cy
+320.1967/191.8275；焦距允许 2% 相对偏差，主点允许 2px 偏差。该基线用于检测运行时
+配置漂移，不代表物理标定已通过。`shift-camera-intrinsics` live 证据仍待完成。

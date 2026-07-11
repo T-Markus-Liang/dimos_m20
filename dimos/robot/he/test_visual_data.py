@@ -19,6 +19,7 @@ from dimos.robot.he.visual_data import (
     occupancy_grid_metrics,
     pointcloud_xyz_quality,
     quaternion_distance_degrees,
+    shifted_camera_intrinsics,
     should_drop_camera_info,
     stationary_trajectory_metrics,
     timestamp_alignment,
@@ -44,6 +45,8 @@ class TestHEVisualData(unittest.TestCase):
 
         k, p = corrupted_camera_intrinsics([1.0] * 9, [1.0] * 12)
         self.assertEqual((k[0], k[4], p[0], p[5]), (0.0, 0.0, 0.0, 0.0))
+        k, p = shifted_camera_intrinsics([10.0] * 9, [10.0] * 12)
+        self.assertEqual((k[0], k[4], k[2], p[0], p[6]), (11.0, 11.0, 20.0, 11.0, 20.0))
 
     def test_timestamp_alignment_uses_nearest_samples(self) -> None:
         metrics = timestamp_alignment([1.0, 2.0, 3.0], [0.995, 2.02, 3.005])
