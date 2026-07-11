@@ -2,7 +2,7 @@
 
 Date: 2026-07-11 21:28 CST
 
-Status: root cause fixed on VM; Orin lifecycle verification pending
+Status: child cleanup fixed; Rerun RPC starvation fix pending Orin verification
 
 ## Safety Scope
 
@@ -46,9 +46,33 @@ The HE lifecycle test suite now starts a real isolated process group and proves
 that `_stop_process_group()` reaps it within 4.5 seconds. All 39 HE tests, Ruff,
 Bash syntax and `git diff --check` pass on the VM.
 
+## First Live Attempt And Remaining Cause
+
+Commit `f6fbfb25` passed 39 tests and was deployed to Orin, but the first normal
+stop still failed: the CLI escalated after 7.099 seconds. The result disproved
+that child cleanup was the only blocker.
+
+The new timestamped log is more specific:
+
+- the daemon received SIGTERM at `13:32:58.856Z`;
+- the coordinator began the `RerunBridgeModule.stop()` RPC at `13:32:58.881Z`;
+- no RPC completion arrived before the five-second CLI deadline;
+- after parent escalation, the worker's direct shutdown began at
+  `13:33:03.904Z` and Rerun itself stopped about 1.2ms later.
+
+Rerun shutdown is therefore fast once invoked locally, but its stop RPC is
+starved while the bridge continues processing visual messages. The shadow
+blueprint previously placed Rerun last, so reverse-order coordinator shutdown
+tried to stop it first while RTAB-Map and all adapters were still publishing.
+
+The second fix makes Rerun the first module started and last stopped. The native
+runner is now last started and first stopped, cutting the source before bridge
+shutdown. A blueprint-order test locks this lifecycle contract while retaining
+the same five motion-free modules and connections.
+
 ## Required Orin Evidence
 
-After commit and fast-forward sync, start the motion-free shadow blueprint,
+After the ordering commit and fast-forward sync, start the motion-free shadow blueprint,
 wait for both native processes and `/he/visual_odom`, then use normal
 `dimos stop` without `--force`. Record elapsed time and require:
 

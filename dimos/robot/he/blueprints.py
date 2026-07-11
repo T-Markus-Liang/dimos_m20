@@ -57,10 +57,6 @@ he_teleop_headless = autoconnect(
 
 
 he_visual_slam_shadow = autoconnect(
-    HERTABMapShadowRunner.blueprint(),
-    HEVisualSlamBridge.blueprint(),
-    HELocalizationHealth.blueprint(),
-    HEVisualMapAdapter.blueprint(),
     RerunBridgeModule.blueprint(
         rerun_open="none",
         memory_limit="256MB",
@@ -73,4 +69,8 @@ he_visual_slam_shadow = autoconnect(
             "world/global_costmap",
         ],
     ),
+    HEVisualMapAdapter.blueprint(),
+    HELocalizationHealth.blueprint(),
+    HEVisualSlamBridge.blueprint(),
+    HERTABMapShadowRunner.blueprint(),
 ).global_config(n_workers=4)

@@ -6,6 +6,7 @@ import os
 from pathlib import Path
 import signal
 import subprocess
+import sys
 import tempfile
 import time
 import types
@@ -104,7 +105,10 @@ class TestHEVisualSlamBridge(unittest.TestCase):
         self.assertEqual(bridge._tracking["inliers"], 80)
 
     def test_shadow_blueprint_contains_no_motion_modules(self) -> None:
-        module_names = {atom.module.__name__ for atom in he_visual_slam_shadow.blueprints}
+        ordered_module_names = [
+            atom.module.__name__ for atom in he_visual_slam_shadow.blueprints
+        ]
+        module_names = set(ordered_module_names)
         self.assertNotIn("MovementManager", module_names)
         self.assertNotIn("HEConnection", module_names)
         self.assertEqual(
@@ -117,6 +121,8 @@ class TestHEVisualSlamBridge(unittest.TestCase):
                 "RerunBridgeModule",
             },
         )
+        self.assertEqual(ordered_module_names[0], "RerunBridgeModule")
+        self.assertEqual(ordered_module_names[-1], "HERTABMapShadowRunner")
 
 
 class TestHELocalizationHealth(unittest.TestCase):
@@ -267,7 +273,14 @@ class TestHERTABMapRuntimeBounds(unittest.TestCase):
 
     def test_shadow_runner_reaps_its_process_group_within_cli_grace(self) -> None:
         process = subprocess.Popen(
-            ["bash", "-c", "trap 'exit 0' INT TERM; while true; do sleep 1; done"],
+            [
+                sys.executable,
+                "-c",
+                "import signal, time; "
+                "signal.signal(signal.SIGINT, lambda *_: exit(0)); "
+                "signal.signal(signal.SIGTERM, lambda *_: exit(0)); "
+                "time.sleep(60)",
+            ],
             start_new_session=True,
         )
         runner = HERTABMapShadowRunner()

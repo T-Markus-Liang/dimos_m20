@@ -279,6 +279,12 @@ health while keeping real motion disconnected.
   final `wait`, made external SIGINT/SIGTERM return success, and reduced the
   Python process-group fallback to three seconds. A real process-group lifecycle
   test raises the HE total to 39; all pass with Ruff and Bash checks on the VM.
+- The first normal-stop Orin attempt still escalated after 7.099 seconds. Logs
+  show the coordinator waited five seconds for the Rerun stop RPC, while direct
+  worker shutdown stopped Rerun in about 1.2ms after parent escalation.
+- Reordered only the shadow blueprint lifecycle: Rerun starts first/stops last,
+  and the native runner starts last/stops first. This cuts visual producers
+  before bridge shutdown; a focused order assertion preserves the contract.
 
 ## Decisions
 
@@ -327,8 +333,9 @@ health while keeping real motion disconnected.
   first threshold-only deployment failed, while the corrected unlinked-node
   persistence setting passed a full 600-second Orin soak with about 99.0%
   lower database growth. The 256MiB hard watchdog remains enabled.
-- Graceful shutdown root cause is fixed and unit-tested on the VM. The normal
-  non-force Orin `dimos stop` timing and cleanup verification remain pending.
+- Native child cleanup is fixed and unit-tested. The first Orin stop exposed a
+  second Rerun RPC starvation issue; the lifecycle-order correction is tested on
+  the VM and still needs a second normal non-force Orin verification.
 
 ## Resume Instructions
 

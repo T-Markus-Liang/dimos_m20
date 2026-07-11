@@ -988,6 +988,14 @@ runner 已改为共享时间窗内并行 SIGINT -> SIGTERM -> SIGKILL，并最�
 完整设计和待执行 Orin 复测见
 `docs/he/evidence/2026-07-11_2128_shadow-graceful-shutdown.md`。
 
+第一轮 Orin 普通 stop 实测仍在 7.099 秒升级 SIGKILL，证明 child cleanup 不是唯一
+阻塞。新日志显示 coordinator 在 `RerunBridgeModule.stop()` RPC 等满 5 秒，但父进程
+升级后 worker 本地仅约 1.2ms 就完成 Rerun stop；问题是 bridge 在视觉消息持续输入时
+无法及时处理 stop RPC。`he-visual-slam-shadow` 因此调整生命周期顺序：Rerun 第一个
+启动、最后一个停止；RTAB-Map runner 最后启动、最先停止。连接关系和五个无运动
+模块不变，先切断生产者再关闭可视化。该顺序由测试锁定，仍需第二轮 Orin 普通 stop
+实测确认。
+
 ## 16. 公开基准与视觉外参准入复核（2026-07-11）
 
 公开数值基准已从官方论文补齐到
