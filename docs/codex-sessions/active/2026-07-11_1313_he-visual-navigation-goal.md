@@ -153,22 +153,28 @@ health while keeping real motion disconnected.
 
 ## Current State
 
-- VM and Orin were clean and synchronized at `d3483cbb` before the current
-  integration edits. RTAB-Map runtime packages are installed only on Orin.
-- DimOS shadow modules, tests and blueprint are committed, pushed and exercised
-  on Orin. Lifecycle fixes are synchronized through `3da830d3`.
+- VM, origin and Orin are synchronized at `22473979`; both worktrees are clean.
+- The final static closeout passed all 29 HE tests, blueprint discovery,
+  deployment integrity, isolated control dry-run, Aurora live quality and both
+  read-only gates. `he-dimos-sense` is active with zero restarts.
+- DimOS visual shadow modules, lifecycle controls, ADR and evidence are
+  committed, pushed and exercised on Orin. Current map quality remains
+  unhealthy and no planner costmap or motion command is released.
 - Aurora depth coverage, camera extrinsics, moving accuracy, loop closure and
   relocalization remain open gates. Real motion remains prohibited.
 
 ## Resume Instructions
 
-1. Commit the final soak evidence and latched-map health correction.
-2. Fast-forward Orin and recheck live health has latency plus only meaningful
-   map-quality failures in a fresh run.
-3. Re-run the static/read-only closeout and synchronize the macOS doc mirror.
-4. Audit every Goal requirement; keep moving tests gated on a new vehicle-down
-   confirmation.
-5. Do not enable motion or restore LD19.
+1. Read this log, ADR-001 and the final shadow soak evidence.
+2. Complete camera-to-base and camera-to-IMU extrinsic qualification.
+3. Expand the public candidate ledger with directly comparable published
+   benchmark tables; current source/compatibility coverage is stronger than its
+   numeric score coverage.
+4. After a new vehicle-down confirmation, record moving, loop-closure and
+   relocalization datasets and decide whether RTAB-Map can graduate beyond the
+   shadow baseline.
+5. Address the existing Rerun coordinator graceful-stop timeout separately.
+6. Do not enable motion or restore LD19.
 
 ## Open Questions
 
@@ -176,3 +182,5 @@ health while keeping real motion disconnected.
 - Can RTAB-Map produce navigation-usable map coverage after the camera can move?
 - Will the full DimOS shadow stack preserve at least 1GiB available memory in
   an extended Orin soak?
+- Can the public candidate results be normalized enough to support a stronger
+  SOTA comparison without mixing datasets, inputs and alignment methods?
