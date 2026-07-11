@@ -3,7 +3,7 @@ set -eo pipefail
 
 repo_root=$(cd "$(dirname "${BASH_SOURCE[0]}")/../../../.." && pwd)
 config="$repo_root/dimos/robot/he/deployment/he-rtabmap-shadow.yaml"
-database=${HE_RTABMAP_DB:-/var/tmp/he-rtabmap/rtabmap.db}
+database_dir=/var/tmp/he-rtabmap
 
 source /opt/ros/humble/setup.bash
 source /home/ubuntu/ros2_ws/install/setup.bash
@@ -29,7 +29,34 @@ if [[ "${1:-}" == --check ]]; then
   exit 0
 fi
 
+mkdir -p "$database_dir"
+exec 9>"$database_dir/shadow.lock"
+flock -n 9 || {
+  echo "Refusing to start a second HE RTAB-Map shadow instance" >&2
+  exit 1
+}
+
+if pgrep -f "$odom_binary.*he-rtabmap-shadow.yaml|$slam_binary.*he-rtabmap-shadow.yaml" \
+  >/dev/null; then
+  echo "Refusing to start while an HE RTAB-Map process already exists" >&2
+  exit 1
+fi
+
+if [[ -n "${HE_RTABMAP_DB:-}" ]]; then
+  database=$HE_RTABMAP_DB
+else
+  database="$database_dir/rtabmap-$(date +%Y%m%d-%H%M%S).db"
+  mapfile -t expired_databases < <(
+    find "$database_dir" -maxdepth 1 -type f -name 'rtabmap-*.db' \
+      -printf '%T@ %p\n' | sort -nr | tail -n +5 | cut -d' ' -f2-
+  )
+  if ((${#expired_databases[@]})); then
+    rm -f -- "${expired_databases[@]}"
+  fi
+fi
 mkdir -p "$(dirname "$database")"
+ulimit -c 0
+echo "HE RTAB-Map database: $database"
 
 "$odom_binary" --ros-args \
   --params-file "$config" \
@@ -57,24 +84,22 @@ slam_pid=$!
 
 stop_process() {
   local pid=$1
-  kill -INT "$pid" 2>/dev/null || true
-  for _ in $(seq 1 20); do
+  for _ in $(seq 1 10); do
     kill -0 "$pid" 2>/dev/null || return
-    sleep 0.25
+    sleep 0.2
   done
   kill -TERM "$pid" 2>/dev/null || true
-  sleep 1
+  sleep 0.5
   kill -KILL "$pid" 2>/dev/null || true
 }
 
 cleanup() {
   trap - EXIT INT TERM
+  kill -INT "$slam_pid" "$odom_pid" 2>/dev/null || true
   stop_process "$slam_pid"
   stop_process "$odom_pid"
 }
 trap cleanup EXIT INT TERM
 
-while kill -0 "$odom_pid" 2>/dev/null && kill -0 "$slam_pid" 2>/dev/null; do
-  sleep 1
-done
+wait -n "$odom_pid" "$slam_pid" || true
 exit 1

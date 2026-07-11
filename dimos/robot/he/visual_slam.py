@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import asyncio
 from collections.abc import AsyncGenerator
+import ctypes
 from dataclasses import dataclass, field
 import math
 import os
@@ -30,6 +31,15 @@ from dimos.msgs.nav_msgs.Path import Path
 from dimos.utils.logging_config import setup_logger
 
 logger = setup_logger()
+_LIBC = ctypes.CDLL(None)
+
+
+def _terminate_with_parent() -> None:
+    """Ask Linux to terminate the native runner if its DimOS worker dies."""
+    if _LIBC.prctl(1, signal.SIGTERM) != 0:  # PR_SET_PDEATHSIG
+        os._exit(127)
+    if os.getppid() == 1:
+        os.kill(os.getpid(), signal.SIGTERM)
 
 
 def _stamp_seconds(header: Any) -> float:
@@ -486,7 +496,9 @@ class HERTABMapShadowRunner(Module):
         runner = self.config.runner or str(
             FilePath(__file__).parent / "deployment" / "run-he-rtabmap-shadow.sh"
         )
-        self._process = subprocess.Popen([runner], start_new_session=True)
+        self._process = subprocess.Popen(
+            [runner], start_new_session=True, preexec_fn=_terminate_with_parent
+        )
         self._monitor_task = asyncio.create_task(self._monitor())
         try:
             yield
