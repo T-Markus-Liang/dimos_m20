@@ -1719,3 +1719,8 @@ Sense 后无 RTAB-Map 或临时 throttle 残留。第一次 shadow admission 曾
 `/he/visual_odom` CLI readiness timeout，并暴露恢复成功会掩盖原失败码的问题；
 `switch-he-dimos-mode.sh` 已改为恢复 Sense 后保留非零状态，未放宽 gate。完整证据见
 `docs/he/evidence/2026-07-12_0635_native-pointcloud-throttle-qualification.md`。
+
+同一 shadow 下的无 daemon A/B 进一步确认：`ubuntu` 用户订阅 visual odometry 返回
+0，root 在 12 秒后返回 124。根因是运行态 ROS 2/DDS 订阅身份不一致，不是 RTAB-Map
+停发。模式切换继续由 root 管理 systemd，但 readiness gate 现在通过 `runuser` 固定以
+`ubuntu` 运行；QoS、超时和准入条件均未放宽。

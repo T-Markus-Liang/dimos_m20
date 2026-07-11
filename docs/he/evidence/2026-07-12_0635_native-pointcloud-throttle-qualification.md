@@ -72,7 +72,11 @@ The first mode-switch attempt encountered an intermittent CLI readiness timeout
 for `/he/visual_odom` even though RTAB-Map was computing. Recovery succeeded,
 but the switch script returned success and allowed the caller to continue. The
 wrapper was corrected to preserve the original non-zero admission status after
-restoring Sense. No gate or timeout was weakened.
+restoring Sense. A controlled same-shadow A/B then isolated the readiness
+failure: an `ubuntu` no-daemon echo returned 0 while root timed out after 12
+seconds with status 124. Mode switching still runs as root, but readiness gates
+now run as the `ubuntu` runtime user through `runuser`. No gate, QoS, or timeout
+was weakened.
 
 ## Result
 

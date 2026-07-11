@@ -28,7 +28,7 @@ wait_gate() {
   local gate_log
   gate_log=$(mktemp)
   for _ in $(seq 1 6); do
-    if bash "$gate" >"$gate_log" 2>&1; then
+    if runuser -u ubuntu -- bash "$gate" >"$gate_log" 2>&1; then
       cat "$gate_log"
       rm -f "$gate_log"
       return 0

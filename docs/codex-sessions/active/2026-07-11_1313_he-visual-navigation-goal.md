@@ -765,6 +765,12 @@ health while keeping real motion disconnected.
   memory. Added `restore_sense_on_error` so recovery preserves the failure exit
   status; all 60 HE tests and static checks pass. Final deployment of this
   orchestration fix and a clean wrapper round trip remain pending.
+- Reproduced the wrapper-only timeout under one healthy shadow with ROS daemon
+  disabled: `ubuntu` received `/he/visual_odom` with status 0 while root timed
+  out after 12 seconds with status 124. The publisher remained best-effort at
+  about 8.6Hz. Changed only gate execution to `runuser -u ubuntu`; root retains
+  systemd ownership and all readiness thresholds remain unchanged. Final VM
+  validation and Orin wrapper round trip remain pending.
 
 ## Decisions
 

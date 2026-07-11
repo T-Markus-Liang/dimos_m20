@@ -538,6 +538,7 @@ class TestHERTABMapRuntimeBounds(unittest.TestCase):
         self.assertIn("restore_sense", switch)
         self.assertIn("trap restore_sense_on_error ERR", switch)
         self.assertIn('exit "$status"', switch)
+        self.assertIn('runuser -u ubuntu -- bash "$gate"', switch)
         self.assertIn("wait_gate", switch)
         self.assertIn('wait_gate "$deployment/verify-he-readonly.sh"', switch)
         self.assertIn("verify-he-shadow-readonly.sh", switch)
