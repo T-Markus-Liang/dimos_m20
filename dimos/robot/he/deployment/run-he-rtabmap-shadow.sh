@@ -3,6 +3,7 @@ set -eo pipefail
 
 repo_root=$(cd "$(dirname "${BASH_SOURCE[0]}")/../../../.." && pwd)
 config="$repo_root/dimos/robot/he/deployment/he-rtabmap-shadow.yaml"
+watchdog_binary="$repo_root/dimos/robot/he/deployment/he-rtabmap-db-watchdog.sh"
 database_dir=/var/tmp/he-rtabmap
 
 source /opt/ros/humble/setup.bash
@@ -15,6 +16,12 @@ slam_binary=/opt/ros/humble/lib/rtabmap_slam/rtabmap
   echo "RTAB-Map 0.23.7 odometry/SLAM packages are required" >&2
   exit 1
 }
+[[ -x "$watchdog_binary" ]] || {
+  echo "HE RTAB-Map database watchdog is required" >&2
+  exit 1
+}
+
+"$watchdog_binary" --check
 
 nav_info=$(ros2 topic info /he/nav_cmd_vel -v 2>/dev/null || true)
 nav_publishers=$(awk '/Publisher count:/ {print $3; exit}' <<<"$nav_info")
@@ -82,6 +89,9 @@ odom_pid=$!
   -r cloud_map:=/he/visual_cloud_map &
 slam_pid=$!
 
+"$watchdog_binary" "$database" &
+watchdog_pid=$!
+
 stop_process() {
   local pid=$1
   for _ in $(seq 1 10); do
@@ -95,11 +105,21 @@ stop_process() {
 
 cleanup() {
   trap - EXIT INT TERM
-  kill -INT "$slam_pid" "$odom_pid" 2>/dev/null || true
+  kill -INT "$watchdog_pid" "$slam_pid" "$odom_pid" 2>/dev/null || true
+  stop_process "$watchdog_pid"
   stop_process "$slam_pid"
   stop_process "$odom_pid"
 }
 trap cleanup EXIT INT TERM
 
-wait -n "$odom_pid" "$slam_pid" || true
-exit 1
+set +e
+wait -n "$odom_pid" "$slam_pid" "$watchdog_pid"
+child_status=$?
+set -e
+if ((child_status == 42)); then
+  echo "HE RTAB-Map shadow stopped by the database size watchdog" >&2
+elif ((child_status == 0)); then
+  echo "HE RTAB-Map shadow child exited unexpectedly" >&2
+  child_status=1
+fi
+exit "$child_status"

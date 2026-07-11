@@ -242,6 +242,19 @@ health while keeping real motion disconnected.
   unexposed `SupportedInfo.depth_range`, edge trim, temperature and laser-current
   calls that the ROS driver does not surface; no undocumented direct SDK change
   is approved.
+- Completed a 600-second full shadow soak with no motion publisher. Available
+  memory stayed above 3.1GiB, full-stack RSS was about 1.82-1.84GiB, CPU was
+  132-147%, GPU 6-23%, peak temperature 64.25C and swap grew only 3.75MiB.
+- The 90-second stationary odometry sample had 4.72/8.25mm final/max drift but
+  accumulated 0.480m frame-to-frame jitter. The active RTAB-Map database grew
+  from 16.7MiB to 126.7MiB in 590 seconds, proving that file-count retention did
+  not bound one running database.
+- Added native 0.02m/0.01rad graph commit thresholds and a separately testable
+  active-database watchdog. It defaults to 256MiB, rejects invalid boundaries
+  before startup and makes the runner clean up all native children at the cap.
+- Preserved the primary/supplement TSV and 90-second odometry JSON under
+  `docs/he/evidence/2026-07-11_20*`. All 38 HE tests, Ruff, Bash syntax and
+  `git diff --check` pass on the VM; Orin post-deployment soak is pending.
 
 ## Decisions
 
@@ -268,9 +281,10 @@ health while keeping real motion disconnected.
 
 ## Current State
 
-- VM, origin and Orin are synchronized on `codex/he-orin`; all worktrees are
-  clean. Use `git rev-parse HEAD` for the current evidence commit rather than
-  embedding a self-invalidating session-log commit here.
+- VM has the tested database-boundedness patch and baseline evidence pending
+  commit. Origin and Orin remain on the preceding clean commit until this
+  change is pushed and fast-forwarded. Use `git rev-parse HEAD` for commit
+  identity rather than embedding a self-invalidating value here.
 - The final current-script static closeout passed under systemd with status 0.
   `he-dimos-sense` is active with zero restarts, memory is about 1005MiB,
   no visual SLAM node is running and `/he/nav_cmd_vel` has zero publishers.
@@ -286,26 +300,31 @@ health while keeping real motion disconnected.
 - The enhanced diagnostic and effective-parameter A/B are complete. No tested
   setting resolves the stable spatial defect, so the canonical configuration is
   restored and RGB-D navigation admission remains failed.
+- The extended static soak is complete and exposed active-database growth as a
+  real defect. The boundedness patch is implemented and unit-tested on the VM,
+  but remains pending deployment and a second 600-second Orin soak.
 
 ## Resume Instructions
 
 1. Read this log, ADR-001 and the final shadow soak evidence.
-2. Run a static matte-target and camera pitch/height experiment to separate
+2. Deploy the database boundedness patch and repeat the 600-second stationary
+   shadow soak; compare database slope, RSS, CPU, GPU, swap and cleanup gates.
+3. Run a static matte-target and camera pitch/height experiment to separate
    floor reflectivity/grazing-angle effects from sensor defects.
-3. Evaluate a controlled move from the shared USB 2.0 hub to the available
+4. Evaluate a controlled move from the shared USB 2.0 hub to the available
    10Gbps root port if physical access is approved.
-4. Escalate firmware 2.0.8/SDK 1.1.22 evidence to the vendor if target coverage
+5. Escalate firmware 2.0.8/SDK 1.1.22 evidence to the vendor if target coverage
    remains abnormal, requesting optical specifications and the documented
    `SupportedInfo.depth_range` interpretation.
-5. Use the new nominal-extrinsics audit to plan physical camera-to-base and
+6. Use the new nominal-extrinsics audit to plan physical camera-to-base and
    camera-to-IMU calibration; do not promote the nominal values to calibrated.
-6. Keep public benchmark tables source-scoped and update them only when a new
+7. Keep public benchmark tables source-scoped and update them only when a new
    candidate has code, license, runtime and deployability evidence.
-7. After a new vehicle-down confirmation, record moving, loop-closure and
+8. After a new vehicle-down confirmation, record moving, loop-closure and
    relocalization datasets and decide whether RTAB-Map can graduate beyond the
    shadow baseline.
-8. Address the existing Rerun coordinator graceful-stop timeout separately.
-9. Do not enable motion or restore LD19.
+9. Address the existing Rerun coordinator graceful-stop timeout separately.
+10. Do not enable motion or restore LD19.
 
 ## Open Questions
 

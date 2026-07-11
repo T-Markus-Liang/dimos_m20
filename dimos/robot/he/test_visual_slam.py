@@ -2,6 +2,10 @@
 
 from __future__ import annotations
 
+import os
+from pathlib import Path
+import subprocess
+import tempfile
 import types
 import unittest
 
@@ -15,6 +19,8 @@ from dimos.robot.he.visual_slam import (
     HEVisualMapAdapter,
     HEVisualSlamBridge,
 )
+
+DEPLOYMENT_DIR = Path(__file__).parent / "deployment"
 
 
 def header(stamp: float = 100.0, frame_id: str = "he_map") -> types.SimpleNamespace:
@@ -203,6 +209,57 @@ class TestHEVisualMapAdapter(unittest.TestCase):
         self.assertTrue(valid)
         self.assertAlmostEqual(metrics["known_ratio"], 0.75)
         self.assertAlmostEqual(metrics["free_ratio_of_known"], 2.0 / 3.0)
+
+
+class TestHERTABMapRuntimeBounds(unittest.TestCase):
+    def watchdog(self, *args: str, env: dict[str, str] | None = None):
+        clean_env = os.environ.copy()
+        clean_env.pop("HE_RTABMAP_MAX_DB_MIB", None)
+        clean_env.pop("HE_RTABMAP_DB_POLL_SECONDS", None)
+        if env:
+            clean_env.update(env)
+        return subprocess.run(
+            [DEPLOYMENT_DIR / "he-rtabmap-db-watchdog.sh", *args],
+            capture_output=True,
+            check=False,
+            env=clean_env,
+            text=True,
+            timeout=3,
+        )
+
+    def test_shadow_uses_motion_commit_thresholds(self) -> None:
+        config = (DEPLOYMENT_DIR / "he-rtabmap-shadow.yaml").read_text()
+        self.assertIn('"RGBD/LinearUpdate": "0.02"', config)
+        self.assertIn('"RGBD/AngularUpdate": "0.01"', config)
+
+    def test_watchdog_default_and_configuration_boundaries(self) -> None:
+        result = self.watchdog("--check")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("256 MiB", result.stdout)
+
+        invalid_environments = (
+            {"HE_RTABMAP_MAX_DB_MIB": "0"},
+            {"HE_RTABMAP_MAX_DB_MIB": "4097"},
+            {"HE_RTABMAP_MAX_DB_MIB": "invalid"},
+            {"HE_RTABMAP_DB_POLL_SECONDS": "0"},
+            {"HE_RTABMAP_DB_POLL_SECONDS": "61"},
+        )
+        for environment in invalid_environments:
+            with self.subTest(environment=environment):
+                self.assertEqual(self.watchdog("--check", env=environment).returncode, 2)
+
+    def test_watchdog_reports_a_database_at_the_limit(self) -> None:
+        with tempfile.NamedTemporaryFile() as database:
+            database.truncate(1024 * 1024)
+            result = self.watchdog(
+                database.name,
+                env={
+                    "HE_RTABMAP_MAX_DB_MIB": "1",
+                    "HE_RTABMAP_DB_POLL_SECONDS": "1",
+                },
+            )
+        self.assertEqual(result.returncode, 42, result.stderr)
+        self.assertIn("reached", result.stderr)
 
 
 if __name__ == "__main__":

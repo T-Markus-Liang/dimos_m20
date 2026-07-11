@@ -24,6 +24,8 @@ rtabmap:
     queue_size: 30
     qos: 2
     "Rtabmap/DetectionRate": "2.0"
+    "RGBD/LinearUpdate": "0.02"
+    "RGBD/AngularUpdate": "0.01"
     "Mem/IncrementalMemory": "true"
     "Mem/InitWMWithAllNodes": "false"
     "Reg/Strategy": "0"

@@ -70,6 +70,14 @@ an explicit localization/resume transform caused a verified RTAB-Map graph
 fatal. Database resume therefore requires an explicit `HE_RTABMAP_DB` and a
 separate relocalization procedure.
 
+A later 600-second stationary soak exposed a separate active-database growth
+failure: 0.480m of accumulated frame jitter grew one database from 16.7MiB to
+126.7MiB despite only 4.72mm final drift. The baseline now gates graph commits
+at 0.02m translation and 0.01rad rotation. An independent watchdog defaults to
+a 256MiB hard active-database limit and stops the complete shadow stack at the
+limit. File retention and this active-file cap solve different failure modes;
+neither is permission to discard map state during real navigation.
+
 Real navigation remains prohibited until moving ATE/RPE, loop closure,
 relocalization, map quality, camera extrinsics, tracking-loss detection,
 resource soak and control safety gates pass after a new vehicle-down safety

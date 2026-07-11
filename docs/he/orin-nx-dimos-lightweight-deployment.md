@@ -1114,3 +1114,28 @@ Aurora930 的 FOV、反射率/距离精度、掠射角、环境光、USB 带宽�
 trim、温度和 laser current API，但 ROS 2 驱动没有调用/发布。完整证据见
 `docs/he/evidence/2026-07-11_1848_aurora-sdk-guide-audit.md`；不得在缺少厂商依据时
 增加猜测参数或修改 laser current/firmware。
+
+## 18. RTAB-Map 长时静态资源与数据库边界（2026-07-11）
+
+完整五模块 `he-visual-slam-shadow` 完成 600 秒静态 soak，全程没有
+`MovementManager`、`HEConnection` 或速度发布者。整套 shadow RSS 约
+1.82-1.84GiB，CPU 约 132-147% 单核，GPU 6-23%，最高温度 64.25C；available
+memory 最低约 3.11GiB，swap 仅增加 3.75MiB，没有 OOM 或服务重启。
+
+但测试确认原有“最多保留五个数据库”只限制跨运行文件数量，不限制当前数据库。
+视觉 odom 在 90 秒内最终位置漂移只有 4.72mm、最大 8.25mm，却累计产生 0.480m
+逐帧抖动。RTAB-Map 因而持续提交静止节点，数据库在 590 秒内从 16.7MiB 增长到
+126.7MiB，约 11.2MiB/min；该行为不能部署到长期运行的 NX 8GB。
+
+第一层修复使用 RTAB-Map 原生 `RGBD/LinearUpdate=0.02m` 和
+`RGBD/AngularUpdate=0.01rad`，阈值高于本轮静止净漂移，用于抑制无意义节点提交。
+第二层是独立 active-database watchdog：默认 256MiB，每两秒检查一次，触限后让
+runner 联动停止并回收 odometry 与 SLAM，不能继续无界写盘。可配置范围为：
+
+- `HE_RTABMAP_MAX_DB_MIB=1..4096`，默认 256；
+- `HE_RTABMAP_DB_POLL_SECONDS=1..60`，默认 2。
+
+零值、非整数和越界值在启动前直接失败。watchdog 是故障停机边界，不是 rolling
+database；不能在不保证图一致性时删除活动节点。完整基线、里程计和资源原始证据见
+`docs/he/evidence/2026-07-11_2027_extended-shadow-soak.md`。修复部署后还必须完成
+第二次同长度静态 soak，证明数据库增长被实质抑制后才能关闭该缺陷。
