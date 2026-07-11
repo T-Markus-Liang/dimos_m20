@@ -43,6 +43,14 @@ uses `he-pointcloud-throttle.service`. Install its official Humble dependency
 with `sudo apt-get install ros-humble-topic-tools`. Rerun keeps only the latest
 state in a 128MB recording window.
 
+In the visual-SLAM shadow blueprint, the bridge also computes a small
+`depth_quality` dictionary from each already-converted 5Hz depth frame. It
+contains source time plus global, center-40% and bottom-third valid-depth ratios;
+the full image is not copied to the health worker. `HELocalizationHealth` fails
+closed if this evidence is missing, malformed, older than 1s, or below the
+provisional 10% threshold in any region. These are conservative shadow gates,
+not vendor accuracy specifications or approval for navigation.
+
 ## Verification
 
 Run the static closeout from the Orin repository root:

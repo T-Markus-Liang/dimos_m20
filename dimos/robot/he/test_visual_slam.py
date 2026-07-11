@@ -98,6 +98,21 @@ def runtime_status(
     }
 
 
+def depth_quality_status(
+    stamp: float = 100.0,
+    *,
+    valid_ratio: float = 0.5,
+    center_ratio: float = 0.5,
+    bottom_ratio: float = 0.5,
+) -> dict[str, float]:
+    return {
+        "stamp": stamp,
+        "valid_ratio": valid_ratio,
+        "center_40_percent_valid_ratio": center_ratio,
+        "bottom_third_valid_ratio": bottom_ratio,
+    }
+
+
 class TestHEVisualSlamBridge(unittest.TestCase):
     def test_camera_info_validation_accepts_canonical_and_rejects_bad_intrinsics(self) -> None:
         status = HEVisualSlamBridge.camera_info_status(ros_camera_info(), "rgb_camera_link")
@@ -216,6 +231,7 @@ class TestHELocalizationHealth(unittest.TestCase):
                 "pose_age_s": 0.1,
                 "tf_age_s": 0.1,
                 "runtime_status_age_s": 0.1,
+                "depth_quality_age_s": 0.1,
             },
             {
                 "received_at": 2.0,
@@ -225,6 +241,7 @@ class TestHELocalizationHealth(unittest.TestCase):
                 "pose_age_s": 1.1,
                 "tf_age_s": 1.1,
                 "runtime_status_age_s": 1.1,
+                "depth_quality_age_s": 1.1,
             },
             {
                 "received_at": 3.0,
@@ -234,6 +251,7 @@ class TestHELocalizationHealth(unittest.TestCase):
                 "pose_age_s": 0.1,
                 "tf_age_s": 0.1,
                 "runtime_status_age_s": 0.1,
+                "depth_quality_age_s": 0.1,
             },
         ]
 
@@ -244,6 +262,7 @@ class TestHELocalizationHealth(unittest.TestCase):
         self.assertEqual(summary["reason_counts"]["pose_stale"], 1)
         self.assertEqual(summary["max_pose_age_s"], 1.1)
         self.assertEqual(summary["max_runtime_status_age_s"], 1.1)
+        self.assertEqual(summary["max_depth_quality_age_s"], 1.1)
         self.assertEqual(len(summary["transitions"]), 3)
         self.assertEqual(summary["transitions"][1]["reasons"][0], "pose_stale")
 
@@ -253,6 +272,26 @@ class TestHELocalizationHealth(unittest.TestCase):
         self.assertIn("pose_missing", result.reasons)
         self.assertIn("map_missing", result.reasons)
         self.assertIn("status_missing", result.reasons)
+        self.assertIn("depth_quality_missing", result.reasons)
+
+    def test_depth_quality_missing_invalid_stale_and_partial_coverage_fail_closed(self) -> None:
+        evaluator = HELocalizationHealth()
+        self.assertIn("depth_quality_missing", evaluator.evaluate(now=100.0).reasons)
+
+        evaluator._depth_quality = {"stamp": 100.0, "valid_ratio": 0.5}
+        self.assertIn("depth_quality_invalid", evaluator.evaluate(now=100.0).reasons)
+
+        evaluator._depth_quality = depth_quality_status(stamp=98.0)
+        self.assertIn("depth_quality_stale", evaluator.evaluate(now=100.0).reasons)
+
+        evaluator._depth_quality = depth_quality_status(
+            valid_ratio=0.09, center_ratio=0.08, bottom_ratio=0.06
+        )
+        result = evaluator.evaluate(now=100.1)
+        self.assertIn("depth_valid_ratio_low", result.reasons)
+        self.assertIn("depth_center_coverage_low", result.reasons)
+        self.assertIn("depth_bottom_coverage_low", result.reasons)
+        self.assertAlmostEqual(result.details["depth_bottom_valid_ratio"], 0.06)
 
     def test_camera_info_missing_invalid_and_stale_fail_closed(self) -> None:
         evaluator = HELocalizationHealth()
@@ -304,6 +343,7 @@ class TestHELocalizationHealth(unittest.TestCase):
             "tf_stamp": 100.0,
         }
         evaluator._runtime_status = runtime_status()
+        evaluator._depth_quality = depth_quality_status()
         self.assertTrue(evaluator.evaluate(now=100.1).healthy)
 
     def test_latched_map_age_is_diagnostic_unless_explicitly_gated(self) -> None:
@@ -317,6 +357,7 @@ class TestHELocalizationHealth(unittest.TestCase):
             "tf_stamp": 100.0,
         }
         evaluator._runtime_status = runtime_status()
+        evaluator._depth_quality = depth_quality_status()
         self.assertTrue(evaluator.evaluate(now=100.1).healthy)
 
         gated = HELocalizationHealth(max_map_age_s=3.0)
@@ -324,6 +365,7 @@ class TestHELocalizationHealth(unittest.TestCase):
         gated._map = evaluator._map
         gated._status = evaluator._status
         gated._runtime_status = evaluator._runtime_status
+        gated._depth_quality = evaluator._depth_quality
         self.assertIn("map_stale", gated.evaluate(now=100.1).reasons)
 
     def test_stale_pose_tracking_loss_and_tf_jump_fail_closed(self) -> None:

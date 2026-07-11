@@ -12,6 +12,7 @@ from dimos.robot.he.visual_data import (
     bgr8_array,
     corrupted_camera_intrinsics,
     depth_array,
+    depth_health_metrics,
     depth_ir_quality,
     depth_quality,
     depth_temporal_quality,
@@ -31,6 +32,19 @@ from dimos.robot.he.visual_data import (
 
 
 class TestHEVisualData(unittest.TestCase):
+    def test_depth_health_metrics_reports_global_center_and_bottom_coverage(self) -> None:
+        depth = np.zeros((10, 10), dtype=np.uint16)
+        depth[3:7, 3:7] = 1000
+        depth[8:, :3] = 1000
+
+        metrics = depth_health_metrics(depth)
+
+        self.assertAlmostEqual(metrics["valid_ratio"], 0.22)
+        self.assertAlmostEqual(metrics["center_40_percent_valid_ratio"], 1.0)
+        self.assertAlmostEqual(metrics["bottom_third_valid_ratio"], 0.25)
+        with self.assertRaises(ValueError):
+            depth_health_metrics(np.array([], dtype=np.uint16))
+
     def test_visual_fault_payload_blanks_only_selected_stream(self) -> None:
         payload = bytes([1, 2, 3])
         self.assertEqual(visual_fault_payload(payload, "rgb", "blank-rgb"), bytes(3))

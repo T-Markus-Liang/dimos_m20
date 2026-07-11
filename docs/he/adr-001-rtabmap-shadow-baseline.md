@@ -159,6 +159,16 @@ values, RSS above 768MB, available memory below 1GiB or swap growth above
 64MB. These thresholds protect the shadow baseline from stale monitoring and
 system pressure; they do not replace the database watchdog or systemd limits.
 
+Depth quality is now a direct health input rather than an inference from pose or
+map output. `HESensorBridge` computes global, center-40% and bottom-third valid
+ratios from the already converted 5Hz depth frame and publishes only those
+metrics plus source time. Missing, malformed or older-than-1s evidence is
+unhealthy. Each region has a provisional 10% minimum, so the observed 6.73%
+bottom-third coverage is explicitly rejected even if RTAB-Map continues to
+produce pose. This threshold is a conservative shadow interlock; physical target
+calibration, mounting qualification and vendor specifications must replace or
+confirm it before navigation approval.
+
 Static Orin fault qualification proved the contract with real runner values.
 An 8GiB test threshold added `system_memory_low` to all 184 health samples;
 restoring the 1GiB default removed that reason from all 187 samples while the

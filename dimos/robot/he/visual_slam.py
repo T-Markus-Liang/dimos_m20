@@ -400,6 +400,7 @@ class LocalizationHealth:
     map_age_s: float | None = None
     tf_age_s: float | None = None
     camera_info_age_s: float | None = None
+    depth_quality_age_s: float | None = None
     runtime_status_age_s: float | None = None
     inliers: int | None = None
     known_ratio: float | None = None
@@ -447,6 +448,7 @@ def summarize_localization_health(samples: Sequence[Mapping[str, Any]]) -> dict[
         "max_map_age_s": maximum("map_age_s"),
         "max_tf_age_s": maximum("tf_age_s"),
         "max_camera_info_age_s": maximum("camera_info_age_s"),
+        "max_depth_quality_age_s": maximum("depth_quality_age_s"),
         "max_runtime_status_age_s": maximum("runtime_status_age_s"),
         "transitions": transitions,
     }
@@ -458,6 +460,10 @@ class HELocalizationHealthConfig(ModuleConfig):
     max_map_age_s: float | None = Field(default=None, gt=0.0)
     max_tf_age_s: float = Field(default=1.0, gt=0.0)
     max_camera_info_age_s: float = Field(default=1.0, gt=0.0)
+    max_depth_quality_age_s: float = Field(default=1.0, gt=0.0)
+    min_depth_valid_ratio: float = Field(default=0.10, ge=0.0, le=1.0)
+    min_depth_center_valid_ratio: float = Field(default=0.10, ge=0.0, le=1.0)
+    min_depth_bottom_valid_ratio: float = Field(default=0.10, ge=0.0, le=1.0)
     min_inliers: int = Field(default=20, ge=1)
     min_known_ratio: float = Field(default=0.10, ge=0.0, le=1.0)
     min_free_ratio_of_known: float = Field(default=0.10, ge=0.0, le=1.0)
@@ -478,6 +484,7 @@ class HELocalizationHealth(Module):
     visual_map: In[OccupancyGrid]
     visual_status: In[dict]
     slam_runtime_status: In[dict]
+    depth_quality: In[dict]
     localization_health: Out[LocalizationHealth]
 
     def __init__(self, **config_args: Any) -> None:
@@ -486,6 +493,7 @@ class HELocalizationHealth(Module):
         self._map: OccupancyGrid | None = None
         self._status: dict[str, Any] | None = None
         self._runtime_status: dict[str, Any] | None = None
+        self._depth_quality: dict[str, Any] | None = None
         self._evaluation_task: asyncio.Task[None] | None = None
 
     async def main(self) -> AsyncGenerator[None, None]:
@@ -521,6 +529,10 @@ class HELocalizationHealth(Module):
         self._runtime_status = msg
         self.localization_health.publish(self.evaluate())
 
+    async def handle_depth_quality(self, msg: dict) -> None:
+        self._depth_quality = msg
+        self.localization_health.publish(self.evaluate())
+
     def evaluate(self, now: float | None = None) -> LocalizationHealth:
         now = time.time() if now is None else now
         reasons: list[str] = []
@@ -535,6 +547,51 @@ class HELocalizationHealth(Module):
             if camera_info_stamp is None
             else max(0.0, now - float(camera_info_stamp))
         )
+        depth_quality = self._depth_quality or {}
+        depth_quality_age = None
+        depth_metrics: dict[str, float] = {}
+        if not depth_quality:
+            reasons.append("depth_quality_missing")
+        else:
+            depth_stamp = math.nan
+            try:
+                depth_stamp = float(depth_quality.get("stamp"))
+                depth_metrics = {
+                    key: float(depth_quality.get(key))
+                    for key in (
+                        "valid_ratio",
+                        "center_40_percent_valid_ratio",
+                        "bottom_third_valid_ratio",
+                    )
+                }
+            except (TypeError, ValueError):
+                pass
+            invalid_depth_quality = (
+                not math.isfinite(depth_stamp)
+                or len(depth_metrics) != 3
+                or any(
+                    not math.isfinite(value) or not 0.0 <= value <= 1.0
+                    for value in depth_metrics.values()
+                )
+            )
+            if invalid_depth_quality:
+                reasons.append("depth_quality_invalid")
+            else:
+                depth_quality_age = max(0.0, now - depth_stamp)
+                if depth_quality_age > self.config.max_depth_quality_age_s:
+                    reasons.append("depth_quality_stale")
+                if depth_metrics["valid_ratio"] < self.config.min_depth_valid_ratio:
+                    reasons.append("depth_valid_ratio_low")
+                if (
+                    depth_metrics["center_40_percent_valid_ratio"]
+                    < self.config.min_depth_center_valid_ratio
+                ):
+                    reasons.append("depth_center_coverage_low")
+                if (
+                    depth_metrics["bottom_third_valid_ratio"]
+                    < self.config.min_depth_bottom_valid_ratio
+                ):
+                    reasons.append("depth_bottom_coverage_low")
 
         if pose_age is None:
             reasons.append("pose_missing")
@@ -643,6 +700,7 @@ class HELocalizationHealth(Module):
             map_age_s=map_age,
             tf_age_s=tf_age,
             camera_info_age_s=camera_info_age,
+            depth_quality_age_s=depth_quality_age,
             runtime_status_age_s=runtime_status_age,
             inliers=inliers,
             known_ratio=known_ratio,
@@ -656,6 +714,13 @@ class HELocalizationHealth(Module):
                 "swap_used_mb": runtime_status.get("swap_used_mb"),
                 "swap_growth_mb": runtime_status.get("swap_growth_mb"),
                 "camera_info_error": status.get("camera_info_error"),
+                "depth_valid_ratio": depth_metrics.get("valid_ratio"),
+                "depth_center_valid_ratio": depth_metrics.get(
+                    "center_40_percent_valid_ratio"
+                ),
+                "depth_bottom_valid_ratio": depth_metrics.get(
+                    "bottom_third_valid_ratio"
+                ),
             },
         )
 

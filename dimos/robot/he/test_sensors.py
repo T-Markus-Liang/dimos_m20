@@ -126,6 +126,40 @@ class TestHESensorBridge(unittest.TestCase):
         self.assertEqual(image.dtype, np.dtype(np.uint16))
         np.testing.assert_array_equal(image.data, values)
 
+    def test_depth_callback_publishes_small_quality_metrics(self) -> None:
+        bridge = HESensorBridge()
+        depth_messages = []
+        quality_messages = []
+        bridge.depth_image.subscribe(depth_messages.append)
+        bridge.depth_quality.subscribe(quality_messages.append)
+        values = np.zeros((6, 6), dtype="<u2")
+        values[2:4, 2:4] = 1000
+        values[4:, :3] = 1000
+        message = types.SimpleNamespace(
+            encoding="mono16",
+            width=6,
+            height=6,
+            step=12,
+            is_bigendian=False,
+            data=values.tobytes(),
+            header=header("depth_camera_link"),
+        )
+
+        bridge._on_depth_image(message)
+
+        self.assertEqual(len(depth_messages), 1)
+        self.assertEqual(len(quality_messages), 1)
+        self.assertEqual(
+            set(quality_messages[0]),
+            {
+                "stamp",
+                "valid_ratio",
+                "center_40_percent_valid_ratio",
+                "bottom_third_valid_ratio",
+            },
+        )
+        self.assertAlmostEqual(quality_messages[0]["bottom_third_valid_ratio"], 0.5)
+
     def test_camera_info_preserves_calibration_and_roi(self) -> None:
         roi = types.SimpleNamespace(
             x_offset=1,

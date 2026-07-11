@@ -317,6 +317,30 @@ def _largest_component(mask: np.ndarray) -> dict[str, Any] | None:
     }
 
 
+def depth_health_metrics(
+    depth_mm: np.ndarray,
+    *,
+    min_depth_mm: int = 150,
+    max_depth_mm: int = 4000,
+) -> dict[str, float]:
+    """Compute the bounded depth coverage needed by live localization health."""
+    if depth_mm.ndim != 2 or depth_mm.size == 0:
+        raise ValueError("depth image must be a non-empty 2D array")
+    if min_depth_mm < 0 or max_depth_mm < min_depth_mm:
+        raise ValueError("depth limits must define a non-negative increasing range")
+    valid = (depth_mm >= min_depth_mm) & (depth_mm <= max_depth_mm)
+    height, width = depth_mm.shape
+    y0 = min(int(height * 0.3), height - 1)
+    y1 = max(y0 + 1, int(height * 0.7))
+    x0 = min(int(width * 0.3), width - 1)
+    x1 = max(x0 + 1, int(width * 0.7))
+    return {
+        "valid_ratio": float(np.mean(valid)),
+        "center_40_percent_valid_ratio": float(np.mean(valid[y0:y1, x0:x1])),
+        "bottom_third_valid_ratio": float(np.mean(valid[2 * height // 3 :])),
+    }
+
+
 def depth_quality(
     depth_mm: np.ndarray,
     *,

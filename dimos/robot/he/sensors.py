@@ -21,6 +21,7 @@ from dimos.msgs.sensor_msgs.CameraInfo import CameraInfo
 from dimos.msgs.sensor_msgs.Image import Image, ImageFormat
 from dimos.msgs.sensor_msgs.Imu import Imu
 from dimos.msgs.sensor_msgs.PointCloud2 import PointCloud2
+from dimos.robot.he.visual_data import depth_health_metrics
 from dimos.utils.logging_config import setup_logger
 
 logger = setup_logger()
@@ -64,6 +65,7 @@ class HESensorBridge(Module):
     config: HESensorBridgeConfig
     color_image: Out[Image]
     depth_image: Out[Image]
+    depth_quality: Out[dict]
     ir_image: Out[Image]
     pointcloud: Out[PointCloud2]
     camera_info: Out[CameraInfo]
@@ -317,19 +319,30 @@ class HESensorBridge(Module):
         result.roi_do_rectify = msg.roi.do_rectify
         return result
 
-    def _publish_image(self, stream: str, max_hz: float, port: Out[Image], msg: Any) -> None:
+    def _publish_image(
+        self, stream: str, max_hz: float, port: Out[Image], msg: Any
+    ) -> Image | None:
         if not self._allowed(stream, max_hz):
-            return
+            return None
         try:
-            port.publish(self._image_from_ros(msg))
+            image = self._image_from_ros(msg)
         except ValueError as exc:
             logger.warning("Dropping invalid Aurora %s frame: %s", stream, exc)
+            return None
+        port.publish(image)
+        return image
 
     def _on_color_image(self, msg: Any) -> None:
         self._publish_image("color_image", self.config.color_image_max_hz, self.color_image, msg)
 
     def _on_depth_image(self, msg: Any) -> None:
-        self._publish_image("depth_image", self.config.depth_image_max_hz, self.depth_image, msg)
+        image = self._publish_image(
+            "depth_image", self.config.depth_image_max_hz, self.depth_image, msg
+        )
+        if image is not None:
+            self.depth_quality.publish(
+                {"stamp": image.ts, **depth_health_metrics(image.data)}
+            )
 
     def _on_ir_image(self, msg: Any) -> None:
         self._publish_image("ir_image", self.config.ir_image_max_hz, self.ir_image, msg)

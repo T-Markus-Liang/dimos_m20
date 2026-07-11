@@ -793,6 +793,15 @@ health while keeping real motion disconnected.
   rosbag, Rerun or database payload and a scan found no home path, IP, password,
   private key or serial value. The final validated package SHA-256 was
   `a1e04fb79c96dd6ff34442fd103cb6231dd05bb8c3989c4f000ed6cd91f933c9`.
+- Found that localization health had no direct Aurora depth-quality input and
+  could only infer degradation through RTAB-Map outputs. Added a tiny
+  `depth_quality` stream computed after the bridge's existing 5Hz NumPy
+  conversion: source time plus global, center-40% and bottom-third valid ratios.
+  Health now rejects missing, malformed, older-than-1s or below-10% regional
+  evidence. The health worker receives no full image and adds no ROS subscriber.
+  Four focused and all 64 HE tests, Ruff, blueprint registry and diff checks
+  pass. The thresholds are provisional shadow interlocks; Orin evidence remains
+  pending and physical calibration/vendor evidence still controls admission.
 
 ## Decisions
 

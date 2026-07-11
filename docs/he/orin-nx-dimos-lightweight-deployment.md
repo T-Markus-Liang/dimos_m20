@@ -1750,3 +1750,21 @@ RTAB-Map 或临时 throttle 残留，部署完整性和最终只读门通过。
 `SHA256SUMS`。默认排除 RGB/IR/depth 图像、点云 payload、rosbag、Rerun recording、
 设备序列号和 SDK 临时日志。序列号只能通过厂商私密通道单独提供。该包是支持工单
 材料，不代表深度准入已经通过；静态标定板、相机俯仰和 USB3 A/B 仍需现场执行。
+
+## 31. 深度覆盖直接接入定位健康（2026-07-12）
+
+此前 `HELocalizationHealth` 只通过 pose、map、RTAB-Map status、CameraInfo 和资源
+间接判断视觉链路，没有直接接收 Aurora depth 覆盖。这样即使下三分之一长期无深度，
+只要 RTAB-Map 仍输出 pose，就缺少独立的传感质量原因。
+
+候选实现由 `HESensorBridge` 在现有 5Hz depth 已转换为 NumPy 后计算 global、center
+40% 和 bottom-third 三个 valid ratio，并发布带 source timestamp 的小字典。health
+worker 不接收完整 depth，不新增 ROS subscriber，也不重复生成点云。以下情况 fail
+closed：指标缺失、字段/范围无效、超过 1 秒未更新，或任一区域低于 10%。对应原因是
+`depth_quality_missing/invalid/stale`、`depth_valid_ratio_low`、
+`depth_center_coverage_low` 和 `depth_bottom_coverage_low`。
+
+10% 是 shadow 阶段保守阻断线，用于确保已观察到的 bottom-third 6.73% 缺陷不会被
+pose 输出掩盖；它不是厂商精度规格，也不代表达到 10% 即可导航。静态标定板、相机
+俯仰/高度、USB3 A/B 和厂商回复完成后必须重新评估阈值。VM 64 项 HE unittest、
+Ruff、blueprint registry 和 diff 检查已通过；Orin 实际原因、资源和故障恢复仍待验证。
