@@ -180,6 +180,14 @@ not accepted as tested. The follow-up candidate removes the lightweight runner
 manager's dedicated worker and uses the already qualified 128MB sampled-sensor
 Rerun window; it requires a fresh equivalent Orin soak.
 
+The optimized equivalent soak passed. Worker count stayed at six; 13 tagged
+processes used 1.31-1.32GiB PSS, available memory stayed above 2.85GiB and both
+main-loop and runner-relative swap growth were zero. All eight sampled streams
+remained present, native RSS ended at 430.81MB, runtime status age stayed below
+1.083s and no resource reason appeared in 259 health samples. Three brief
+`pose_stale` samples recovered without intervention and remain a longer/moving
+test signal. See `evidence/2026-07-12_0411_dual-path-shadow-soak.md`.
+
 Real navigation remains prohibited until moving ATE/RPE, loop closure,
 relocalization, map quality, camera extrinsics, tracking-loss detection,
 resource soak and control safety gates pass after a new vehicle-down safety

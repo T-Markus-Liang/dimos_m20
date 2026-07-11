@@ -1575,5 +1575,18 @@ CameraInfo 约 0.96Hz、odom/IMU 约 16Hz。native SLAM 和 Rerun 同时工作�
 第二版只做两项证据驱动优化：`HERTABMapShadowRunner` 不再占专属 Python worker，
 使 3 个 dedicated module 对应 6-worker policy；combined Rerun 使用 HE Sense 已完成
 10 分钟 A/B 的 128MB window。runner 仍最后启动并保留 native process-group cleanup，
-全局 worker policy 不变。结构测试锁定这两个条件，VM 56 项 HE 测试通过；该候选必须
-重新做同口径 Orin soak 才能决定保留或回滚。
+全局 worker policy 不变。结构测试锁定这两个条件，VM 56 项 HE 测试通过，随后按
+同口径执行 Orin soak。
+
+第二版同口径实测已通过：worker 日志确认总数为 6；11 个样本中 tagged process 始终
+为 13，总 PSS 最小/中位/最大约 1.28/1.31/1.32GiB，available 最低约 2.85GiB，主循环
+和 runner-relative swap growth 均为零，温度最高 66.75C。native process-group RSS
+结束时约 430.81MB，runtime age 最大 1.083 秒，259 个 health 样本没有资源 reason。
+
+八路 sampled 输出从开始到结束均存在：RGB 4.218->4.022Hz、depth
+4.129->3.755Hz、IR 3.983->3.707Hz、点云 0.883->0.836Hz、两路 CameraInfo 约
+0.97Hz、odom/IMU 约 16Hz。3 个样本短暂触发 `pose_stale`，最大 0.531 秒，随后自动
+恢复；不放宽 0.5 秒门，留给更长和移动测试继续观察。所有系统样本导航发布者为零，
+普通 SIGTERM、无残留、Sense 恢复、live sensor/read-only gate 和 macOS `9877` 连接
+均通过。因此保留 6-worker/128MB 组合，完整证据见
+`docs/he/evidence/2026-07-12_0411_dual-path-shadow-soak.md`。

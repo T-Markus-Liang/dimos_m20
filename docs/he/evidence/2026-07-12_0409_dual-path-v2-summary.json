@@ -1,0 +1,228 @@
+{
+  "available_median_bytes": 3070365696,
+  "available_min_bytes": 3058593792,
+  "health_summary": {
+    "first_received_at": 1783800560.1750078,
+    "healthy_samples": 0,
+    "last_received_at": 1783800574.9844444,
+    "max_camera_info_age_s": 0.3407719135284424,
+    "max_map_age_s": 710.2605335712433,
+    "max_pose_age_s": 0.5306155681610107,
+    "max_runtime_status_age_s": 1.0825304985046387,
+    "max_tf_age_s": 0.7248880863189697,
+    "reason_counts": {
+      "map_known_ratio_low": 259,
+      "pose_stale": 3
+    },
+    "samples": 259,
+    "transitions": [
+      {
+        "checked_at": 1783800560.1740727,
+        "healthy": false,
+        "reasons": [
+          "pose_stale",
+          "map_known_ratio_low"
+        ],
+        "received_at": 1783800560.1750078,
+        "sample_index": 0
+      },
+      {
+        "checked_at": 1783800560.2199426,
+        "healthy": false,
+        "reasons": [
+          "map_known_ratio_low"
+        ],
+        "received_at": 1783800560.2216923,
+        "sample_index": 2
+      },
+      {
+        "checked_at": 1783800563.201997,
+        "healthy": false,
+        "reasons": [
+          "pose_stale",
+          "map_known_ratio_low"
+        ],
+        "received_at": 1783800563.2035897,
+        "sample_index": 50
+      },
+      {
+        "checked_at": 1783800563.2635813,
+        "healthy": false,
+        "reasons": [
+          "map_known_ratio_low"
+        ],
+        "received_at": 1783800563.2653742,
+        "sample_index": 51
+      }
+    ],
+    "unhealthy_samples": 259
+  },
+  "process_count_max": 13,
+  "process_count_min": 13,
+  "runtime_first": {
+    "process_alive": true,
+    "received_at": 1783800553.332973,
+    "rss_mb": 431.3046875,
+    "stamp": 1783800553.3057263,
+    "swap_growth_mb": 0.0,
+    "swap_used_mb": 558.02734375,
+    "system_available_mb": 2884.12890625
+  },
+  "runtime_last": {
+    "process_alive": true,
+    "received_at": 1783800557.4910574,
+    "rss_mb": 430.80859375,
+    "stamp": 1783800557.461493,
+    "swap_growth_mb": 0.0,
+    "swap_used_mb": 558.02734375,
+    "system_available_mb": 2892.80078125
+  },
+  "sampled_rates_end": {
+    "duration_s": 10.0,
+    "streams": {
+      "camera_info": {
+        "count": 10,
+        "rate_hz": 0.972666085589803
+      },
+      "color_image": {
+        "count": 42,
+        "rate_hz": 4.021590893810348
+      },
+      "depth_camera_info": {
+        "count": 10,
+        "rate_hz": 0.9726433042719255
+      },
+      "depth_image": {
+        "count": 39,
+        "rate_hz": 3.755316229314884
+      },
+      "imu": {
+        "count": 160,
+        "rate_hz": 15.932917665966615
+      },
+      "ir_image": {
+        "count": 38,
+        "rate_hz": 3.706958129562911
+      },
+      "odom": {
+        "count": 162,
+        "rate_hz": 16.173664661764995
+      },
+      "pointcloud": {
+        "count": 9,
+        "rate_hz": 0.8357739316664349
+      }
+    }
+  },
+  "sampled_rates_start": {
+    "duration_s": 10.0,
+    "streams": {
+      "camera_info": {
+        "count": 10,
+        "rate_hz": 0.9686162944010616
+      },
+      "color_image": {
+        "count": 44,
+        "rate_hz": 4.217941836510156
+      },
+      "depth_camera_info": {
+        "count": 10,
+        "rate_hz": 0.968624222980195
+      },
+      "depth_image": {
+        "count": 42,
+        "rate_hz": 4.1292033823234
+      },
+      "imu": {
+        "count": 161,
+        "rate_hz": 16.026737186459258
+      },
+      "ir_image": {
+        "count": 41,
+        "rate_hz": 3.9826696162303197
+      },
+      "odom": {
+        "count": 161,
+        "rate_hz": 16.088209084955214
+      },
+      "pointcloud": {
+        "count": 9,
+        "rate_hz": 0.8829262589766675
+      }
+    }
+  },
+  "swap_growth_max_bytes": 0,
+  "swap_used_start_bytes": 585134080,
+  "system_samples": 11,
+  "temperature_max_c": 66.75,
+  "temperature_min_c": 62.218,
+  "top_processes": [
+    {
+      "command": "/home/ubuntu/he/dimos_wd_m20/.venv/bin/python -c from multiprocessing.forkserver import main; main(49, 51, ['__main__'], **{'sys_path': ['/home/ubuntu/he/dimos_wd_m20/.venv/lib/python3.10/site-packages/dimos_lcm/python_lcm_msgs', '/home/ubuntu/he/dimos_wd_m20/.venv/bin', '/opt/ros/humble/lib/python3.10/site-packages', '/opt/ros/humble/local/lib/python3.10/dist-packages', '/usr/lib/python310.zip', '/usr/lib/python3.10', '/usr/lib/python3.10/lib-dynload', '/home/ubuntu/he/dimos_wd_m20/.venv/lib/python3.10/site-packages', '/home/ubuntu/he/dimos_wd_m20', '/home/ubuntu/he/dimos_wd_m20/.venv/lib/python3.10/site-packages/cmeel.prefix/lib/python3.10/site-packages', '/home/ubuntu/he/dimos_wd_m20/.venv/lib/python3.10/site-packages/rerun_sdk']})",
+      "pid": 218597,
+      "ppid": 218595,
+      "private_dirty_bytes": 369819648,
+      "pss_bytes": 395761664,
+      "rss_bytes": 462225408
+    },
+    {
+      "command": "/opt/ros/humble/lib/rtabmap_slam/rtabmap --ros-args --params-file /home/ubuntu/he/dimos_wd_m20/dimos/robot/he/deployment/he-rtabmap-shadow.yaml -p database_path:=/home/ubuntu/he/logs/he-dual-path-v2-20260712/dual-path-v2.db -p Mem/IncrementalMemory:='true' -p Mem/InitWMWithAllNodes:='false' -p Mem/LocalizationReadOnly:='false' -p Mem/LocalizationDataSaved:='false' -r rgb/image:=/aurora/rgb/image_raw -r depth/image:=/aurora/depth/image_raw -r rgb/camera_info:=/aurora/rgb/camera_info -r odom:=/he/visual_odom -r odom_info:=/he/visual_odom_info -r map:=/he/visual_occupancy -r mapPath:=/he/visual_path -r mapData:=/he/visual_map_data -r info:=/he/visual_slam_info -r cloud_map:=/he/visual_cloud_map",
+      "pid": 218909,
+      "ppid": 218780,
+      "private_dirty_bytes": 133603328,
+      "pss_bytes": 191491072,
+      "rss_bytes": 258392064
+    },
+    {
+      "command": "/home/ubuntu/he/dimos_wd_m20/.venv/bin/python -c from multiprocessing.forkserver import main; main(49, 51, ['__main__'], **{'sys_path': ['/home/ubuntu/he/dimos_wd_m20/.venv/lib/python3.10/site-packages/dimos_lcm/python_lcm_msgs', '/home/ubuntu/he/dimos_wd_m20/.venv/bin', '/opt/ros/humble/lib/python3.10/site-packages', '/opt/ros/humble/local/lib/python3.10/dist-packages', '/usr/lib/python310.zip', '/usr/lib/python3.10', '/usr/lib/python3.10/lib-dynload', '/home/ubuntu/he/dimos_wd_m20/.venv/lib/python3.10/site-packages', '/home/ubuntu/he/dimos_wd_m20', '/home/ubuntu/he/dimos_wd_m20/.venv/lib/python3.10/site-packages/cmeel.prefix/lib/python3.10/site-packages', '/home/ubuntu/he/dimos_wd_m20/.venv/lib/python3.10/site-packages/rerun_sdk']})",
+      "pid": 218596,
+      "ppid": 218595,
+      "private_dirty_bytes": 161697792,
+      "pss_bytes": 178813952,
+      "rss_bytes": 250904576
+    },
+    {
+      "command": "/home/ubuntu/he/dimos_wd_m20/.venv/bin/python -c from multiprocessing.forkserver import main; main(49, 51, ['__main__'], **{'sys_path': ['/home/ubuntu/he/dimos_wd_m20/.venv/lib/python3.10/site-packages/dimos_lcm/python_lcm_msgs', '/home/ubuntu/he/dimos_wd_m20/.venv/bin', '/opt/ros/humble/lib/python3.10/site-packages', '/opt/ros/humble/local/lib/python3.10/dist-packages', '/usr/lib/python310.zip', '/usr/lib/python3.10', '/usr/lib/python3.10/lib-dynload', '/home/ubuntu/he/dimos_wd_m20/.venv/lib/python3.10/site-packages', '/home/ubuntu/he/dimos_wd_m20', '/home/ubuntu/he/dimos_wd_m20/.venv/lib/python3.10/site-packages/cmeel.prefix/lib/python3.10/site-packages', '/home/ubuntu/he/dimos_wd_m20/.venv/lib/python3.10/site-packages/rerun_sdk']})",
+      "pid": 218598,
+      "ppid": 218595,
+      "private_dirty_bytes": 129998848,
+      "pss_bytes": 142865408,
+      "rss_bytes": 212459520
+    },
+    {
+      "command": "/home/ubuntu/he/dimos_wd_m20/.venv/bin/python -c from multiprocessing.forkserver import main; main(49, 51, ['__main__'], **{'sys_path': ['/home/ubuntu/he/dimos_wd_m20/.venv/lib/python3.10/site-packages/dimos_lcm/python_lcm_msgs', '/home/ubuntu/he/dimos_wd_m20/.venv/bin', '/opt/ros/humble/lib/python3.10/site-packages', '/opt/ros/humble/local/lib/python3.10/dist-packages', '/usr/lib/python310.zip', '/usr/lib/python3.10', '/usr/lib/python3.10/lib-dynload', '/home/ubuntu/he/dimos_wd_m20/.venv/lib/python3.10/site-packages', '/home/ubuntu/he/dimos_wd_m20', '/home/ubuntu/he/dimos_wd_m20/.venv/lib/python3.10/site-packages/cmeel.prefix/lib/python3.10/site-packages', '/home/ubuntu/he/dimos_wd_m20/.venv/lib/python3.10/site-packages/rerun_sdk']})",
+      "pid": 218601,
+      "ppid": 218595,
+      "private_dirty_bytes": 117608448,
+      "pss_bytes": 127947776,
+      "rss_bytes": 189554688
+    },
+    {
+      "command": "/home/ubuntu/he/dimos_wd_m20/.venv/bin/python -c from multiprocessing.forkserver import main; main(49, 51, ['__main__'], **{'sys_path': ['/home/ubuntu/he/dimos_wd_m20/.venv/lib/python3.10/site-packages/dimos_lcm/python_lcm_msgs', '/home/ubuntu/he/dimos_wd_m20/.venv/bin', '/opt/ros/humble/lib/python3.10/site-packages', '/opt/ros/humble/local/lib/python3.10/dist-packages', '/usr/lib/python310.zip', '/usr/lib/python3.10', '/usr/lib/python3.10/lib-dynload', '/home/ubuntu/he/dimos_wd_m20/.venv/lib/python3.10/site-packages', '/home/ubuntu/he/dimos_wd_m20', '/home/ubuntu/he/dimos_wd_m20/.venv/lib/python3.10/site-packages/cmeel.prefix/lib/python3.10/site-packages', '/home/ubuntu/he/dimos_wd_m20/.venv/lib/python3.10/site-packages/rerun_sdk']})",
+      "pid": 218599,
+      "ppid": 218595,
+      "private_dirty_bytes": 109543424,
+      "pss_bytes": 119882752,
+      "rss_bytes": 181800960
+    },
+    {
+      "command": "/opt/ros/humble/lib/rtabmap_odom/rgbd_odometry --ros-args --params-file /home/ubuntu/he/dimos_wd_m20/dimos/robot/he/deployment/he-rtabmap-shadow.yaml -r rgb/image:=/aurora/rgb/image_raw -r depth/image:=/aurora/depth/image_raw -r rgb/camera_info:=/aurora/rgb/camera_info -r odom:=/he/visual_odom -r odom_info:=/he/visual_odom_info",
+      "pid": 218908,
+      "ppid": 218780,
+      "private_dirty_bytes": 76812288,
+      "pss_bytes": 118949888,
+      "rss_bytes": 185499648
+    },
+    {
+      "command": "/home/ubuntu/he/dimos_wd_m20/.venv/bin/python -c from multiprocessing.forkserver import main; main(49, 51, ['__main__'], **{'sys_path': ['/home/ubuntu/he/dimos_wd_m20/.venv/lib/python3.10/site-packages/dimos_lcm/python_lcm_msgs', '/home/ubuntu/he/dimos_wd_m20/.venv/bin', '/opt/ros/humble/lib/python3.10/site-packages', '/opt/ros/humble/local/lib/python3.10/dist-packages', '/usr/lib/python310.zip', '/usr/lib/python3.10', '/usr/lib/python3.10/lib-dynload', '/home/ubuntu/he/dimos_wd_m20/.venv/lib/python3.10/site-packages', '/home/ubuntu/he/dimos_wd_m20', '/home/ubuntu/he/dimos_wd_m20/.venv/lib/python3.10/site-packages/cmeel.prefix/lib/python3.10/site-packages', '/home/ubuntu/he/dimos_wd_m20/.venv/lib/python3.10/site-packages/rerun_sdk']})",
+      "pid": 218602,
+      "ppid": 218595,
+      "private_dirty_bytes": 106045440,
+      "pss_bytes": 116368384,
+      "rss_bytes": 178823168
+    }
+  ],
+  "total_pss_max_bytes": 1416303616,
+  "total_pss_median_bytes": 1406944256,
+  "total_pss_min_bytes": 1376662528
+}

@@ -657,6 +657,21 @@ health while keeping real motion disconnected.
   entities. Global worker policy and the three CPU/data-heavy dedicated modules
   remain unchanged. VM 56-test, Ruff, registry and diff checks pass; Orin A/B
   remains pending.
+- Deployed the optimized candidate as `9c1588d0` and repeated the full
+  11-point/10-minute soak with process discovery corrected to use run tags at
+  every sample. Worker logs confirmed six total workers; 13 tagged processes
+  stayed stable with 1.31GiB median and 1.32GiB maximum PSS.
+- The optimized run passed resource admission: available memory never fell
+  below 2.85GiB, main-loop and runner-relative swap growth were both zero,
+  native RSS ended at 430.81MB, runtime age stayed below 1.083s and temperature
+  peaked at 66.75C. No resource reason appeared in 259 health samples.
+- All eight sampled streams persisted from start to end while native SLAM ran.
+  Three health samples briefly added `pose_stale` at a 0.531s maximum and
+  recovered automatically; the 0.5s threshold remains unchanged. Every system
+  sample had zero navigation publishers.
+- Optimized shadow stopped with ordinary SIGTERM and no error/native residue.
+  Sense restoration, live sensor gate, final read-only gate and remote port
+  9877 connectivity all passed with zero service restarts.
 - Pushed the probe, failed-getter fix, bounded DDS convergence and final
   evidence as `1655079a`, `b7b56853`, `a4af65e6` and `64cfeb4c`; Orin
   fast-forwarded cleanly and the macOS deployment mirror was synchronized.
@@ -740,9 +755,9 @@ health while keeping real motion disconnected.
   control modules remain unchanged; moving and physical-calibration gates are
   still open.
 - Shadow resource-health hardening is deployed and statically qualified. The
-  first dual-path runtime failed swap-growth admission and was safely removed.
-  The optimized six-worker/128MB candidate is VM-verified but not yet deployed;
-  the architecture gate remains open until its Orin soak passes.
+  optimized six-worker/128MB dual-path shadow is now deployed and passed static
+  function/resource soak. Separate coordinator/systemd service isolation,
+  physical calibration and every moving qualification gate remain open.
 
 ## Resume Instructions
 
