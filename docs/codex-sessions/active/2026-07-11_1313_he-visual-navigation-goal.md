@@ -101,11 +101,28 @@ health while keeping real motion disconnected.
 - Added a process-group-owning RTAB-Map runner and registered the motion-free
   `he-visual-slam-shadow` blueprint. It contains no `MovementManager`,
   `HEConnection` or velocity output.
-- Added ten visual SLAM conversion/health/map/blueprint tests. All 27 HE unittest cases
+- Added twelve visual SLAM conversion/health/map/blueprint tests. All 29 HE unittest cases
   pass, Ruff passes, the generated blueprint registry passes in CI mode, and
   `dimos list` exposes `he-visual-slam-shadow`.
 - Created ADR-001 selecting RTAB-Map only as the current shadow baseline. Real
   navigation approval is explicitly withheld.
+- Pushed integration commit `e4d469cb`, fast-forwarded Orin and ran the complete
+  DimOS shadow stack for about three minutes. Available memory stayed near
+  3.33GiB, RTAB-Map group RSS was about 493-533MiB, and `/he/nav_cmd_vel`
+  stayed at zero publishers.
+- Read live health directly: current map known ratio was 2.04-2.31%, free ratio
+  among known cells 12.7-15.0%, and the planner map was withheld.
+- Fixed OdomInfo overwriting `odom_latency_ms` in `651af9bb`; live health then
+  reported about 138ms odometry latency.
+- Found a verified RTAB-Map `Memory::addLink()` fatal when a 25MiB incremental
+  database was reused after visual odometry reset. `kill -0` also treated the
+  dead SLAM zombie as alive and allowed odometry orphans.
+- Fixed lifecycle in `3da830d3`: fresh bounded databases by default, explicit
+  resume only, five-file retention, single-instance lock, `wait -n` reaping,
+  no core dumps and parent-death cleanup.
+- Fault-injected a SLAM child exit after the fix. Both native children were gone
+  within the six-second check and health reported `slam_process_down`.
+- Restored `he-dimos-sense.service` active with zero restarts after testing.
 
 ## Decisions
 
@@ -123,23 +140,27 @@ health while keeping real motion disconnected.
 - Require at least 10% known map cells and 10% free cells among known cells
   before exposing a visual map to planners. The current 2.52% result must stay
   unhealthy rather than being hidden by parameter relaxation.
+- Treat a latched occupancy map's age as diagnostic by default. Pose and TF
+  remain freshness-gated; map age can be explicitly enabled because a static
+  map is allowed not to republish while the robot is stationary.
 
 ## Current State
 
 - VM and Orin were clean and synchronized at `d3483cbb` before the current
   integration edits. RTAB-Map runtime packages are installed only on Orin.
-- DimOS shadow modules, tests, blueprint, ADR and map evidence are implemented
-  in the VM worktree but not yet committed or deployed to Orin.
+- DimOS shadow modules, tests and blueprint are committed, pushed and exercised
+  on Orin. Lifecycle fixes are synchronized through `3da830d3`.
 - Aurora depth coverage, camera extrinsics, moving accuracy, loop closure and
   relocalization remain open gates. Real motion remains prohibited.
 
 ## Resume Instructions
 
-1. Review and commit the shadow integration, ADR and map evidence.
-2. Push `codex/he-orin`, fast-forward Orin and run `he-visual-slam-shadow`.
-3. Execute a bounded Orin soak, preserving health, resources, restart, database
-   growth and process-cleanup evidence.
-4. Re-run read-only gates and confirm zero `/he/nav_cmd_vel` publishers.
+1. Commit the final soak evidence and latched-map health correction.
+2. Fast-forward Orin and recheck live health has latency plus only meaningful
+   map-quality failures in a fresh run.
+3. Re-run the static/read-only closeout and synchronize the macOS doc mirror.
+4. Audit every Goal requirement; keep moving tests gated on a new vehicle-down
+   confirmation.
 5. Do not enable motion or restore LD19.
 
 ## Open Questions

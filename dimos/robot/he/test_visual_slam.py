@@ -153,6 +153,26 @@ class TestHELocalizationHealth(unittest.TestCase):
         evaluator._runtime_status = {"process_alive": True, "rss_mb": 470.0}
         self.assertTrue(evaluator.evaluate(now=100.1).healthy)
 
+    def test_latched_map_age_is_diagnostic_unless_explicitly_gated(self) -> None:
+        evaluator = HELocalizationHealth()
+        evaluator._odom = Odometry(ts=100.0)
+        evaluator._map = OccupancyGrid(grid=np.zeros((10, 10), dtype=np.int8), ts=1.0)
+        evaluator._status = {
+            "tracking_lost": False,
+            "inliers": 50,
+            "tf_ok": True,
+            "tf_stamp": 100.0,
+        }
+        evaluator._runtime_status = {"process_alive": True, "rss_mb": 470.0}
+        self.assertTrue(evaluator.evaluate(now=100.1).healthy)
+
+        gated = HELocalizationHealth(max_map_age_s=3.0)
+        gated._odom = evaluator._odom
+        gated._map = evaluator._map
+        gated._status = evaluator._status
+        gated._runtime_status = evaluator._runtime_status
+        self.assertIn("map_stale", gated.evaluate(now=100.1).reasons)
+
     def test_stale_pose_tracking_loss_and_tf_jump_fail_closed(self) -> None:
         evaluator = HELocalizationHealth()
         evaluator._odom = Odometry(ts=98.0)

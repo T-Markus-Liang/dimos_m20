@@ -294,7 +294,7 @@ class LocalizationHealth:
 class HELocalizationHealthConfig(ModuleConfig):
     evaluation_hz: float = Field(default=5.0, gt=0.0)
     max_pose_age_s: float = Field(default=0.5, gt=0.0)
-    max_map_age_s: float = Field(default=3.0, gt=0.0)
+    max_map_age_s: float | None = Field(default=None, gt=0.0)
     max_tf_age_s: float = Field(default=1.0, gt=0.0)
     min_inliers: int = Field(default=20, ge=1)
     min_known_ratio: float = Field(default=0.10, ge=0.0, le=1.0)
@@ -371,7 +371,7 @@ class HELocalizationHealth(Module):
             reasons.append("pose_stale")
         if map_age is None:
             reasons.append("map_missing")
-        elif map_age > self.config.max_map_age_s:
+        elif self.config.max_map_age_s is not None and map_age > self.config.max_map_age_s:
             reasons.append("map_stale")
         if not status:
             reasons.append("status_missing")

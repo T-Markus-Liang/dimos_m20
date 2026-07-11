@@ -964,3 +964,23 @@ shadow baseline，但不代表真实导航获批。架构决策和替代方案�
 
 该蓝图没有 `MovementManager`、`HEConnection` 或速度输出。车辆真实移动、ATE/RPE、
 回环、重定位、地图可通行性和自动探索仍等待新的车辆落地安全确认。
+
+集成 shadow soak 的完整记录位于
+`docs/he/evidence/2026-07-11_1448_dimos-shadow-soak.md`。运行时 RTAB-Map
+进程组 RSS 约 493-533MiB，整机 available memory 约 3.33GiB，`/he/nav_cmd_vel`
+持续为 0 个发布者。health 正确输出约 138ms odom latency，并以
+`map_known_ratio_low` 保持 unhealthy。
+
+测试发现不能在视觉 odom 每次归零的同时默认恢复旧 incremental database；该
+组合触发了 RTAB-Map `Memory::addLink()` fatal。runner 已改为默认创建时间戳数据库、
+最多保留 5 份、单实例锁、`wait -n` 子进程回收和 parent-death cleanup。只有显式
+设置 `HE_RTABMAP_DB` 才允许恢复数据库，且恢复前必须另行完成重定位设计。
+
+OccupancyGrid 是 latched/event-driven，静止时不重发不代表地图失效。因此 map age
+默认作为诊断值，不直接阻断 health；需要该门时可显式设置 `max_map_age_s`。pose、
+TF、tracking、inliers、latency、RSS 和地图质量仍为默认门禁。
+
+受控终止 SLAM 子进程后，odometry 在 6 秒检查前已同步清理，health 报告
+`slam_process_down`，无原生进程残留。当前剩余的运行粗糙点是 DimOS
+`RerunBridgeModule` 停止会占满 CLI 的 5 秒 grace period，使主 daemon 被升级为
+SIGKILL；原生 SLAM 清理通过，但后续应在 DimOS/Rerun 协调层修复优雅退出。

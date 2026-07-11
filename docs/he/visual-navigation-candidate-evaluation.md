@@ -173,3 +173,10 @@ jitter, depth coverage is poor, and no moving/loop/relocalization data is
 authorized yet. Full raw evidence is under
 `docs/he/evidence/2026-07-11_1418_rtabmap-*` and
 `docs/he/evidence/2026-07-11_1430_rtabmap-static-map.json`.
+
+The integrated DimOS soak is recorded in
+`docs/he/evidence/2026-07-11_1448_dimos-shadow-soak.md`. It confirmed bounded
+runtime resources and fail-closed health, and it also found that blindly
+resuming an incremental database after visual odometry resets can crash
+RTAB-Map. The default runner now starts a fresh bounded database; map resume is
+deferred until an explicit relocalization workflow exists.

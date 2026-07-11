@@ -64,6 +64,12 @@ RTAB-Map is the only heavy SLAM runtime installed and must remain bounded. A
 different baseline requires equivalent HE data, Orin resource evidence, an ADR
 update and a rollback path.
 
+Incremental mapping starts with a new bounded database by default because
+visual odometry resets on each shadow start. Reusing a mapping database without
+an explicit localization/resume transform caused a verified RTAB-Map graph
+fatal. Database resume therefore requires an explicit `HE_RTABMAP_DB` and a
+separate relocalization procedure.
+
 Real navigation remains prohibited until moving ATE/RPE, loop closure,
 relocalization, map quality, camera extrinsics, tracking-loss detection,
 resource soak and control safety gates pass after a new vehicle-down safety
