@@ -158,6 +158,10 @@ health while keeping real motion disconnected.
   stricter endpoint, process, command and port check.
 - Added a non-suppressing `ERR` trap to the read-only gate so the still-failing
   final invocation reports the exact assertion instead of ending silently.
+- Proved the missing closeout tail was a `systemd-run --pipe` output-channel
+  artifact. The exact repository script completed in non-piped transient unit
+  `he-static-final-1635` with `Result=success`, `ExecMainCode=0` and
+  `ExecMainStatus=0`; final motion and service gates remained closed/healthy.
 
 ## Decisions
 
@@ -181,8 +185,10 @@ health while keeping real motion disconnected.
 
 ## Current State
 
-- VM, origin and Orin are synchronized at `17341f9c`. The read-only failure
-  diagnostic is under verification before its follow-up commit.
+- VM, origin and Orin are synchronized at `87d804c5`; all worktrees are clean.
+- The final current-script static closeout passed under systemd with status 0.
+  `he-dimos-sense` is active with zero restarts, memory is about 1005MiB,
+  no visual SLAM node is running and `/he/nav_cmd_vel` has zero publishers.
 - The final static closeout passed all 29 HE tests, blueprint discovery,
   deployment integrity, isolated control dry-run, Aurora live quality and both
   read-only gates. `he-dimos-sense` is active with zero restarts.

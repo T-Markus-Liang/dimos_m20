@@ -1028,3 +1028,9 @@ Aurora subscription count、导航进程、控制发布者和端口，因此删�
 
 只读门同时增加不吞错的 `ERR` 诊断，失败时输出具体行号和命令，便于区分安全条件
 失败与 ROS CLI 生命周期问题；该诊断不会捕获错误或把失败改为通过。
+
+最终确认此前“输出停在 cleanup/final gate”是 `systemd-run --pipe` 在 rclpy 退出后
+丢失输出通道，并非封板 unit 失败。改用不带 pipe 的 transient user unit 执行原始
+脚本，再独立查询 `he-static-final-1635.service`，结果为 `Result=success`、
+`ExecMainCode=0`、`ExecMainStatus=0`。封板后传感服务 active、零重启、约 1005MiB，
+工作区干净，`/he/nav_cmd_vel` 仍为 0 个发布者。

@@ -82,3 +82,15 @@ The closeout then reached the final gate but still ended without identifying
 which assertion failed. `verify-he-readonly.sh` now installs an `ERR` trap that
 prints the failing line and command. It does not catch or suppress the error and
 does not change any safety condition.
+
+The missing terminal tail was ultimately an output-channel artifact, not a
+failed unit. `systemd-run --user --wait --pipe` lost its pipe after the rclpy
+test process exited, while the transient service continued and systemd recorded
+`Result=success`, `ExecMainCode=0`, `ExecMainStatus=0`. A final run used a
+non-piped transient unit (`he-static-final-1635.service`) and queried systemd
+after completion. It returned the same success result and status 0 for the
+unmodified repository closeout script at commit `87d804c5`.
+
+Post-closeout state was clean: `he-dimos-sense.service=active`, `NRestarts=0`,
+about 1005MiB current memory, no visual SLAM ROS node, and zero publishers on
+`/he/nav_cmd_vel`.
