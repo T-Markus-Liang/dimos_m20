@@ -24,14 +24,17 @@ blueprints=$(.venv/bin/dimos list)
 grep -qx 'he-sense-headless' <<<"$blueprints"
 grep -qx 'he-teleop-headless' <<<"$blueprints"
 
-printf '%s\n' '=== HEConnection standard-library tests ==='
-.venv/bin/python -m unittest -v dimos.robot.he.test_connection
+printf '%s\n' '=== HE standard-library tests ==='
+.venv/bin/python -m unittest -v \
+  dimos.robot.he.test_connection \
+  dimos.robot.he.test_sensors
 
 printf '%s\n' '=== isolated ROS control dry-run ==='
 .venv/bin/python dimos/robot/he/deployment/verify-he-control-dry-run.py
 
 printf '%s\n' '=== live sensor quality gate ==='
-.venv/bin/python dimos/robot/he/deployment/verify-he-sensors.py --scan-samples 30 --timeout 12
+.venv/bin/python dimos/robot/he/deployment/verify-he-sensors.py \
+  --image-samples 5 --pointcloud-samples 2 --timeout 15
 
 printf '%s\n' '=== DDS test-endpoint cleanup ==='
 has_test_endpoints() {

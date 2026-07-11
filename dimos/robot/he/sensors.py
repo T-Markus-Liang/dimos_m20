@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import math
 import threading
 import time
 from collections.abc import AsyncGenerator
@@ -18,6 +17,8 @@ from dimos.msgs.geometry_msgs.Quaternion import Quaternion
 from dimos.msgs.geometry_msgs.Twist import Twist
 from dimos.msgs.geometry_msgs.Vector3 import Vector3
 from dimos.msgs.nav_msgs.Odometry import Odometry
+from dimos.msgs.sensor_msgs.CameraInfo import CameraInfo
+from dimos.msgs.sensor_msgs.Image import Image, ImageFormat
 from dimos.msgs.sensor_msgs.Imu import Imu
 from dimos.msgs.sensor_msgs.PointCloud2 import PointCloud2
 from dimos.utils.logging_config import setup_logger
@@ -27,31 +28,46 @@ logger = setup_logger()
 
 class HESensorBridgeConfig(ModuleConfig):
     ros_node_name: str = "dimos_he_sensors"
-    scan_topic: str = "/scan"
     odom_topic: str = "/odom_raw"
     imu_topic: str = "/ros_robot_controller/imu_raw"
-    camera_pointcloud_topic: str = "/aurora/points2"
-    lidar_max_hz: float = Field(default=10.0, ge=0.0)
+    color_image_topic: str = "/aurora/rgb/image_raw"
+    depth_image_topic: str = "/aurora/depth/image_raw"
+    ir_image_topic: str = "/aurora/ir/image_raw"
+    pointcloud_topic: str = "/aurora/points2"
+    camera_info_topic: str = "/aurora/rgb/camera_info"
+    depth_camera_info_topic: str = "/aurora/ir/camera_info"
     odom_max_hz: float = Field(default=20.0, ge=0.0)
     imu_max_hz: float = Field(default=20.0, ge=0.0)
-    enable_camera_pointcloud: bool = False
-    camera_pointcloud_max_hz: float = Field(default=1.0, ge=0.0)
-    camera_point_stride: int = Field(default=8, ge=1)
+    color_image_max_hz: float = Field(default=5.0, ge=0.0)
+    depth_image_max_hz: float = Field(default=5.0, ge=0.0)
+    ir_image_max_hz: float = Field(default=5.0, ge=0.0)
+    pointcloud_max_hz: float = Field(default=1.0, ge=0.0)
+    camera_info_max_hz: float = Field(default=1.0, ge=0.0)
+    pointcloud_stride: int = Field(default=8, ge=1)
+    enable_color_image: bool = True
+    enable_depth_image: bool = True
+    enable_ir_image: bool = True
+    enable_pointcloud: bool = True
+    enable_camera_info: bool = True
 
 
 class HESensorBridge(Module):
     """Convert HE ROS 2 sensor topics to DimOS-native messages.
 
-    The LD19 scan is converted to a planar PointCloud2 stream. Aurora point
-    clouds are deliberately opt-in and downsampled because the raw stream is
-    about 58MB/s on this platform.
+    All Aurora modalities are enabled by default. Images retain their native
+    precision, while the high-bandwidth point cloud is rate-limited and
+    downsampled before it enters DimOS.
     """
 
     dedicated_worker = True
 
     config: HESensorBridgeConfig
-    lidar: Out[PointCloud2]
-    camera_pointcloud: Out[PointCloud2]
+    color_image: Out[Image]
+    depth_image: Out[Image]
+    ir_image: Out[Image]
+    pointcloud: Out[PointCloud2]
+    camera_info: Out[CameraInfo]
+    depth_camera_info: Out[CameraInfo]
     odom: Out[Odometry]
     imu: Out[Imu]
 
@@ -76,8 +92,9 @@ class HESensorBridge(Module):
             from rclpy.executors import SingleThreadedExecutor
             from rclpy.node import Node
             from rclpy.qos import qos_profile_sensor_data
+            from sensor_msgs.msg import CameraInfo as RosCameraInfo
+            from sensor_msgs.msg import Image as RosImage
             from sensor_msgs.msg import Imu as RosImu
-            from sensor_msgs.msg import LaserScan
             from sensor_msgs.msg import PointCloud2 as RosPointCloud2
         except ImportError as exc:
             raise RuntimeError("HESensorBridge requires ROS 2 Humble Python packages") from exc
@@ -85,16 +102,51 @@ class HESensorBridge(Module):
         if not rclpy.ok():
             rclpy.init(args=None)
         self._node = Node(self.config.ros_node_name)
-        self._node.create_subscription(LaserScan, self.config.scan_topic, self._on_scan, qos_profile_sensor_data)
         self._node.create_subscription(
             RosOdometry, self.config.odom_topic, self._on_odom, qos_profile_sensor_data
         )
-        self._node.create_subscription(RosImu, self.config.imu_topic, self._on_imu, qos_profile_sensor_data)
-        if self.config.enable_camera_pointcloud:
+        self._node.create_subscription(
+            RosImu, self.config.imu_topic, self._on_imu, qos_profile_sensor_data
+        )
+        if self.config.enable_color_image:
+            self._node.create_subscription(
+                RosImage,
+                self.config.color_image_topic,
+                self._on_color_image,
+                qos_profile_sensor_data,
+            )
+        if self.config.enable_depth_image:
+            self._node.create_subscription(
+                RosImage,
+                self.config.depth_image_topic,
+                self._on_depth_image,
+                qos_profile_sensor_data,
+            )
+        if self.config.enable_ir_image:
+            self._node.create_subscription(
+                RosImage,
+                self.config.ir_image_topic,
+                self._on_ir_image,
+                qos_profile_sensor_data,
+            )
+        if self.config.enable_pointcloud:
             self._node.create_subscription(
                 RosPointCloud2,
-                self.config.camera_pointcloud_topic,
-                self._on_camera_pointcloud,
+                self.config.pointcloud_topic,
+                self._on_pointcloud,
+                qos_profile_sensor_data,
+            )
+        if self.config.enable_camera_info:
+            self._node.create_subscription(
+                RosCameraInfo,
+                self.config.camera_info_topic,
+                self._on_camera_info,
+                qos_profile_sensor_data,
+            )
+            self._node.create_subscription(
+                RosCameraInfo,
+                self.config.depth_camera_info_topic,
+                self._on_depth_camera_info,
                 qos_profile_sensor_data,
             )
 
@@ -103,11 +155,14 @@ class HESensorBridge(Module):
         self._spin_thread = threading.Thread(target=self._spin_ros, daemon=True)
         self._spin_thread.start()
         logger.info(
-            "HE ROS bridge started: scan=%s odom=%s imu=%s camera_pointcloud=%s",
-            self.config.scan_topic,
+            "HE ROS bridge started: odom=%s imu=%s Aurora(rgb=%s depth=%s ir=%s points=%s info=%s)",
             self.config.odom_topic,
             self.config.imu_topic,
-            self.config.enable_camera_pointcloud,
+            self.config.enable_color_image,
+            self.config.enable_depth_image,
+            self.config.enable_ir_image,
+            self.config.enable_pointcloud,
+            self.config.enable_camera_info,
         )
 
     def _spin_ros(self) -> None:
@@ -144,33 +199,6 @@ class HESensorBridge(Module):
     @staticmethod
     def _timestamp(header: Any) -> float:
         return float(header.stamp.sec) + float(header.stamp.nanosec) / 1_000_000_000.0
-
-    def _on_scan(self, msg: Any) -> None:
-        if not self._allowed("lidar", self.config.lidar_max_hz):
-            return
-        ranges = np.asarray(msg.ranges, dtype=np.float32)
-        angles = msg.angle_min + np.arange(ranges.size, dtype=np.float32) * msg.angle_increment
-        valid = np.isfinite(ranges)
-        valid &= ranges >= msg.range_min
-        valid &= ranges <= msg.range_max
-        if not np.any(valid):
-            return
-        selected = ranges[valid]
-        selected_angles = angles[valid]
-        points = np.column_stack(
-            (
-                selected * np.cos(selected_angles),
-                selected * np.sin(selected_angles),
-                np.zeros(selected.size, dtype=np.float32),
-            )
-        )
-        self.lidar.publish(
-            PointCloud2.from_numpy(
-                points,
-                frame_id=msg.header.frame_id or "lidar_frame",
-                timestamp=self._timestamp(msg.header),
-            )
-        )
 
     def _on_odom(self, msg: Any) -> None:
         if not self._allowed("odom", self.config.odom_max_hz):
@@ -227,22 +255,115 @@ class HESensorBridge(Module):
             )
         )
 
-    def _on_camera_pointcloud(self, msg: Any) -> None:
-        if not self._allowed("camera_pointcloud", self.config.camera_pointcloud_max_hz):
+    @staticmethod
+    def _image_from_ros(msg: Any) -> Image:
+        encoding = msg.encoding.lower()
+        formats: dict[str, tuple[np.dtype[Any], int, ImageFormat]] = {
+            "bgr8": (np.dtype(np.uint8), 3, ImageFormat.BGR),
+            "rgb8": (np.dtype(np.uint8), 3, ImageFormat.RGB),
+            "mono8": (np.dtype(np.uint8), 1, ImageFormat.GRAY),
+            "mono16": (np.dtype(np.uint16), 1, ImageFormat.DEPTH16),
+            "16uc1": (np.dtype(np.uint16), 1, ImageFormat.DEPTH16),
+        }
+        if encoding not in formats:
+            raise ValueError(f"unsupported Aurora image encoding: {msg.encoding}")
+        dtype, channels, image_format = formats[encoding]
+        row_bytes = msg.width * channels * dtype.itemsize
+        if msg.step < row_bytes:
+            raise ValueError(f"image step {msg.step} is smaller than row payload {row_bytes}")
+        raw = np.frombuffer(msg.data, dtype=np.uint8)
+        required = msg.height * msg.step
+        if raw.size < required:
+            raise ValueError(f"image payload has {raw.size} bytes, expected at least {required}")
+        rows = raw[:required].reshape(msg.height, msg.step)[:, :row_bytes]
+        if dtype.itemsize == 1:
+            shape = (
+                (msg.height, msg.width, channels)
+                if channels > 1
+                else (msg.height, msg.width)
+            )
+            image = np.ascontiguousarray(rows).reshape(shape)
+        else:
+            byte_order = ">" if msg.is_bigendian else "<"
+            wire_dtype = dtype.newbyteorder(byte_order)
+            image = np.frombuffer(np.ascontiguousarray(rows).tobytes(), dtype=wire_dtype).reshape(
+                msg.height, msg.width
+            )
+            image = image.astype(dtype, copy=False)
+        return Image.from_numpy(
+            image,
+            format=image_format,
+            frame_id=msg.header.frame_id,
+            ts=HESensorBridge._timestamp(msg.header),
+        )
+
+    @staticmethod
+    def _camera_info_from_ros(msg: Any) -> CameraInfo:
+        result = CameraInfo(
+            height=msg.height,
+            width=msg.width,
+            distortion_model=msg.distortion_model,
+            D=list(msg.d),
+            K=list(msg.k),
+            R=list(msg.r),
+            P=list(msg.p),
+            binning_x=msg.binning_x,
+            binning_y=msg.binning_y,
+            frame_id=msg.header.frame_id,
+            ts=HESensorBridge._timestamp(msg.header),
+        )
+        result.roi_x_offset = msg.roi.x_offset
+        result.roi_y_offset = msg.roi.y_offset
+        result.roi_height = msg.roi.height
+        result.roi_width = msg.roi.width
+        result.roi_do_rectify = msg.roi.do_rectify
+        return result
+
+    def _publish_image(self, stream: str, max_hz: float, port: Out[Image], msg: Any) -> None:
+        if not self._allowed(stream, max_hz):
+            return
+        try:
+            port.publish(self._image_from_ros(msg))
+        except ValueError as exc:
+            logger.warning("Dropping invalid Aurora %s frame: %s", stream, exc)
+
+    def _on_color_image(self, msg: Any) -> None:
+        self._publish_image("color_image", self.config.color_image_max_hz, self.color_image, msg)
+
+    def _on_depth_image(self, msg: Any) -> None:
+        self._publish_image("depth_image", self.config.depth_image_max_hz, self.depth_image, msg)
+
+    def _on_ir_image(self, msg: Any) -> None:
+        self._publish_image("ir_image", self.config.ir_image_max_hz, self.ir_image, msg)
+
+    def _on_camera_info(self, msg: Any) -> None:
+        if self._allowed("camera_info", self.config.camera_info_max_hz):
+            self.camera_info.publish(self._camera_info_from_ros(msg))
+
+    def _on_depth_camera_info(self, msg: Any) -> None:
+        if self._allowed("depth_camera_info", self.config.camera_info_max_hz):
+            self.depth_camera_info.publish(self._camera_info_from_ros(msg))
+
+    def _on_pointcloud(self, msg: Any) -> None:
+        if not self._allowed("pointcloud", self.config.pointcloud_max_hz):
             return
         try:
             from sensor_msgs_py import point_cloud2
         except ImportError:
-            logger.warning("sensor_msgs_py is unavailable; Aurora point cloud is disabled")
+            logger.warning("sensor_msgs_py is unavailable; dropping Aurora point cloud")
             return
         points = np.asarray(
-            list(point_cloud2.read_points(msg, field_names=("x", "y", "z"), skip_nans=True)),
+            point_cloud2.read_points_numpy(
+                msg,
+                field_names=("x", "y", "z"),
+                skip_nans=True,
+            ),
             dtype=np.float32,
         )
         if points.size == 0:
             return
-        points = points[:: self.config.camera_point_stride]
-        self.camera_pointcloud.publish(
+        points = points[:: self.config.pointcloud_stride]
+        self.pointcloud.publish(
             PointCloud2.from_numpy(
                 points,
                 frame_id=msg.header.frame_id or "depth_camera_link",

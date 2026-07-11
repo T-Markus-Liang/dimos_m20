@@ -1,19 +1,19 @@
 #!/usr/bin/env python3
-"""Verify the live HE sensor feeds without enabling motion or raw point clouds."""
+"""Verify every live Aurora feed plus HE IMU and open-loop odometry."""
 
 from __future__ import annotations
 
 import argparse
-import math
 import statistics
 import time
 from typing import Any
 
+import numpy as np
 import rclpy
 from nav_msgs.msg import Odometry
 from rclpy.node import Node
 from rclpy.qos import qos_profile_sensor_data
-from sensor_msgs.msg import CameraInfo, Imu, LaserScan
+from sensor_msgs.msg import CameraInfo, Image, Imu, PointCloud2
 
 
 def stamp_seconds(message: Any) -> float:
@@ -29,108 +29,154 @@ def median_rate(messages: list[Any]) -> float:
     return 1.0 / statistics.median(positive)
 
 
-def percentile(values: list[float], fraction: float) -> float:
-    ordered = sorted(values)
-    return ordered[min(round((len(ordered) - 1) * fraction), len(ordered) - 1)]
-
-
 def require(condition: bool, message: str) -> None:
     if not condition:
         raise RuntimeError(message)
 
 
+def require_image(message: Image, encoding: str, frame_id: str) -> None:
+    require(message.encoding == encoding, f"unexpected {frame_id} encoding: {message.encoding}")
+    require(message.width == 640 and message.height == 400, f"unexpected {frame_id} size")
+    require(message.header.frame_id == frame_id, f"unexpected frame: {message.header.frame_id}")
+    require(len(message.data) >= message.height * message.step, f"short {frame_id} payload")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--scan-samples", type=int, default=30)
-    parser.add_argument("--timeout", type=float, default=10.0)
+    parser.add_argument("--image-samples", type=int, default=5)
+    parser.add_argument("--pointcloud-samples", type=int, default=2)
+    parser.add_argument("--timeout", type=float, default=15.0)
     args = parser.parse_args()
-    require(args.scan_samples >= 3, "--scan-samples must be at least 3")
+    require(args.image_samples >= 3, "--image-samples must be at least 3")
+    require(args.pointcloud_samples >= 1, "--pointcloud-samples must be positive")
 
     rclpy.init()
     node = Node("he_sensor_quality_gate")
-    scans: list[LaserScan] = []
+    rgb: list[Image] = []
+    depth: list[Image] = []
+    ir: list[Image] = []
+    points: list[PointCloud2] = []
+    rgb_info: list[CameraInfo] = []
+    depth_info: list[CameraInfo] = []
     imus: list[Imu] = []
     odoms: list[Odometry] = []
-    cameras: list[CameraInfo] = []
     subscriptions = [
-        node.create_subscription(LaserScan, "/scan", scans.append, qos_profile_sensor_data),
+        node.create_subscription(Image, "/aurora/rgb/image_raw", rgb.append, qos_profile_sensor_data),
+        node.create_subscription(
+            Image, "/aurora/depth/image_raw", depth.append, qos_profile_sensor_data
+        ),
+        node.create_subscription(Image, "/aurora/ir/image_raw", ir.append, qos_profile_sensor_data),
+        node.create_subscription(PointCloud2, "/aurora/points2", points.append, qos_profile_sensor_data),
+        node.create_subscription(
+            CameraInfo, "/aurora/rgb/camera_info", rgb_info.append, qos_profile_sensor_data
+        ),
+        node.create_subscription(
+            CameraInfo, "/aurora/ir/camera_info", depth_info.append, qos_profile_sensor_data
+        ),
         node.create_subscription(
             Imu, "/ros_robot_controller/imu_raw", imus.append, qos_profile_sensor_data
         ),
         node.create_subscription(Odometry, "/odom_raw", odoms.append, qos_profile_sensor_data),
-        node.create_subscription(
-            CameraInfo, "/aurora/rgb/camera_info", cameras.append, qos_profile_sensor_data
-        ),
     ]
 
     try:
         deadline = time.monotonic() + args.timeout
         while time.monotonic() < deadline:
             rclpy.spin_once(node, timeout_sec=0.1)
-            if len(scans) >= args.scan_samples and imus and odoms and cameras:
+            if (
+                len(rgb) >= args.image_samples
+                and len(depth) >= args.image_samples
+                and len(ir) >= args.image_samples
+                and len(points) >= args.pointcloud_samples
+                and rgb_info
+                and depth_info
+                and imus
+                and odoms
+            ):
                 break
-        require(len(scans) >= args.scan_samples, f"received only {len(scans)} scan messages")
+
+        for name, messages, count in (
+            ("RGB", rgb, args.image_samples),
+            ("depth", depth, args.image_samples),
+            ("IR", ir, args.image_samples),
+            ("point cloud", points, args.pointcloud_samples),
+        ):
+            require(len(messages) >= count, f"received only {len(messages)} {name} samples")
+        require(rgb_info, "received no RGB CameraInfo")
+        require(depth_info, "received no IR/depth CameraInfo")
         require(imus, "received no IMU messages")
         require(odoms, "received no odometry messages")
-        require(cameras, "received no RGB CameraInfo messages")
 
-        scans = scans[: args.scan_samples]
-        scan = scans[-1]
-        now = time.time()
-        require(scan.header.frame_id == "lidar_frame", f"unexpected scan frame: {scan.header.frame_id}")
-        require(scan.angle_min <= 0.01, f"scan angle_min is not near zero: {scan.angle_min}")
-        require(scan.angle_max - scan.angle_min >= 2.0 * math.pi - 0.05, "scan is not full 360 degrees")
-        require(0.019 <= scan.range_min <= 0.021, f"unexpected range_min: {scan.range_min}")
-        require(24.9 <= scan.range_max <= 25.1, f"unexpected range_max: {scan.range_max}")
-        require(len(scan.ranges) >= 400, f"too few scan bins: {len(scan.ranges)}")
-        require(abs(now - stamp_seconds(scan)) < 1.0, "scan timestamp is stale or clock is not synchronized")
+        rgb = rgb[: args.image_samples]
+        depth = depth[: args.image_samples]
+        ir = ir[: args.image_samples]
+        points = points[: args.pointcloud_samples]
+        require_image(rgb[-1], "bgr8", "rgb_camera_link")
+        require_image(depth[-1], "mono16", "depth_camera_link")
+        require_image(ir[-1], "mono8", "depth_camera_link")
 
-        valid_ranges = [
-            value
-            for message in scans
-            for value in message.ranges
-            if math.isfinite(value) and message.range_min <= value <= message.range_max
-        ]
-        total_ranges = sum(len(message.ranges) for message in scans)
-        valid_ratio = len(valid_ranges) / total_ranges
-        require(valid_ratio >= 0.10, f"scan valid ratio is too low: {valid_ratio:.1%}")
-        scan_hz = median_rate(scans)
-        require(9.0 <= scan_hz <= 11.0, f"scan rate outside 9-11Hz: {scan_hz:.2f}Hz")
+        depth_rows = np.frombuffer(depth[-1].data, dtype=np.uint8).reshape(
+            depth[-1].height, depth[-1].step
+        )
+        depth_values = np.frombuffer(
+            np.ascontiguousarray(depth_rows[:, : depth[-1].width * 2]).tobytes(),
+            dtype="<u2",
+        )
+        depth_valid_ratio = float(np.count_nonzero(depth_values)) / depth_values.size
+        require(depth_valid_ratio >= 0.05, f"depth valid ratio is too low: {depth_valid_ratio:.1%}")
+
+        cloud = points[-1]
+        require(cloud.header.frame_id == "depth_camera_link", f"unexpected cloud frame: {cloud.header.frame_id}")
+        require(cloud.width * cloud.height > 0, "Aurora point cloud is empty")
+        fields = {field.name for field in cloud.fields}
+        require({"x", "y", "z"}.issubset(fields), f"point cloud fields are incomplete: {fields}")
+
+        color_calibration = rgb_info[-1]
+        depth_calibration = depth_info[-1]
+        require_image_info = (
+            ("RGB", color_calibration, "rgb_camera_link"),
+            ("IR/depth", depth_calibration, "depth_camera_link"),
+        )
+        for name, calibration, frame_id in require_image_info:
+            require(calibration.width == 640 and calibration.height == 400, f"bad {name} calibration size")
+            require(calibration.header.frame_id == frame_id, f"bad {name} calibration frame")
+            require(calibration.distortion_model == "plumb_bob", f"bad {name} distortion model")
+            require(calibration.k[0] > 0.0 and calibration.k[4] > 0.0, f"bad {name} intrinsics")
 
         imu = imus[-1]
         odom = odoms[-1]
-        camera = cameras[-1]
         require(imu.header.frame_id == "imu_link", f"unexpected IMU frame: {imu.header.frame_id}")
         require(odom.header.frame_id == "odom", f"unexpected odom frame: {odom.header.frame_id}")
-        require(
-            odom.child_frame_id == "base_footprint",
-            f"unexpected odom child frame: {odom.child_frame_id}",
+        require(odom.child_frame_id == "base_footprint", f"unexpected odom child: {odom.child_frame_id}")
+
+        now = time.time()
+        latest = (
+            ("RGB", rgb[-1]),
+            ("depth", depth[-1]),
+            ("IR", ir[-1]),
+            ("point cloud", cloud),
+            ("RGB CameraInfo", color_calibration),
+            ("depth CameraInfo", depth_calibration),
+            ("IMU", imu),
+            ("odom", odom),
         )
-        require(
-            camera.header.frame_id == "rgb_camera_link",
-            f"unexpected RGB camera frame: {camera.header.frame_id}",
-        )
-        for name, message in (("IMU", imu), ("odom", odom), ("camera", camera)):
-            require(
-                abs(now - stamp_seconds(message)) < 1.0,
-                f"{name} timestamp is stale or clock is not synchronized",
-            )
+        for name, message in latest:
+            require(abs(now - stamp_seconds(message)) < 2.0, f"{name} timestamp is stale")
 
         print("HE live sensor quality gate: PASS")
         print(
-            f"LD19: frame=lidar_frame rate={scan_hz:.2f}Hz bins={len(scan.ranges)} "
-            f"valid={valid_ratio:.1%} p05={percentile(valid_ranges, 0.05):.3f}m "
-            f"median={statistics.median(valid_ranges):.3f}m "
-            f"p95={percentile(valid_ranges, 0.95):.3f}m range=[{scan.range_min:.2f}, {scan.range_max:.1f}]m"
+            f"Aurora RGB: bgr8 640x400 rate={median_rate(rgb):.2f}Hz; "
+            f"depth: mono16 rate={median_rate(depth):.2f}Hz valid={depth_valid_ratio:.1%}; "
+            f"IR: mono8 rate={median_rate(ir):.2f}Hz"
+        )
+        print(
+            f"Aurora point cloud: frame={cloud.header.frame_id} "
+            f"points={cloud.width * cloud.height}; calibrations=RGB+IR/depth"
         )
         print(f"IMU: frame={imu.header.frame_id} observed={len(imus)}")
         print(
             f"odom_raw: frame={odom.header.frame_id}->{odom.child_frame_id} "
             f"observed={len(odoms)} status=UNTRUSTED(command-integrated)"
-        )
-        print(
-            f"Aurora RGB CameraInfo: frame={camera.header.frame_id} "
-            f"size={camera.width}x{camera.height} raw_pointcloud_subscription=NOT_REQUESTED"
         )
     finally:
         for subscription in subscriptions:

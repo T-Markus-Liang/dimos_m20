@@ -7,7 +7,6 @@ required_services=(
   odom-publisher.service
   joystick-control.service
   he-twist-mux.service
-  he-ld19.service
   he-camera-tf.service
   he-dimos-sense.service
   aurora930.service
@@ -21,18 +20,15 @@ done
 
 test "$(systemctl is-active ros-robot-controller.service || true)" = "inactive"
 test "$(systemctl is-enabled ros-robot-controller.service || true)" = "disabled"
+test "$(systemctl is-active he-ld19.service || true)" != "active"
 
 rrc_holders=$(fuser /dev/rrc 2>/dev/null | wc -w)
-lidar_holders=$(fuser /dev/lidar 2>/dev/null | wc -w)
 test "$rrc_holders" -eq 1
-test "$lidar_holders" -eq 1
 
 nav_cmd_vel_info=$(ros2 topic info /he/nav_cmd_vel -v)
 final_cmd_vel_info=$(ros2 topic info /he/final_cmd_vel -v)
 manual_cmd_vel_info=$(ros2 topic info /controller/cmd_vel -v)
 pwm_info=$(ros2 topic info /ros_robot_controller/pwm_servo/set_state -v)
-scan_info=$(ros2 topic info /scan -v)
-camera_info=$(ros2 topic info /aurora/points2 -v)
 
 grep -q '^Publisher count: 0$' <<<"$nav_cmd_vel_info"
 grep -q '^Subscription count: 1$' <<<"$nav_cmd_vel_info"
@@ -49,8 +45,27 @@ grep -q '^Publisher count: 1$' <<<"$pwm_info"
 grep -q '^Subscription count: 1$' <<<"$pwm_info"
 grep -q '^Node name: odom_publisher$' <<<"$pwm_info"
 grep -q '^Node name: ros_robot_controller$' <<<"$pwm_info"
-grep -q '^Publisher count: 1$' <<<"$scan_info"
-grep -q '^Subscription count: 0$' <<<"$camera_info"
+
+aurora_topics=(
+  /aurora/rgb/image_raw
+  /aurora/depth/image_raw
+  /aurora/ir/image_raw
+  /aurora/points2
+  /aurora/rgb/camera_info
+  /aurora/ir/camera_info
+)
+for topic in "${aurora_topics[@]}"; do
+  topic_info=$(ros2 topic info "$topic" -v)
+  grep -q '^Publisher count: 1$' <<<"$topic_info"
+  grep -q '^Subscription count: 1$' <<<"$topic_info"
+  grep -q '^Node name: aurora$' <<<"$topic_info"
+  grep -q '^Node name: dimos_he_sensors$' <<<"$topic_info"
+done
+
+if ros2 topic list | grep -qx '/scan'; then
+  echo "retired LD19 /scan topic is still present" >&2
+  exit 1
+fi
 
 if ros2 topic list | grep -qE '^/cmd_vel$|^/he_safety_test/|^/he_test/'; then
   echo "legacy or isolated test command topic is still present" >&2
@@ -79,7 +94,6 @@ test "$memory_bytes" -lt "$memory_limit_bytes"
 test "$(systemctl show he-dimos-sense.service -p MemoryHigh --value)" = "1073741824"
 test "$(systemctl show he-dimos-sense.service -p MemoryMax --value)" = "1342177280"
 
-timeout 5 ros2 topic echo /scan --once >/dev/null
 timeout 5 ros2 topic echo /ros_robot_controller/imu_raw --once >/dev/null
 timeout 5 ros2 topic echo /odom_raw --once >/dev/null
 

@@ -14,12 +14,12 @@ compare() {
 }
 
 compare "$deployment/he-dimos-sense.service" /etc/systemd/system/he-dimos-sense.service
-compare "$deployment/he-ld19.service" /etc/systemd/system/he-ld19.service
 compare "$deployment/he-camera-tf.service" /etc/systemd/system/he-camera-tf.service
 compare "$deployment/he-twist-mux.service" /etc/systemd/system/he-twist-mux.service
 compare \
   "$deployment/odom-publisher-he.conf" \
   /etc/systemd/system/odom-publisher.service.d/he-command-mux.conf
+test ! -e /etc/systemd/system/he-ld19.service
 
 (
   cd "$ros_root/src/driver/controller"
@@ -47,4 +47,5 @@ test "$(readlink -f "$launch_link")" = \
 
 printf '%s\n' 'HE deployment integrity: PASS'
 printf '%s\n' 'Live systemd files match repository artifacts'
+printf '%s\n' 'LD19 service is retired and absent'
 printf '%s\n' 'ROS safety patches are applied and build copies match source'

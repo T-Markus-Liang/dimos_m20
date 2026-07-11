@@ -1,0 +1,103 @@
+"""Unit tests for Aurora-to-DimOS message conversion."""
+
+import types
+import unittest
+
+import numpy as np
+
+from dimos.msgs.sensor_msgs.Image import ImageFormat
+from dimos.robot.he.sensors import HESensorBridge
+
+
+def header(frame_id: str = "camera") -> types.SimpleNamespace:
+    return types.SimpleNamespace(
+        frame_id=frame_id,
+        stamp=types.SimpleNamespace(sec=12, nanosec=500_000_000),
+    )
+
+
+class TestHESensorBridge(unittest.TestCase):
+    def test_all_aurora_modalities_are_enabled_by_default(self) -> None:
+        bridge = HESensorBridge()
+
+        self.assertTrue(bridge.config.enable_color_image)
+        self.assertTrue(bridge.config.enable_depth_image)
+        self.assertTrue(bridge.config.enable_ir_image)
+        self.assertTrue(bridge.config.enable_pointcloud)
+        self.assertTrue(bridge.config.enable_camera_info)
+        self.assertFalse(hasattr(bridge.config, "scan_topic"))
+
+    def test_bgr8_image_preserves_shape_padding_and_timestamp(self) -> None:
+        rows = np.array(
+            [[1, 2, 3, 4, 5, 6, 99, 99], [7, 8, 9, 10, 11, 12, 99, 99]],
+            dtype=np.uint8,
+        )
+        message = types.SimpleNamespace(
+            encoding="bgr8",
+            width=2,
+            height=2,
+            step=8,
+            is_bigendian=False,
+            data=rows.tobytes(),
+            header=header("rgb_camera_link"),
+        )
+
+        image = HESensorBridge._image_from_ros(message)
+
+        self.assertEqual(image.format, ImageFormat.BGR)
+        self.assertEqual(image.shape, (2, 2, 3))
+        np.testing.assert_array_equal(image.data.reshape(2, 6), rows[:, :6])
+        self.assertEqual(image.frame_id, "rgb_camera_link")
+        self.assertEqual(image.ts, 12.5)
+
+    def test_mono16_depth_preserves_uint16_values(self) -> None:
+        values = np.array([[0, 500], [1000, 4000]], dtype="<u2")
+        message = types.SimpleNamespace(
+            encoding="mono16",
+            width=2,
+            height=2,
+            step=4,
+            is_bigendian=False,
+            data=values.tobytes(),
+            header=header("depth_camera_link"),
+        )
+
+        image = HESensorBridge._image_from_ros(message)
+
+        self.assertEqual(image.format, ImageFormat.DEPTH16)
+        self.assertEqual(image.dtype, np.dtype(np.uint16))
+        np.testing.assert_array_equal(image.data, values)
+
+    def test_camera_info_preserves_calibration_and_roi(self) -> None:
+        roi = types.SimpleNamespace(
+            x_offset=1,
+            y_offset=2,
+            height=300,
+            width=500,
+            do_rectify=True,
+        )
+        message = types.SimpleNamespace(
+            height=400,
+            width=640,
+            distortion_model="plumb_bob",
+            d=[0.1] * 5,
+            k=[1.0] * 9,
+            r=[2.0] * 9,
+            p=[3.0] * 12,
+            binning_x=0,
+            binning_y=0,
+            roi=roi,
+            header=header("depth_camera_link"),
+        )
+
+        result = HESensorBridge._camera_info_from_ros(message)
+
+        self.assertEqual(result.frame_id, "depth_camera_link")
+        self.assertEqual(result.D, message.d)
+        self.assertEqual(result.K, message.k)
+        self.assertEqual(result.roi_x_offset, 1)
+        self.assertTrue(result.roi_do_rectify)
+
+
+if __name__ == "__main__":
+    unittest.main()

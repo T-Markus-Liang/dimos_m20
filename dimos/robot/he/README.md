@@ -20,6 +20,24 @@ Jetson Orin NX Ackermann platform.
 - `he-nav-headless`: intentionally absent until trusted localization and the
   vehicle-down navigation gates pass.
 
+## Sensors
+
+`HESensorBridge` uses Aurora as the HE perception sensor and enables every
+driver output by default:
+
+- `color_image`: `/aurora/rgb/image_raw`, BGR8, limited to 5Hz;
+- `depth_image`: `/aurora/depth/image_raw`, 16-bit depth, limited to 5Hz;
+- `ir_image`: `/aurora/ir/image_raw`, 8-bit grayscale, limited to 5Hz;
+- `pointcloud`: `/aurora/points2`, limited to 1Hz and stride-downsampled by 8;
+- `camera_info`: `/aurora/rgb/camera_info`;
+- `depth_camera_info`: `/aurora/ir/camera_info`, whose driver frame is
+  `depth_camera_link` and supplies the depth/IR intrinsics;
+- `imu` and command-integrated `odom` remain available for diagnostics.
+
+LD19 is retired from the HE runtime and is not a bridge input. The Aurora
+limits reduce DimOS and Rerun load; the ROS subscriptions remain active for all
+modalities. Rerun keeps only the latest state in a 256MB recording window.
+
 ## Verification
 
 Run the static closeout from the Orin repository root:
@@ -31,6 +49,15 @@ bash dimos/robot/he/deployment/verify-he-static-deployment.sh
 The lifted real-command scripts require an explicit `--confirm-lifted` flag and
 must not be run with the vehicle on the ground or without a physical stop path.
 
+Run the bridge conversion tests with:
+
+```bash
+.venv/bin/python -m unittest -v \
+  dimos.robot.he.test_connection dimos.robot.he.test_sensors
+```
+
 See [Chassis characterization](docs/chassis-characterization-2026-07-11.md) for
 the measured command-chain limits, latency, precision, and feedback gaps.
 
+The version-controlled deployment plan is
+[Orin NX lightweight deployment](../../../docs/he/orin-nx-dimos-lightweight-deployment.md).

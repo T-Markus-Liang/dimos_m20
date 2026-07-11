@@ -1,7 +1,7 @@
 [Unit]
 Description=HE DimOS sensor bridge
-After=aurora930.service he-camera-tf.service he-ld19.service odom-publisher.service
-Wants=aurora930.service he-camera-tf.service he-ld19.service odom-publisher.service
+After=aurora930.service he-camera-tf.service odom-publisher.service
+Wants=aurora930.service he-camera-tf.service odom-publisher.service
 
 [Service]
 Type=simple
