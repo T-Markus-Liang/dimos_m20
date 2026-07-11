@@ -162,3 +162,9 @@ RGB-depth P95 remained about 65ms, point-cloud rate fell from 14.49Hz to
 Depth validity was 20.51% globally, 15.76% in the center 40%, and only about
 4.9-5.7% in the lower-third tiles. This spatial distribution does not yet pass
 the visual-navigation sensor gate.
+
+The enhanced spatial/temporal qualification and controlled effective-parameter
+A/B are recorded in `docs/he/evidence/2026-07-11_1831_aurora-depth-parameter-ab.md`.
+None of threshold 30, indoor laser mode, disabled alignment or disabled depth
+correction resolved the stable coverage gap. Keep the canonical values and do
+not approve RGB-D navigation from global validity alone.

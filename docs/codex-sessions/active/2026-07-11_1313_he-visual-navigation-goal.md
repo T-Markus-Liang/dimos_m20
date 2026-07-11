@@ -202,6 +202,18 @@ health while keeping real motion disconnected.
 - `laser_power=2` produced 26.66% global, 18.95% center and 24.02% stable
   coverage, but requires an isolated `laser_power=1` control before attribution
   because both temporary runs observed point cloud near 8Hz.
+- Completed the isolated auto-laser control: indoor versus auto differed by
+  only 0.17 points global, 0.05 center and 0.07 stable, so mode 2 has no proven
+  benefit and mode 1 remains canonical.
+- Disabling alignment produced 25.65% global, 19.90% center and 23.23% stable
+  coverage but retained the lower-image defect and removes required RGB-depth
+  geometry. Keep alignment enabled.
+- Disabling depth correction produced 26.46% global, 18.86% center and 23.79%
+  stable coverage, effectively equal to its isolated control, while shifting
+  depth p50/p95 without ground truth. Keep correction enabled.
+- Reconfirmed every canonical runtime parameter, both services active with zero
+  restarts, the live sensor gate and read-only gate. No tested setting was
+  persisted and `/he/nav_cmd_vel` remained at zero publishers.
 
 ## Decisions
 
@@ -243,16 +255,16 @@ health while keeping real motion disconnected.
   unhealthy and no planner costmap or motion command is released.
 - Aurora depth coverage, camera extrinsics, moving accuracy, loop closure and
   relocalization remain open gates. Real motion remains prohibited.
-- The enhanced diagnostic is synchronized and live-verified on Orin. Controlled
-  effective-parameter A/B evidence is the next task; no persistent Aurora
-  setting has changed.
+- The enhanced diagnostic and effective-parameter A/B are complete. No tested
+  setting resolves the stable spatial defect, so the canonical configuration is
+  restored and RGB-D navigation admission remains failed.
 
 ## Resume Instructions
 
 1. Read this log, ADR-001 and the final shadow soak evidence.
-2. Push and fast-forward the restore-guarded A/B runner, then test only
-   Aurora-effective single-variable changes. Preserve the baseline JSON and
-   restore systemd defaults and both read-only gates after every test.
+2. Read the completed Aurora parameter A/B evidence. Investigate physical
+   mounting/occlusion, scene geometry, USB topology and vendor firmware/SDK
+   support rather than trying shared ROS parameters that Aurora does not apply.
 3. Use the new nominal-extrinsics audit to plan physical camera-to-base and
    camera-to-IMU calibration; do not promote the nominal values to calibrated.
 4. Keep public benchmark tables source-scoped and update them only when a new

@@ -1074,3 +1074,15 @@ driver 的 DDS publisher 尚未过期，与 canonical publisher 短时并存；�
 权威门即通过。runner 因此在 canonical service active 后等待 5 秒再验证，不删除或
 放宽 publisher-count 断言。同时修复 `restore_service()` 内部 `set +e` 泄漏到主流程
 的问题，任何 sensor/read-only gate 失败现在都会保持非零退出，不能打印伪成功。
+
+静态 A/B 完成后没有参数满足持久化条件。`threshold_size=30` 将全局/中心有效率从
+同阶段基线 24.26%/18.57% 降到 21.84%/15.66%；室内 laser mode 2 与同 runner 的
+自动 mode 1 对照仅差 0.17/0.05 个百分点；关闭 alignment 或 depth correction 均未
+恢复下方稀疏区域。所有实验的非零低于范围、超过范围和 `65535` 比例均为零，点云
+zero XYZ 与 depth zero 精确对应，说明当前无效编码为零值。
+
+最终保留 threshold 110、laser auto、alignment/depth correction 开启、RGB-D 关闭、
+150-4000mm 和 resolution mode 2。完整结果、比较边界和恢复证明见
+`docs/he/evidence/2026-07-11_1831_aurora-depth-parameter-ab.md`。当前稳定 mask 最大
+连通区域仍低于整图 8%，RGB-D 导航准入继续失败；下一步应转向安装遮挡/场景几何、
+USB 拓扑和厂商固件/SDK 支持调查，而不是继续随机调公共 ROS 参数。
