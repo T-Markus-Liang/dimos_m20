@@ -199,6 +199,14 @@ shutdown uses SIGTERM and systemd cgroup cleanup; no force-stop path is part of
 the procedure. These limits are deployment containment, not evidence that
 multi-hour or moving workloads fit the budget.
 
+Static service qualification passed on Orin. Eleven one-minute cgroup samples
+held memory at 1346.7-1366.7MiB with 349 tasks, at least 3011.9MiB system
+available, zero ten-minute swap growth, zero high/max/OOM events, zero service
+restarts and zero navigation publishers. A startup-readiness race on the first
+return to Sense was corrected with bounded retries of the complete unchanged
+gate; the fixed full round trip passed and left no native residue. See
+`evidence/2026-07-12_0448_shadow-systemd-cgroup.md`.
+
 Real navigation remains prohibited until moving ATE/RPE, loop closure,
 relocalization, map quality, camera extrinsics, tracking-loss detection,
 resource soak and control safety gates pass after a new vehicle-down safety

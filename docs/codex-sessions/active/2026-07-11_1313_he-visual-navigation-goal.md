@@ -690,6 +690,16 @@ health while keeping real motion disconnected.
   The unchanged gate passed seconds later. Refactored both mode admissions to a
   bounded six-attempt/five-second readiness loop and added structural coverage;
   timeout still fails and shadow-error restoration still returns to Sense.
+- Installed the shadow unit and completed a service-level 10-minute Orin soak.
+  Eleven samples held cgroup memory at 1346.7-1366.7MiB and tasks at 349;
+  available memory stayed above 3011.9MiB, swap did not grow, and high/max/OOM,
+  restarts and navigation publishers stayed zero. Journal warnings were empty
+  and the final shadow gate passed.
+- Deployed readiness fix `951d1108` and passed a complete
+  `Sense -> shadow -> Sense` round trip. Normal stop left no native residue and
+  final deployment integrity/read-only gates passed with Sense enabled/active,
+  shadow static/inactive, and zero navigation publishers. Evidence and profiler
+  snapshots are in `docs/he/evidence/2026-07-12_0448_shadow-systemd-cgroup.md`.
 - Pushed the probe, failed-getter fix, bounded DDS convergence and final
   evidence as `1655079a`, `b7b56853`, `a4af65e6` and `64cfeb4c`; Orin
   fast-forwarded cleanly and the macOS deployment mirror was synchronized.
@@ -774,9 +784,10 @@ health while keeping real motion disconnected.
   still open.
 - Shadow resource-health hardening is deployed and statically qualified. The
   optimized six-worker/128MB dual-path shadow is now deployed and passed static
-  function/resource soak. Service isolation is implemented and VM-validated
-  but still requires Orin installation and cgroup qualification. Physical
-  calibration and every moving qualification gate remain open.
+  function/resource soak. Static systemd isolation, cgroup containment and
+  bounded mode switching are also Orin-qualified. Physical calibration,
+  multi-hour/moving resource behavior and every moving qualification gate
+  remain open.
 
 ## Resume Instructions
 
@@ -805,8 +816,8 @@ health while keeping real motion disconnected.
 8. Preserve the verified normal shadow shutdown path; do not replace it with
    `--force` in deployment procedures.
 9. Do not enable motion or restore LD19.
-10. Install and qualify the static shadow systemd unit on Orin, then return to
-    the enabled Sense service and preserve zero navigation publishers.
+10. Preserve the qualified static shadow unit and bounded switch; do not enable
+    shadow at boot or weaken its complete readiness gates.
 
 ## Open Questions
 

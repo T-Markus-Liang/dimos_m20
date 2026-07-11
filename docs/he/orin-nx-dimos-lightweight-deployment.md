@@ -1627,3 +1627,12 @@ health 中没有 stale/invalid/resource failure。任一步失败都会停止 sh
 `dimos_he_sensors` 订阅检查上短暂失败，数秒后同一门通过。切换脚本因此对 Sense 和
 shadow 使用相同的有限 readiness 重试：最多 6 次、间隔 5 秒；每次仍执行完整原门，
 不放宽 topic、资源或运动条件，超时仍视为失败。
+
+修复后的 Orin 服务级验收通过。10 分钟内 11 个 cgroup 样本的 memory
+min/median/max 为 1346.7/1359.0/1366.7MiB，349 tasks 恒定，available 最低
+3011.9MiB，swap 为 558MiB 零增长，`memory.events` high/max/oom/oom_kill、服务
+重启和导航发布者全部为零，最高温度 66.187C。末端 shadow 门通过，修复后的完整
+`Sense -> shadow -> Sense` 往返也通过；普通停止后没有 native 残留，最终 Sense
+enabled/active、shadow static/inactive。短往返中的 runner-relative swap 增长约
+44MiB，低于 64MiB 门，保留为更长运行观察项。完整证据见
+`docs/he/evidence/2026-07-12_0448_shadow-systemd-cgroup.md`。

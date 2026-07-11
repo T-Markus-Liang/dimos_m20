@@ -1,0 +1,1155 @@
+{
+  "captured_at": "2026-07-12T04:29:38+0800",
+  "cgroup": {
+    "memory_current_bytes": 1412558848,
+    "memory_stat": {
+      "active_anon": 53248,
+      "active_file": 167936,
+      "anon": 1378836480,
+      "anon_thp": 272629760,
+      "file": 3047424,
+      "file_dirty": 32768,
+      "file_mapped": 2162688,
+      "file_thp": 0,
+      "file_writeback": 0,
+      "inactive_anon": 1386770432,
+      "inactive_file": 667648,
+      "kernel_stack": 5701632,
+      "pagetables": 11530240,
+      "percpu": 0,
+      "pgactivate": 11,
+      "pgdeactivate": 0,
+      "pgfault": 2350338,
+      "pglazyfree": 0,
+      "pglazyfreed": 0,
+      "pgmajfault": 1,
+      "pgrefill": 0,
+      "pgscan": 22,
+      "pgsteal": 0,
+      "shmem": 2211840,
+      "shmem_thp": 0,
+      "slab": 6683400,
+      "slab_reclaimable": 713872,
+      "slab_unreclaimable": 5969528,
+      "sock": 172032,
+      "swapcached": 0,
+      "thp_collapse_alloc": 2,
+      "thp_fault_alloc": 460,
+      "unevictable": 0,
+      "workingset_activate_anon": 0,
+      "workingset_activate_file": 39,
+      "workingset_nodereclaim": 0,
+      "workingset_refault_anon": 0,
+      "workingset_refault_file": 39,
+      "workingset_restore_anon": 0,
+      "workingset_restore_file": 39
+    }
+  },
+  "processes": [
+    {
+      "command": "/home/ubuntu/he/dimos_wd_m20/.venv/bin/python /home/ubuntu/he/dimos_wd_m20/.venv/bin/dimos run he-visual-slam-shadow",
+      "fd_count": 154,
+      "largest_anonymous_mappings": [
+        {
+          "anonymous_bytes": 35631104,
+          "mapping": "[heap]",
+          "rss_bytes": 35631104,
+          "size_bytes": 35790848
+        },
+        {
+          "anonymous_bytes": 10420224,
+          "mapping": "[anonymous]",
+          "rss_bytes": 10420224,
+          "size_bytes": 10485760
+        },
+        {
+          "anonymous_bytes": 7340032,
+          "mapping": "[anonymous]",
+          "rss_bytes": 7340032,
+          "size_bytes": 7340032
+        },
+        {
+          "anonymous_bytes": 6291456,
+          "mapping": "[anonymous]",
+          "rss_bytes": 6291456,
+          "size_bytes": 6291456
+        },
+        {
+          "anonymous_bytes": 6291456,
+          "mapping": "[anonymous]",
+          "rss_bytes": 6291456,
+          "size_bytes": 6291456
+        },
+        {
+          "anonymous_bytes": 4706304,
+          "mapping": "[anonymous]",
+          "rss_bytes": 4706304,
+          "size_bytes": 4722688
+        },
+        {
+          "anonymous_bytes": 4194304,
+          "mapping": "[anonymous]",
+          "rss_bytes": 4194304,
+          "size_bytes": 4194304
+        },
+        {
+          "anonymous_bytes": 4128768,
+          "mapping": "[anonymous]",
+          "rss_bytes": 4128768,
+          "size_bytes": 4194304
+        },
+        {
+          "anonymous_bytes": 4026368,
+          "mapping": "/home/ubuntu/he/dimos_wd_m20/.venv/lib/python3.10/site-packages/rerun_bindings/rerun_bindings.abi3.so",
+          "rss_bytes": 4026368,
+          "size_bytes": 4046848
+        },
+        {
+          "anonymous_bytes": 2449408,
+          "mapping": "[anonymous]",
+          "rss_bytes": 2449408,
+          "size_bytes": 1073741824
+        }
+      ],
+      "memory": {
+        "AnonHugePages": 14680064,
+        "Anonymous": 149172224,
+        "FilePmdMapped": 0,
+        "LazyFree": 0,
+        "Locked": 0,
+        "Private_Clean": 12288,
+        "Private_Dirty": 149172224,
+        "Private_Hugetlb": 0,
+        "Pss": 162050048,
+        "Pss_Anon": 149172224,
+        "Pss_File": 12877824,
+        "Pss_Shmem": 0,
+        "Referenced": 228143104,
+        "Rss": 234606592,
+        "Shared_Clean": 85422080,
+        "Shared_Dirty": 0,
+        "Shared_Hugetlb": 0,
+        "ShmemPmdMapped": 0,
+        "Swap": 0,
+        "SwapPss": 0
+      },
+      "pid": 227803,
+      "ppid": 1,
+      "role": "coordinator",
+      "threads": 41
+    },
+    {
+      "command": "/home/ubuntu/he/dimos_wd_m20/.venv/bin/python -s -c from multiprocessing.resource_tracker import main;main(49)",
+      "fd_count": 4,
+      "largest_anonymous_mappings": [
+        {
+          "anonymous_bytes": 2043904,
+          "mapping": "[anonymous]",
+          "rss_bytes": 2043904,
+          "size_bytes": 2363392
+        },
+        {
+          "anonymous_bytes": 1855488,
+          "mapping": "[anonymous]",
+          "rss_bytes": 1855488,
+          "size_bytes": 2396160
+        },
+        {
+          "anonymous_bytes": 1286144,
+          "mapping": "[heap]",
+          "rss_bytes": 1286144,
+          "size_bytes": 1351680
+        }
+      ],
+      "memory": {
+        "AnonHugePages": 0,
+        "Anonymous": 5668864,
+        "FilePmdMapped": 0,
+        "LazyFree": 0,
+        "Locked": 0,
+        "Private_Clean": 0,
+        "Private_Dirty": 5668864,
+        "Private_Hugetlb": 0,
+        "Pss": 5864448,
+        "Pss_Anon": 5668864,
+        "Pss_File": 195584,
+        "Pss_Shmem": 0,
+        "Referenced": 10866688,
+        "Rss": 10969088,
+        "Shared_Clean": 5300224,
+        "Shared_Dirty": 0,
+        "Shared_Hugetlb": 0,
+        "ShmemPmdMapped": 0,
+        "Swap": 0,
+        "SwapPss": 0
+      },
+      "pid": 227902,
+      "ppid": 227803,
+      "role": "resource_tracker",
+      "threads": 1
+    },
+    {
+      "command": "/home/ubuntu/he/dimos_wd_m20/.venv/bin/python -s -c from multiprocessing.forkserver import main; main(49, 51, ['__main__'], **{'sys_path': ['/home/ubuntu/he/dimos_wd_m20/.venv/lib/python3.10/site-packages/dimos_lcm/python_lcm_msgs', '/home/ubuntu/he/dimos_wd_m20/.venv/bin', '/opt/ros/humble/lib/python3.10/site-packages', '/opt/ros/humble/local/lib/python3.10/dist-packages', '/usr/lib/python310.zip', '/usr/lib/python3.10', '/usr/lib/python3.10/lib-dynload', '/home/ubuntu/he/dimos_wd_m20/.venv/lib/python3.10/site-packages', '/home/ubuntu/he/dimos_wd_m20', '/home/ubuntu/he/dimos_wd_m20/.venv/lib/python3.10/site-packages/cmeel.prefix/lib/python3.10/site-packages', '/home/ubuntu/he/dimos_wd_m20/.venv/lib/python3.10/site-packages/rerun_sdk']})",
+      "fd_count": 15,
+      "largest_anonymous_mappings": [
+        {
+          "anonymous_bytes": 2207744,
+          "mapping": "[anonymous]",
+          "rss_bytes": 2207744,
+          "size_bytes": 2396160
+        },
+        {
+          "anonymous_bytes": 2068480,
+          "mapping": "[anonymous]",
+          "rss_bytes": 2068480,
+          "size_bytes": 2363392
+        },
+        {
+          "anonymous_bytes": 1388544,
+          "mapping": "[heap]",
+          "rss_bytes": 1388544,
+          "size_bytes": 1474560
+        }
+      ],
+      "memory": {
+        "AnonHugePages": 0,
+        "Anonymous": 6184960,
+        "FilePmdMapped": 0,
+        "LazyFree": 0,
+        "Locked": 0,
+        "Private_Clean": 0,
+        "Private_Dirty": 5263360,
+        "Private_Hugetlb": 0,
+        "Pss": 5613568,
+        "Pss_Anon": 5406720,
+        "Pss_File": 205824,
+        "Pss_Shmem": 0,
+        "Referenced": 11681792,
+        "Rss": 11780096,
+        "Shared_Clean": 5595136,
+        "Shared_Dirty": 921600,
+        "Shared_Hugetlb": 0,
+        "ShmemPmdMapped": 0,
+        "Swap": 0,
+        "SwapPss": 0
+      },
+      "pid": 227903,
+      "ppid": 227803,
+      "role": "forkserver",
+      "threads": 1
+    },
+    {
+      "command": "/home/ubuntu/he/dimos_wd_m20/.venv/bin/python -s -c from multiprocessing.forkserver import main; main(49, 51, ['__main__'], **{'sys_path': ['/home/ubuntu/he/dimos_wd_m20/.venv/lib/python3.10/site-packages/dimos_lcm/python_lcm_msgs', '/home/ubuntu/he/dimos_wd_m20/.venv/bin', '/opt/ros/humble/lib/python3.10/site-packages', '/opt/ros/humble/local/lib/python3.10/dist-packages', '/usr/lib/python310.zip', '/usr/lib/python3.10', '/usr/lib/python3.10/lib-dynload', '/home/ubuntu/he/dimos_wd_m20/.venv/lib/python3.10/site-packages', '/home/ubuntu/he/dimos_wd_m20', '/home/ubuntu/he/dimos_wd_m20/.venv/lib/python3.10/site-packages/cmeel.prefix/lib/python3.10/site-packages', '/home/ubuntu/he/dimos_wd_m20/.venv/lib/python3.10/site-packages/rerun_sdk']})",
+      "fd_count": 116,
+      "largest_anonymous_mappings": [
+        {
+          "anonymous_bytes": 27029504,
+          "mapping": "[heap]",
+          "rss_bytes": 27029504,
+          "size_bytes": 27185152
+        },
+        {
+          "anonymous_bytes": 15151104,
+          "mapping": "[anonymous]",
+          "rss_bytes": 15151104,
+          "size_bytes": 15425536
+        },
+        {
+          "anonymous_bytes": 7340032,
+          "mapping": "[anonymous]",
+          "rss_bytes": 7340032,
+          "size_bytes": 7340032
+        },
+        {
+          "anonymous_bytes": 6291456,
+          "mapping": "[anonymous]",
+          "rss_bytes": 6291456,
+          "size_bytes": 6291456
+        },
+        {
+          "anonymous_bytes": 6291456,
+          "mapping": "[anonymous]",
+          "rss_bytes": 6291456,
+          "size_bytes": 6291456
+        },
+        {
+          "anonymous_bytes": 5160960,
+          "mapping": "[anonymous]",
+          "rss_bytes": 5160960,
+          "size_bytes": 5242880
+        },
+        {
+          "anonymous_bytes": 4194304,
+          "mapping": "[anonymous]",
+          "rss_bytes": 4194304,
+          "size_bytes": 4194304
+        },
+        {
+          "anonymous_bytes": 4116480,
+          "mapping": "[anonymous]",
+          "rss_bytes": 4116480,
+          "size_bytes": 12488704
+        },
+        {
+          "anonymous_bytes": 4116480,
+          "mapping": "[anonymous]",
+          "rss_bytes": 4116480,
+          "size_bytes": 12488704
+        },
+        {
+          "anonymous_bytes": 4116480,
+          "mapping": "[anonymous]",
+          "rss_bytes": 4116480,
+          "size_bytes": 12488704
+        }
+      ],
+      "memory": {
+        "AnonHugePages": 16777216,
+        "Anonymous": 161869824,
+        "FilePmdMapped": 0,
+        "LazyFree": 0,
+        "Locked": 0,
+        "Private_Clean": 28672,
+        "Private_Dirty": 161452032,
+        "Private_Hugetlb": 0,
+        "Pss": 175366144,
+        "Pss_Anon": 161112064,
+        "Pss_File": 13601792,
+        "Pss_Shmem": 651264,
+        "Referenced": 245567488,
+        "Rss": 254550016,
+        "Shared_Clean": 90275840,
+        "Shared_Dirty": 2793472,
+        "Shared_Hugetlb": 0,
+        "ShmemPmdMapped": 0,
+        "Swap": 131072,
+        "SwapPss": 0
+      },
+      "pid": 227904,
+      "ppid": 227903,
+      "role": "worker",
+      "threads": 62
+    },
+    {
+      "command": "/home/ubuntu/he/dimos_wd_m20/.venv/bin/python -s -c from multiprocessing.forkserver import main; main(49, 51, ['__main__'], **{'sys_path': ['/home/ubuntu/he/dimos_wd_m20/.venv/lib/python3.10/site-packages/dimos_lcm/python_lcm_msgs', '/home/ubuntu/he/dimos_wd_m20/.venv/bin', '/opt/ros/humble/lib/python3.10/site-packages', '/opt/ros/humble/local/lib/python3.10/dist-packages', '/usr/lib/python310.zip', '/usr/lib/python3.10', '/usr/lib/python3.10/lib-dynload', '/home/ubuntu/he/dimos_wd_m20/.venv/lib/python3.10/site-packages', '/home/ubuntu/he/dimos_wd_m20', '/home/ubuntu/he/dimos_wd_m20/.venv/lib/python3.10/site-packages/cmeel.prefix/lib/python3.10/site-packages', '/home/ubuntu/he/dimos_wd_m20/.venv/lib/python3.10/site-packages/rerun_sdk']})",
+      "fd_count": 67,
+      "largest_anonymous_mappings": [
+        {
+          "anonymous_bytes": 233951232,
+          "mapping": "[anonymous]",
+          "rss_bytes": 233951232,
+          "size_bytes": 1073741824
+        },
+        {
+          "anonymous_bytes": 27287552,
+          "mapping": "[heap]",
+          "rss_bytes": 27287552,
+          "size_bytes": 27492352
+        },
+        {
+          "anonymous_bytes": 12582912,
+          "mapping": "[anonymous]",
+          "rss_bytes": 12582912,
+          "size_bytes": 1073741824
+        },
+        {
+          "anonymous_bytes": 9404416,
+          "mapping": "[anonymous]",
+          "rss_bytes": 9404416,
+          "size_bytes": 9437184
+        },
+        {
+          "anonymous_bytes": 8634368,
+          "mapping": "[anonymous]",
+          "rss_bytes": 8634368,
+          "size_bytes": 8667136
+        },
+        {
+          "anonymous_bytes": 7340032,
+          "mapping": "[anonymous]",
+          "rss_bytes": 7340032,
+          "size_bytes": 7340032
+        },
+        {
+          "anonymous_bytes": 6291456,
+          "mapping": "[anonymous]",
+          "rss_bytes": 6291456,
+          "size_bytes": 6291456
+        },
+        {
+          "anonymous_bytes": 6291456,
+          "mapping": "[anonymous]",
+          "rss_bytes": 6291456,
+          "size_bytes": 6291456
+        },
+        {
+          "anonymous_bytes": 5160960,
+          "mapping": "[anonymous]",
+          "rss_bytes": 5160960,
+          "size_bytes": 5242880
+        },
+        {
+          "anonymous_bytes": 4194304,
+          "mapping": "[anonymous]",
+          "rss_bytes": 4194304,
+          "size_bytes": 4194304
+        }
+      ],
+      "memory": {
+        "AnonHugePages": 211812352,
+        "Anonymous": 382955520,
+        "FilePmdMapped": 0,
+        "LazyFree": 0,
+        "Locked": 0,
+        "Private_Clean": 9728000,
+        "Private_Dirty": 382103552,
+        "Private_Hugetlb": 0,
+        "Pss": 404839424,
+        "Pss_Anon": 382224384,
+        "Pss_File": 22615040,
+        "Pss_Shmem": 0,
+        "Referenced": 467070976,
+        "Rss": 477601792,
+        "Shared_Clean": 84918272,
+        "Shared_Dirty": 851968,
+        "Shared_Hugetlb": 0,
+        "ShmemPmdMapped": 0,
+        "Swap": 0,
+        "SwapPss": 0
+      },
+      "pid": 227905,
+      "ppid": 227903,
+      "role": "worker",
+      "threads": 39
+    },
+    {
+      "command": "/home/ubuntu/he/dimos_wd_m20/.venv/bin/python -s -c from multiprocessing.forkserver import main; main(49, 51, ['__main__'], **{'sys_path': ['/home/ubuntu/he/dimos_wd_m20/.venv/lib/python3.10/site-packages/dimos_lcm/python_lcm_msgs', '/home/ubuntu/he/dimos_wd_m20/.venv/bin', '/opt/ros/humble/lib/python3.10/site-packages', '/opt/ros/humble/local/lib/python3.10/dist-packages', '/usr/lib/python310.zip', '/usr/lib/python3.10', '/usr/lib/python3.10/lib-dynload', '/home/ubuntu/he/dimos_wd_m20/.venv/lib/python3.10/site-packages', '/home/ubuntu/he/dimos_wd_m20', '/home/ubuntu/he/dimos_wd_m20/.venv/lib/python3.10/site-packages/cmeel.prefix/lib/python3.10/site-packages', '/home/ubuntu/he/dimos_wd_m20/.venv/lib/python3.10/site-packages/rerun_sdk']})",
+      "fd_count": 92,
+      "largest_anonymous_mappings": [
+        {
+          "anonymous_bytes": 24698880,
+          "mapping": "[heap]",
+          "rss_bytes": 24698880,
+          "size_bytes": 24899584
+        },
+        {
+          "anonymous_bytes": 9506816,
+          "mapping": "[anonymous]",
+          "rss_bytes": 9506816,
+          "size_bytes": 17825792
+        },
+        {
+          "anonymous_bytes": 7340032,
+          "mapping": "[anonymous]",
+          "rss_bytes": 7340032,
+          "size_bytes": 7340032
+        },
+        {
+          "anonymous_bytes": 6291456,
+          "mapping": "[anonymous]",
+          "rss_bytes": 6291456,
+          "size_bytes": 6291456
+        },
+        {
+          "anonymous_bytes": 5799936,
+          "mapping": "[anonymous]",
+          "rss_bytes": 5799936,
+          "size_bytes": 5869568
+        },
+        {
+          "anonymous_bytes": 5160960,
+          "mapping": "[anonymous]",
+          "rss_bytes": 5160960,
+          "size_bytes": 5242880
+        },
+        {
+          "anonymous_bytes": 4194304,
+          "mapping": "[anonymous]",
+          "rss_bytes": 4194304,
+          "size_bytes": 4194304
+        },
+        {
+          "anonymous_bytes": 4026368,
+          "mapping": "/home/ubuntu/he/dimos_wd_m20/.venv/lib/python3.10/site-packages/rerun_bindings/rerun_bindings.abi3.so",
+          "rss_bytes": 4026368,
+          "size_bytes": 4046848
+        },
+        {
+          "anonymous_bytes": 3145728,
+          "mapping": "[anonymous]",
+          "rss_bytes": 3145728,
+          "size_bytes": 3145728
+        },
+        {
+          "anonymous_bytes": 2625536,
+          "mapping": "[anonymous]",
+          "rss_bytes": 2625536,
+          "size_bytes": 2625536
+        }
+      ],
+      "memory": {
+        "AnonHugePages": 6291456,
+        "Anonymous": 131002368,
+        "FilePmdMapped": 0,
+        "LazyFree": 0,
+        "Locked": 0,
+        "Private_Clean": 1142784,
+        "Private_Dirty": 130584576,
+        "Private_Hugetlb": 0,
+        "Pss": 142088192,
+        "Pss_Anon": 130238464,
+        "Pss_File": 11206656,
+        "Pss_Shmem": 642048,
+        "Referenced": 208809984,
+        "Rss": 215101440,
+        "Shared_Clean": 80674816,
+        "Shared_Dirty": 2699264,
+        "Shared_Hugetlb": 0,
+        "ShmemPmdMapped": 0,
+        "Swap": 131072,
+        "SwapPss": 0
+      },
+      "pid": 227906,
+      "ppid": 227903,
+      "role": "worker",
+      "threads": 39
+    },
+    {
+      "command": "/home/ubuntu/he/dimos_wd_m20/.venv/bin/python -s -c from multiprocessing.forkserver import main; main(49, 51, ['__main__'], **{'sys_path': ['/home/ubuntu/he/dimos_wd_m20/.venv/lib/python3.10/site-packages/dimos_lcm/python_lcm_msgs', '/home/ubuntu/he/dimos_wd_m20/.venv/bin', '/opt/ros/humble/lib/python3.10/site-packages', '/opt/ros/humble/local/lib/python3.10/dist-packages', '/usr/lib/python310.zip', '/usr/lib/python3.10', '/usr/lib/python3.10/lib-dynload', '/home/ubuntu/he/dimos_wd_m20/.venv/lib/python3.10/site-packages', '/home/ubuntu/he/dimos_wd_m20', '/home/ubuntu/he/dimos_wd_m20/.venv/lib/python3.10/site-packages/cmeel.prefix/lib/python3.10/site-packages', '/home/ubuntu/he/dimos_wd_m20/.venv/lib/python3.10/site-packages/rerun_sdk']})",
+      "fd_count": 67,
+      "largest_anonymous_mappings": [
+        {
+          "anonymous_bytes": 24698880,
+          "mapping": "[heap]",
+          "rss_bytes": 24698880,
+          "size_bytes": 24903680
+        },
+        {
+          "anonymous_bytes": 9256960,
+          "mapping": "[anonymous]",
+          "rss_bytes": 9256960,
+          "size_bytes": 17825792
+        },
+        {
+          "anonymous_bytes": 7340032,
+          "mapping": "[anonymous]",
+          "rss_bytes": 7340032,
+          "size_bytes": 7340032
+        },
+        {
+          "anonymous_bytes": 6291456,
+          "mapping": "[anonymous]",
+          "rss_bytes": 6291456,
+          "size_bytes": 6291456
+        },
+        {
+          "anonymous_bytes": 5160960,
+          "mapping": "[anonymous]",
+          "rss_bytes": 5160960,
+          "size_bytes": 5242880
+        },
+        {
+          "anonymous_bytes": 4194304,
+          "mapping": "[anonymous]",
+          "rss_bytes": 4194304,
+          "size_bytes": 4194304
+        },
+        {
+          "anonymous_bytes": 4026368,
+          "mapping": "/home/ubuntu/he/dimos_wd_m20/.venv/lib/python3.10/site-packages/rerun_bindings/rerun_bindings.abi3.so",
+          "rss_bytes": 4026368,
+          "size_bytes": 4046848
+        },
+        {
+          "anonymous_bytes": 3145728,
+          "mapping": "[anonymous]",
+          "rss_bytes": 3145728,
+          "size_bytes": 3145728
+        },
+        {
+          "anonymous_bytes": 2625536,
+          "mapping": "[anonymous]",
+          "rss_bytes": 2625536,
+          "size_bytes": 2625536
+        },
+        {
+          "anonymous_bytes": 2330624,
+          "mapping": "[anonymous]",
+          "rss_bytes": 2330624,
+          "size_bytes": 1073741824
+        }
+      ],
+      "memory": {
+        "AnonHugePages": 2097152,
+        "Anonymous": 109154304,
+        "FilePmdMapped": 0,
+        "LazyFree": 0,
+        "Locked": 0,
+        "Private_Clean": 0,
+        "Private_Dirty": 108261376,
+        "Private_Hugetlb": 0,
+        "Pss": 117249024,
+        "Pss_Anon": 108390400,
+        "Pss_File": 8858624,
+        "Pss_Shmem": 0,
+        "Referenced": 176029696,
+        "Rss": 181731328,
+        "Shared_Clean": 72577024,
+        "Shared_Dirty": 892928,
+        "Shared_Hugetlb": 0,
+        "ShmemPmdMapped": 0,
+        "Swap": 0,
+        "SwapPss": 0
+      },
+      "pid": 227907,
+      "ppid": 227903,
+      "role": "worker",
+      "threads": 25
+    },
+    {
+      "command": "/home/ubuntu/he/dimos_wd_m20/.venv/bin/python -s -c from multiprocessing.forkserver import main; main(49, 51, ['__main__'], **{'sys_path': ['/home/ubuntu/he/dimos_wd_m20/.venv/lib/python3.10/site-packages/dimos_lcm/python_lcm_msgs', '/home/ubuntu/he/dimos_wd_m20/.venv/bin', '/opt/ros/humble/lib/python3.10/site-packages', '/opt/ros/humble/local/lib/python3.10/dist-packages', '/usr/lib/python310.zip', '/usr/lib/python3.10', '/usr/lib/python3.10/lib-dynload', '/home/ubuntu/he/dimos_wd_m20/.venv/lib/python3.10/site-packages', '/home/ubuntu/he/dimos_wd_m20', '/home/ubuntu/he/dimos_wd_m20/.venv/lib/python3.10/site-packages/cmeel.prefix/lib/python3.10/site-packages', '/home/ubuntu/he/dimos_wd_m20/.venv/lib/python3.10/site-packages/rerun_sdk']})",
+      "fd_count": 82,
+      "largest_anonymous_mappings": [
+        {
+          "anonymous_bytes": 24698880,
+          "mapping": "[heap]",
+          "rss_bytes": 24698880,
+          "size_bytes": 24899584
+        },
+        {
+          "anonymous_bytes": 9359360,
+          "mapping": "[anonymous]",
+          "rss_bytes": 9359360,
+          "size_bytes": 17825792
+        },
+        {
+          "anonymous_bytes": 7340032,
+          "mapping": "[anonymous]",
+          "rss_bytes": 7340032,
+          "size_bytes": 7340032
+        },
+        {
+          "anonymous_bytes": 6291456,
+          "mapping": "[anonymous]",
+          "rss_bytes": 6291456,
+          "size_bytes": 6291456
+        },
+        {
+          "anonymous_bytes": 5160960,
+          "mapping": "[anonymous]",
+          "rss_bytes": 5160960,
+          "size_bytes": 5242880
+        },
+        {
+          "anonymous_bytes": 4194304,
+          "mapping": "[anonymous]",
+          "rss_bytes": 4194304,
+          "size_bytes": 4194304
+        },
+        {
+          "anonymous_bytes": 4026368,
+          "mapping": "/home/ubuntu/he/dimos_wd_m20/.venv/lib/python3.10/site-packages/rerun_bindings/rerun_bindings.abi3.so",
+          "rss_bytes": 4026368,
+          "size_bytes": 4046848
+        },
+        {
+          "anonymous_bytes": 3145728,
+          "mapping": "[anonymous]",
+          "rss_bytes": 3145728,
+          "size_bytes": 3145728
+        },
+        {
+          "anonymous_bytes": 2625536,
+          "mapping": "[anonymous]",
+          "rss_bytes": 2625536,
+          "size_bytes": 2625536
+        },
+        {
+          "anonymous_bytes": 2330624,
+          "mapping": "[anonymous]",
+          "rss_bytes": 2330624,
+          "size_bytes": 1073741824
+        }
+      ],
+      "memory": {
+        "AnonHugePages": 4194304,
+        "Anonymous": 117395456,
+        "FilePmdMapped": 0,
+        "LazyFree": 0,
+        "Locked": 0,
+        "Private_Clean": 0,
+        "Private_Dirty": 116502528,
+        "Private_Hugetlb": 0,
+        "Pss": 125490176,
+        "Pss_Anon": 116631552,
+        "Pss_File": 8858624,
+        "Pss_Shmem": 0,
+        "Referenced": 184422400,
+        "Rss": 189972480,
+        "Shared_Clean": 72577024,
+        "Shared_Dirty": 892928,
+        "Shared_Hugetlb": 0,
+        "ShmemPmdMapped": 0,
+        "Swap": 0,
+        "SwapPss": 0
+      },
+      "pid": 227909,
+      "ppid": 227903,
+      "role": "worker",
+      "threads": 31
+    },
+    {
+      "command": "/home/ubuntu/he/dimos_wd_m20/.venv/bin/python -s -c from multiprocessing.forkserver import main; main(49, 51, ['__main__'], **{'sys_path': ['/home/ubuntu/he/dimos_wd_m20/.venv/lib/python3.10/site-packages/dimos_lcm/python_lcm_msgs', '/home/ubuntu/he/dimos_wd_m20/.venv/bin', '/opt/ros/humble/lib/python3.10/site-packages', '/opt/ros/humble/local/lib/python3.10/dist-packages', '/usr/lib/python310.zip', '/usr/lib/python3.10', '/usr/lib/python3.10/lib-dynload', '/home/ubuntu/he/dimos_wd_m20/.venv/lib/python3.10/site-packages', '/home/ubuntu/he/dimos_wd_m20', '/home/ubuntu/he/dimos_wd_m20/.venv/lib/python3.10/site-packages/cmeel.prefix/lib/python3.10/site-packages', '/home/ubuntu/he/dimos_wd_m20/.venv/lib/python3.10/site-packages/rerun_sdk']})",
+      "fd_count": 58,
+      "largest_anonymous_mappings": [
+        {
+          "anonymous_bytes": 24698880,
+          "mapping": "[heap]",
+          "rss_bytes": 24698880,
+          "size_bytes": 24907776
+        },
+        {
+          "anonymous_bytes": 9179136,
+          "mapping": "[anonymous]",
+          "rss_bytes": 9179136,
+          "size_bytes": 17825792
+        },
+        {
+          "anonymous_bytes": 7340032,
+          "mapping": "[anonymous]",
+          "rss_bytes": 7340032,
+          "size_bytes": 7340032
+        },
+        {
+          "anonymous_bytes": 6291456,
+          "mapping": "[anonymous]",
+          "rss_bytes": 6291456,
+          "size_bytes": 6291456
+        },
+        {
+          "anonymous_bytes": 5160960,
+          "mapping": "[anonymous]",
+          "rss_bytes": 5160960,
+          "size_bytes": 5242880
+        },
+        {
+          "anonymous_bytes": 4194304,
+          "mapping": "[anonymous]",
+          "rss_bytes": 4194304,
+          "size_bytes": 4194304
+        },
+        {
+          "anonymous_bytes": 4026368,
+          "mapping": "/home/ubuntu/he/dimos_wd_m20/.venv/lib/python3.10/site-packages/rerun_bindings/rerun_bindings.abi3.so",
+          "rss_bytes": 4026368,
+          "size_bytes": 4046848
+        },
+        {
+          "anonymous_bytes": 3145728,
+          "mapping": "[anonymous]",
+          "rss_bytes": 3145728,
+          "size_bytes": 3145728
+        },
+        {
+          "anonymous_bytes": 2625536,
+          "mapping": "[anonymous]",
+          "rss_bytes": 2625536,
+          "size_bytes": 2625536
+        },
+        {
+          "anonymous_bytes": 2330624,
+          "mapping": "[anonymous]",
+          "rss_bytes": 2330624,
+          "size_bytes": 1073741824
+        }
+      ],
+      "memory": {
+        "AnonHugePages": 2097152,
+        "Anonymous": 107499520,
+        "FilePmdMapped": 0,
+        "LazyFree": 0,
+        "Locked": 0,
+        "Private_Clean": 0,
+        "Private_Dirty": 106602496,
+        "Private_Hugetlb": 0,
+        "Pss": 115573760,
+        "Pss_Anon": 106734592,
+        "Pss_File": 8838144,
+        "Pss_Shmem": 0,
+        "Referenced": 174571520,
+        "Rss": 180117504,
+        "Shared_Clean": 72617984,
+        "Shared_Dirty": 897024,
+        "Shared_Hugetlb": 0,
+        "ShmemPmdMapped": 0,
+        "Swap": 0,
+        "SwapPss": 0
+      },
+      "pid": 227910,
+      "ppid": 227903,
+      "role": "worker",
+      "threads": 13
+    },
+    {
+      "command": "bash /home/ubuntu/he/dimos_wd_m20/dimos/robot/he/deployment/run-he-rtabmap-shadow.sh",
+      "fd_count": 5,
+      "largest_anonymous_mappings": [],
+      "memory": {
+        "AnonHugePages": 0,
+        "Anonymous": 1130496,
+        "FilePmdMapped": 0,
+        "LazyFree": 0,
+        "Locked": 0,
+        "Private_Clean": 0,
+        "Private_Dirty": 1130496,
+        "Private_Hugetlb": 0,
+        "Pss": 1520640,
+        "Pss_Anon": 1130496,
+        "Pss_File": 390144,
+        "Pss_Shmem": 0,
+        "Referenced": 3948544,
+        "Rss": 4329472,
+        "Shared_Clean": 3198976,
+        "Shared_Dirty": 0,
+        "Shared_Hugetlb": 0,
+        "ShmemPmdMapped": 0,
+        "Swap": 0,
+        "SwapPss": 0
+      },
+      "pid": 228151,
+      "ppid": 227910,
+      "role": "child",
+      "threads": 1
+    },
+    {
+      "command": "/home/ubuntu/he/dimos_wd_m20/.venv/bin/python -m dimos.core.coordination.watchdog_main 227803 20260712-042803-he-visual-slam-shadow",
+      "fd_count": 5,
+      "largest_anonymous_mappings": [
+        {
+          "anonymous_bytes": 4198400,
+          "mapping": "[heap]",
+          "rss_bytes": 4198400,
+          "size_bytes": 4296704
+        },
+        {
+          "anonymous_bytes": 3661824,
+          "mapping": "[anonymous]",
+          "rss_bytes": 3661824,
+          "size_bytes": 3739648
+        },
+        {
+          "anonymous_bytes": 2080768,
+          "mapping": "[anonymous]",
+          "rss_bytes": 2080768,
+          "size_bytes": 2363392
+        },
+        {
+          "anonymous_bytes": 2064384,
+          "mapping": "[anonymous]",
+          "rss_bytes": 2064384,
+          "size_bytes": 2097152
+        },
+        {
+          "anonymous_bytes": 1048576,
+          "mapping": "[anonymous]",
+          "rss_bytes": 1048576,
+          "size_bytes": 1048576
+        },
+        {
+          "anonymous_bytes": 1048576,
+          "mapping": "[anonymous]",
+          "rss_bytes": 1048576,
+          "size_bytes": 1048576
+        },
+        {
+          "anonymous_bytes": 1048576,
+          "mapping": "[anonymous]",
+          "rss_bytes": 1048576,
+          "size_bytes": 1048576
+        }
+      ],
+      "memory": {
+        "AnonHugePages": 0,
+        "Anonymous": 18104320,
+        "FilePmdMapped": 0,
+        "LazyFree": 0,
+        "Locked": 0,
+        "Private_Clean": 0,
+        "Private_Dirty": 18104320,
+        "Private_Hugetlb": 0,
+        "Pss": 18455552,
+        "Pss_Anon": 18104320,
+        "Pss_File": 351232,
+        "Pss_Shmem": 0,
+        "Referenced": 25219072,
+        "Rss": 26992640,
+        "Shared_Clean": 8888320,
+        "Shared_Dirty": 0,
+        "Shared_Hugetlb": 0,
+        "ShmemPmdMapped": 0,
+        "Swap": 0,
+        "SwapPss": 0
+      },
+      "pid": 228282,
+      "ppid": 227803,
+      "role": "watchdog",
+      "threads": 1
+    },
+    {
+      "command": "/opt/ros/humble/lib/rtabmap_odom/rgbd_odometry --ros-args --params-file /home/ubuntu/he/dimos_wd_m20/dimos/robot/he/deployment/he-rtabmap-shadow.yaml -r rgb/image:=/aurora/rgb/image_raw -r depth/image:=/aurora/depth/image_raw -r rgb/camera_info:=/aurora/rgb/camera_info -r odom:=/he/visual_odom -r odom_info:=/he/visual_odom_info",
+      "fd_count": 26,
+      "largest_anonymous_mappings": [
+        {
+          "anonymous_bytes": 16859136,
+          "mapping": "[heap]",
+          "rss_bytes": 16859136,
+          "size_bytes": 17387520
+        },
+        {
+          "anonymous_bytes": 4624384,
+          "mapping": "[anonymous]",
+          "rss_bytes": 4624384,
+          "size_bytes": 4624384
+        },
+        {
+          "anonymous_bytes": 3854336,
+          "mapping": "[anonymous]",
+          "rss_bytes": 3854336,
+          "size_bytes": 3854336
+        },
+        {
+          "anonymous_bytes": 3620864,
+          "mapping": "[anonymous]",
+          "rss_bytes": 3620864,
+          "size_bytes": 3620864
+        },
+        {
+          "anonymous_bytes": 3342336,
+          "mapping": "[anonymous]",
+          "rss_bytes": 3342336,
+          "size_bytes": 3342336
+        },
+        {
+          "anonymous_bytes": 2961408,
+          "mapping": "[anonymous]",
+          "rss_bytes": 2961408,
+          "size_bytes": 9297920
+        },
+        {
+          "anonymous_bytes": 2588672,
+          "mapping": "[anonymous]",
+          "rss_bytes": 2588672,
+          "size_bytes": 2588672
+        },
+        {
+          "anonymous_bytes": 2097152,
+          "mapping": "[anonymous]",
+          "rss_bytes": 2097152,
+          "size_bytes": 4194304
+        },
+        {
+          "anonymous_bytes": 2097152,
+          "mapping": "[anonymous]",
+          "rss_bytes": 2097152,
+          "size_bytes": 8388608
+        },
+        {
+          "anonymous_bytes": 1908736,
+          "mapping": "/usr/lib/aarch64-linux-gnu/nvidia/libnvidia-eglcore.so.540.4.0",
+          "rss_bytes": 1908736,
+          "size_bytes": 6000640
+        }
+      ],
+      "memory": {
+        "AnonHugePages": 4194304,
+        "Anonymous": 74477568,
+        "FilePmdMapped": 0,
+        "LazyFree": 0,
+        "Locked": 0,
+        "Private_Clean": 3145728,
+        "Private_Dirty": 74952704,
+        "Private_Hugetlb": 0,
+        "Pss": 117127168,
+        "Pss_Anon": 74477568,
+        "Pss_File": 41998336,
+        "Pss_Shmem": 651264,
+        "Referenced": 176029696,
+        "Rss": 185487360,
+        "Shared_Clean": 105488384,
+        "Shared_Dirty": 1900544,
+        "Shared_Hugetlb": 0,
+        "ShmemPmdMapped": 0,
+        "Swap": 131072,
+        "SwapPss": 0
+      },
+      "pid": 228311,
+      "ppid": 228151,
+      "role": "child",
+      "threads": 34
+    },
+    {
+      "command": "/opt/ros/humble/lib/rtabmap_slam/rtabmap --ros-args --params-file /home/ubuntu/he/dimos_wd_m20/dimos/robot/he/deployment/he-rtabmap-shadow.yaml -p database_path:=/var/tmp/he-rtabmap/rtabmap-20260712-042812.db -p Mem/IncrementalMemory:='true' -p Mem/InitWMWithAllNodes:='false' -p Mem/LocalizationReadOnly:='false' -p Mem/LocalizationDataSaved:='false' -r rgb/image:=/aurora/rgb/image_raw -r depth/image:=/aurora/depth/image_raw -r rgb/camera_info:=/aurora/rgb/camera_info -r odom:=/he/visual_odom -r odom_info:=/he/visual_odom_info -r map:=/he/visual_occupancy -r mapPath:=/he/visual_path -r mapData:=/he/visual_map_data -r info:=/he/visual_slam_info -r cloud_map:=/he/visual_cloud_map",
+      "fd_count": 27,
+      "largest_anonymous_mappings": [
+        {
+          "anonymous_bytes": 21929984,
+          "mapping": "[heap]",
+          "rss_bytes": 21929984,
+          "size_bytes": 26284032
+        },
+        {
+          "anonymous_bytes": 9895936,
+          "mapping": "[anonymous]",
+          "rss_bytes": 9895936,
+          "size_bytes": 9895936
+        },
+        {
+          "anonymous_bytes": 4587520,
+          "mapping": "[anonymous]",
+          "rss_bytes": 4587520,
+          "size_bytes": 9961472
+        },
+        {
+          "anonymous_bytes": 3510272,
+          "mapping": "[anonymous]",
+          "rss_bytes": 3510272,
+          "size_bytes": 10674176
+        },
+        {
+          "anonymous_bytes": 3342336,
+          "mapping": "[anonymous]",
+          "rss_bytes": 3342336,
+          "size_bytes": 9744384
+        },
+        {
+          "anonymous_bytes": 2564096,
+          "mapping": "[anonymous]",
+          "rss_bytes": 2564096,
+          "size_bytes": 9015296
+        },
+        {
+          "anonymous_bytes": 2293760,
+          "mapping": "[anonymous]",
+          "rss_bytes": 2293760,
+          "size_bytes": 8388608
+        },
+        {
+          "anonymous_bytes": 2142208,
+          "mapping": "[anonymous]",
+          "rss_bytes": 2142208,
+          "size_bytes": 8388608
+        },
+        {
+          "anonymous_bytes": 2097152,
+          "mapping": "[anonymous]",
+          "rss_bytes": 2097152,
+          "size_bytes": 8388608
+        },
+        {
+          "anonymous_bytes": 2097152,
+          "mapping": "[anonymous]",
+          "rss_bytes": 2097152,
+          "size_bytes": 8388608
+        }
+      ],
+      "memory": {
+        "AnonHugePages": 10485760,
+        "Anonymous": 116813824,
+        "FilePmdMapped": 0,
+        "LazyFree": 0,
+        "Locked": 0,
+        "Private_Clean": 18575360,
+        "Private_Dirty": 117288960,
+        "Private_Hugetlb": 0,
+        "Pss": 175123456,
+        "Pss_Anon": 116813824,
+        "Pss_File": 57659392,
+        "Pss_Shmem": 649216,
+        "Referenced": 229728256,
+        "Rss": 244408320,
+        "Shared_Clean": 106651648,
+        "Shared_Dirty": 1892352,
+        "Shared_Hugetlb": 0,
+        "ShmemPmdMapped": 0,
+        "Swap": 131072,
+        "SwapPss": 0
+      },
+      "pid": 228312,
+      "ppid": 228151,
+      "role": "child",
+      "threads": 59
+    },
+    {
+      "command": "bash /home/ubuntu/he/dimos_wd_m20/dimos/robot/he/deployment/he-rtabmap-db-watchdog.sh /var/tmp/he-rtabmap/rtabmap-20260712-042812.db",
+      "fd_count": 5,
+      "largest_anonymous_mappings": [],
+      "memory": {
+        "AnonHugePages": 0,
+        "Anonymous": 323584,
+        "FilePmdMapped": 0,
+        "LazyFree": 0,
+        "Locked": 0,
+        "Private_Clean": 0,
+        "Private_Dirty": 323584,
+        "Private_Hugetlb": 0,
+        "Pss": 689152,
+        "Pss_Anon": 323584,
+        "Pss_File": 365568,
+        "Pss_Shmem": 0,
+        "Referenced": 3137536,
+        "Rss": 3457024,
+        "Shared_Clean": 3133440,
+        "Shared_Dirty": 0,
+        "Shared_Hugetlb": 0,
+        "ShmemPmdMapped": 0,
+        "Swap": 0,
+        "SwapPss": 0
+      },
+      "pid": 228313,
+      "ppid": 228151,
+      "role": "child",
+      "threads": 1
+    },
+    {
+      "command": "sleep 2",
+      "fd_count": 4,
+      "largest_anonymous_mappings": [],
+      "memory": {
+        "AnonHugePages": 0,
+        "Anonymous": 110592,
+        "FilePmdMapped": 0,
+        "LazyFree": 0,
+        "Locked": 0,
+        "Private_Clean": 0,
+        "Private_Dirty": 110592,
+        "Private_Hugetlb": 0,
+        "Pss": 186368,
+        "Pss_Anon": 110592,
+        "Pss_File": 75776,
+        "Pss_Shmem": 0,
+        "Referenced": 1544192,
+        "Rss": 1802240,
+        "Shared_Clean": 1691648,
+        "Shared_Dirty": 0,
+        "Shared_Hugetlb": 0,
+        "ShmemPmdMapped": 0,
+        "Swap": 0,
+        "SwapPss": 0
+      },
+      "pid": 229340,
+      "ppid": 228313,
+      "role": "child",
+      "threads": 1
+    }
+  ],
+  "service": "he-dimos-shadow.service",
+  "skipped_processes": [],
+  "systemd": {
+    "ControlGroup": "/system.slice/he-dimos-shadow.service",
+    "MainPID": "227803",
+    "MemoryCurrent": "1408970752",
+    "MemoryHigh": "2147483648",
+    "MemoryMax": "2684354560",
+    "NRestarts": "0"
+  }
+}
