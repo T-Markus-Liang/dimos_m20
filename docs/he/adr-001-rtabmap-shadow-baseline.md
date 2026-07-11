@@ -67,8 +67,11 @@ update and a rollback path.
 Incremental mapping starts with a new bounded database by default because
 visual odometry resets on each shadow start. Reusing a mapping database without
 an explicit localization/resume transform caused a verified RTAB-Map graph
-fatal. Database resume therefore requires an explicit `HE_RTABMAP_DB` and a
-separate relocalization procedure.
+fatal. The runner now has a fail-closed mode contract: `mapping` refuses any
+existing explicit database, while `localization` requires an existing non-empty
+database and forces non-incremental, read-only operation with all saved nodes
+initialized in working memory. This provides a safe map-load path but does not
+prove displaced-start or moving relocalization.
 
 A later 600-second stationary soak exposed a separate active-database growth
 failure: 0.480m of accumulated frame jitter grew one database from 16.7MiB to

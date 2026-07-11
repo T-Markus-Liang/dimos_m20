@@ -90,6 +90,28 @@ bash dimos/robot/he/deployment/run-he-rtabmap-shadow.sh --check
 bash dimos/robot/he/deployment/run-he-rtabmap-shadow.sh
 ```
 
+Mapping always creates a new database. An explicit mapping path must not
+already exist:
+
+```bash
+HE_RTABMAP_MODE=mapping \
+HE_RTABMAP_DB=/var/tmp/he-rtabmap/he-map-new.db \
+.venv/bin/dimos run he-visual-slam-shadow --daemon
+```
+
+Load an existing non-empty database in read-only localization mode with:
+
+```bash
+HE_RTABMAP_MODE=localization \
+HE_RTABMAP_DB=/var/tmp/he-rtabmap/he-map.db \
+.venv/bin/dimos run he-visual-slam-shadow --daemon
+```
+
+Localization forces non-incremental memory, initializes working memory from
+the saved nodes, disables localization-data writes and opens the database
+read-only. Loading a database does not prove relocalization quality; moving and
+displaced-start tests remain gated by a new vehicle-down safety confirmation.
+
 It publishes only `/he/visual_*` pose/map/status topics plus the isolated
 `he_map -> he_visual_odom -> base_link` TF chain, and refuses to start if
 `/he/nav_cmd_vel` has publishers. The integrated shadow stack can be started

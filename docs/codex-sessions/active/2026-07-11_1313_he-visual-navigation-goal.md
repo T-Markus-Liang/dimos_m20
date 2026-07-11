@@ -328,6 +328,17 @@ health while keeping real motion disconnected.
   or SIGKILL. No process or port remained. Restored `he-dimos-sense` active with
   zero restarts; live sensor quality and independent read-only gates passed,
   with zero navigation publishers.
+- Audited the remaining map persistence gap. The runner previously treated an
+  explicit old database as incremental mapping, preserving the known graph
+  fatal risk after visual odometry reset.
+- Added explicit `mapping` and `localization` contracts. Mapping refuses an
+  existing explicit database. Localization requires an existing non-empty
+  readable database and forces non-incremental, all-nodes, read-only operation
+  without saving localization data.
+- Added a ROS-independent mode validator and fail-closed tests for invalid
+  modes, missing/empty localization databases and unsafe mapping reuse. All 40
+  HE tests, Ruff, Bash syntax and `git diff --check` pass on the VM; Orin static
+  map creation and same-scene read-only reload are pending.
 
 ## Decisions
 
@@ -379,27 +390,31 @@ health while keeping real motion disconnected.
 - Native child cleanup, lifecycle order, host RPC-client cleanup and non-parent
   worker waits are fixed and verified on Orin. Normal stop completes inside the
   CLI SIGTERM grace with one shutdown round, no error and no residue.
+- The map-load contract is implemented and VM-tested. It is not yet promoted
+  to proven relocalization; Orin same-scene static reload is the next gate.
 
 ## Resume Instructions
 
 1. Read this log, ADR-001 and the final shadow soak evidence.
-2. Run a static matte-target and camera pitch/height experiment to separate
+2. Deploy and run the mapping-to-read-only-localization static reload test on
+   Orin, preserving database hash/size, node counts, output and failure logs.
+3. Run a static matte-target and camera pitch/height experiment to separate
    floor reflectivity/grazing-angle effects from sensor defects.
-3. Evaluate a controlled move from the shared USB 2.0 hub to the available
+4. Evaluate a controlled move from the shared USB 2.0 hub to the available
    10Gbps root port if physical access is approved.
-4. Escalate firmware 2.0.8/SDK 1.1.22 evidence to the vendor if target coverage
+5. Escalate firmware 2.0.8/SDK 1.1.22 evidence to the vendor if target coverage
    remains abnormal, requesting optical specifications and the documented
    `SupportedInfo.depth_range` interpretation.
-5. Use the new nominal-extrinsics audit to plan physical camera-to-base and
+6. Use the new nominal-extrinsics audit to plan physical camera-to-base and
    camera-to-IMU calibration; do not promote the nominal values to calibrated.
-6. Keep public benchmark tables source-scoped and update them only when a new
+7. Keep public benchmark tables source-scoped and update them only when a new
    candidate has code, license, runtime and deployability evidence.
-7. After a new vehicle-down confirmation, record moving, loop-closure and
+8. After a new vehicle-down confirmation, record moving, loop-closure and
    relocalization datasets and decide whether RTAB-Map can graduate beyond the
    shadow baseline.
-8. Preserve the verified normal shadow shutdown path; do not replace it with
+9. Preserve the verified normal shadow shutdown path; do not replace it with
    `--force` in deployment procedures.
-9. Do not enable motion or restore LD19.
+10. Do not enable motion or restore LD19.
 
 ## Open Questions
 

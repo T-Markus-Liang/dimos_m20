@@ -973,8 +973,22 @@ shadow baseline，但不代表真实导航获批。架构决策和替代方案�
 
 测试发现不能在视觉 odom 每次归零的同时默认恢复旧 incremental database；该
 组合触发了 RTAB-Map `Memory::addLink()` fatal。runner 已改为默认创建时间戳数据库、
-最多保留 5 份、单实例锁、`wait -n` 子进程回收和 parent-death cleanup。只有显式
-设置 `HE_RTABMAP_DB` 才允许恢复数据库，且恢复前必须另行完成重定位设计。
+最多保留 5 份、单实例锁、`wait -n` 子进程回收和 parent-death cleanup。现在模式
+契约为 fail-closed：`mapping` 拒绝任何已存在的显式数据库；`localization` 必须指定
+已存在、非空且可读的 `HE_RTABMAP_DB`，并强制
+`Mem/IncrementalMemory=false`、`Mem/InitWMWithAllNodes=true`、
+`Mem/LocalizationReadOnly=true` 和 `Mem/LocalizationDataSaved=false`。这只建立安全的
+地图加载链路；静止同场景重载、异地启动和移动重定位必须分别验证。
+
+```bash
+# 新建 mapping database，目标路径必须不存在
+HE_RTABMAP_MODE=mapping HE_RTABMAP_DB=/var/tmp/he-rtabmap/he-map-new.db \
+  .venv/bin/dimos run he-visual-slam-shadow --daemon
+
+# 只读加载已有 map database
+HE_RTABMAP_MODE=localization HE_RTABMAP_DB=/var/tmp/he-rtabmap/he-map.db \
+  .venv/bin/dimos run he-visual-slam-shadow --daemon
+```
 
 OccupancyGrid 是 latched/event-driven，静止时不重发不代表地图失效。因此 map age
 默认作为诊断值，不直接阻断 health；需要该门时可显式设置 `max_map_age_s`。pose、

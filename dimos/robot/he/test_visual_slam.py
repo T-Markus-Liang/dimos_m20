@@ -221,6 +221,54 @@ class TestHEVisualMapAdapter(unittest.TestCase):
 
 
 class TestHERTABMapRuntimeBounds(unittest.TestCase):
+    def mode_check(self, env: dict[str, str] | None = None):
+        clean_env = os.environ.copy()
+        clean_env.pop("HE_RTABMAP_MODE", None)
+        clean_env.pop("HE_RTABMAP_DB", None)
+        if env:
+            clean_env.update(env)
+        return subprocess.run(
+            [DEPLOYMENT_DIR / "run-he-rtabmap-shadow.sh", "--check-mode"],
+            capture_output=True,
+            check=False,
+            env=clean_env,
+            text=True,
+            timeout=3,
+        )
+
+    def test_shadow_modes_fail_closed_on_database_reuse(self) -> None:
+        default = self.mode_check()
+        self.assertEqual(default.returncode, 0, default.stderr)
+        self.assertIn("mode: mapping", default.stdout)
+        self.assertIn("IncrementalMemory:=true", default.stdout)
+
+        self.assertEqual(self.mode_check({"HE_RTABMAP_MODE": "invalid"}).returncode, 2)
+        self.assertEqual(self.mode_check({"HE_RTABMAP_MODE": "localization"}).returncode, 2)
+
+        with tempfile.TemporaryDirectory() as directory:
+            database = Path(directory) / "map.db"
+            new_mapping = self.mode_check({"HE_RTABMAP_DB": str(database)})
+            self.assertEqual(new_mapping.returncode, 0, new_mapping.stderr)
+
+            database.touch()
+            mapping = self.mode_check({"HE_RTABMAP_DB": str(database)})
+            self.assertEqual(mapping.returncode, 2)
+
+            empty_localization = self.mode_check(
+                {"HE_RTABMAP_MODE": "localization", "HE_RTABMAP_DB": str(database)}
+            )
+            self.assertEqual(empty_localization.returncode, 2)
+
+            database.write_bytes(b"database")
+            localization = self.mode_check(
+                {"HE_RTABMAP_MODE": "localization", "HE_RTABMAP_DB": str(database)}
+            )
+            self.assertEqual(localization.returncode, 0, localization.stderr)
+            self.assertIn("IncrementalMemory:=false", localization.stdout)
+            self.assertIn("InitWMWithAllNodes:=true", localization.stdout)
+            self.assertIn("LocalizationReadOnly:=true", localization.stdout)
+            self.assertIn("LocalizationDataSaved:=false", localization.stdout)
+
     def watchdog(self, *args: str, env: dict[str, str] | None = None):
         clean_env = os.environ.copy()
         clean_env.pop("HE_RTABMAP_MAX_DB_MIB", None)

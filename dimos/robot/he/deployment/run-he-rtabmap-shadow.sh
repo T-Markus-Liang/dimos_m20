@@ -5,6 +5,58 @@ repo_root=$(cd "$(dirname "${BASH_SOURCE[0]}")/../../../.." && pwd)
 config="$repo_root/dimos/robot/he/deployment/he-rtabmap-shadow.yaml"
 watchdog_binary="$repo_root/dimos/robot/he/deployment/he-rtabmap-db-watchdog.sh"
 database_dir=/var/tmp/he-rtabmap
+mode=${HE_RTABMAP_MODE:-mapping}
+database=${HE_RTABMAP_DB:-}
+
+validate_mode() {
+  case "$mode" in
+    mapping)
+      if [[ -n "$database" && -e "$database" ]]; then
+        echo "Refusing incremental mapping with an existing HE_RTABMAP_DB" >&2
+        return 2
+      fi
+      ;;
+    localization)
+      if [[ -z "$database" ]]; then
+        echo "HE_RTABMAP_DB is required in localization mode" >&2
+        return 2
+      fi
+      if [[ ! -f "$database" || ! -s "$database" || ! -r "$database" ]]; then
+        echo "Localization database must be an existing, non-empty readable file" >&2
+        return 2
+      fi
+      ;;
+    *)
+      echo "HE_RTABMAP_MODE must be mapping or localization" >&2
+      return 2
+      ;;
+  esac
+}
+
+validate_mode
+
+if [[ "$mode" == localization ]]; then
+  rtabmap_mode_args=(
+    -p 'Mem/IncrementalMemory:=false'
+    -p 'Mem/InitWMWithAllNodes:=true'
+    -p 'Mem/LocalizationReadOnly:=true'
+    -p 'Mem/LocalizationDataSaved:=false'
+  )
+else
+  rtabmap_mode_args=(
+    -p 'Mem/IncrementalMemory:=true'
+    -p 'Mem/InitWMWithAllNodes:=false'
+    -p 'Mem/LocalizationReadOnly:=false'
+    -p 'Mem/LocalizationDataSaved:=false'
+  )
+fi
+
+if [[ "${1:-}" == --check-mode ]]; then
+  echo "HE RTAB-Map mode: $mode"
+  echo "HE RTAB-Map database: ${database:-<auto-new>}"
+  echo "HE RTAB-Map parameter overrides: ${rtabmap_mode_args[*]}"
+  exit 0
+fi
 
 source /opt/ros/humble/setup.bash
 source /home/ubuntu/ros2_ws/install/setup.bash
@@ -32,6 +84,7 @@ fi
 
 if [[ "${1:-}" == --check ]]; then
   echo "HE RTAB-Map shadow configuration: PASS"
+  echo "Mode: $mode"
   echo "Motion output: disabled"
   exit 0
 fi
@@ -49,9 +102,7 @@ if pgrep -f "$odom_binary.*he-rtabmap-shadow.yaml|$slam_binary.*he-rtabmap-shado
   exit 1
 fi
 
-if [[ -n "${HE_RTABMAP_DB:-}" ]]; then
-  database=$HE_RTABMAP_DB
-else
+if [[ -z "$database" ]]; then
   database="$database_dir/rtabmap-$(date +%Y%m%d-%H%M%S).db"
   mapfile -t expired_databases < <(
     find "$database_dir" -maxdepth 1 -type f -name 'rtabmap-*.db' \
@@ -61,8 +112,12 @@ else
     rm -f -- "${expired_databases[@]}"
   fi
 fi
-mkdir -p "$(dirname "$database")"
+validate_mode
+if [[ "$mode" == mapping ]]; then
+  mkdir -p "$(dirname "$database")"
+fi
 ulimit -c 0
+echo "HE RTAB-Map mode: $mode"
 echo "HE RTAB-Map database: $database"
 
 "$odom_binary" --ros-args \
@@ -77,6 +132,7 @@ odom_pid=$!
 "$slam_binary" --ros-args \
   --params-file "$config" \
   -p database_path:="$database" \
+  "${rtabmap_mode_args[@]}" \
   -r rgb/image:=/aurora/rgb/image_raw \
   -r depth/image:=/aurora/depth/image_raw \
   -r rgb/camera_info:=/aurora/rgb/camera_info \

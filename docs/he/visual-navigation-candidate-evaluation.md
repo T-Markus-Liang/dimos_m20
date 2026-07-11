@@ -211,5 +211,8 @@ The integrated DimOS soak is recorded in
 `docs/he/evidence/2026-07-11_1448_dimos-shadow-soak.md`. It confirmed bounded
 runtime resources and fail-closed health, and it also found that blindly
 resuming an incremental database after visual odometry resets can crash
-RTAB-Map. The default runner now starts a fresh bounded database; map resume is
-deferred until an explicit relocalization workflow exists.
+RTAB-Map. The default runner starts a fresh bounded database. Explicit
+`localization` mode now loads only an existing non-empty database with
+incremental memory disabled, all saved nodes initialized and the database
+opened read-only. Static same-scene reload and later moving/displaced-start
+relocalization evidence must remain separate.
