@@ -10,6 +10,8 @@ output=$1
 repo=/home/ubuntu/he/dimos_wd_m20
 sdk=/home/ubuntu/third_party/aurora_ws/src/deptrum-ros-driver-aurora930-0.2.11/ext/deptrum-stream-aurora900-linux-aarch64-v1.1.22-18.04
 binary=/tmp/he-aurora-sdk-probe
+sdk_stdout=/tmp/he-aurora-sdk-probe.$$.stdout
+sdk_stderr=/tmp/he-aurora-sdk-probe.$$.stderr
 restored=false
 
 set +u
@@ -25,7 +27,7 @@ restore_service() {
     sleep 0.25
   done
   systemctl is-active --quiet aurora930.service
-  sleep 5
+  sleep 10
   restored=true
 }
 
@@ -37,7 +39,7 @@ on_exit() {
   .venv/bin/python dimos/robot/he/deployment/verify-he-sensors.py \
     --image-samples 5 --pointcloud-samples 2 --timeout 15 || status=$?
   bash dimos/robot/he/deployment/verify-he-readonly.sh || status=$?
-  rm -f "$binary"
+  rm -f "$binary" "$sdk_stdout" "$sdk_stderr"
   exit "$status"
 }
 trap on_exit EXIT INT TERM
@@ -60,9 +62,20 @@ if pgrep -f '/aurora930_node|ros2 launch.*aurora930_launch.py' >/dev/null; then
   exit 1
 fi
 
-timeout 20 "$binary" "$output" >"${output%.json}.sdk.stdout" \
-  2>"${output%.json}.sdk.stderr"
+timeout 20 "$binary" "$output" >"$sdk_stdout" 2>"$sdk_stderr"
 python3 -m json.tool "$output" >/dev/null
+python3 - "$output" "$(git rev-parse HEAD)" <<'PY'
+import json
+from pathlib import Path
+import sys
+import time
+
+path = Path(sys.argv[1])
+report = json.loads(path.read_text())
+report["captured_at"] = time.strftime("%Y-%m-%dT%H:%M:%S%z")
+report["git_head"] = sys.argv[2]
+path.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
+PY
 
 restore_service
 .venv/bin/python dimos/robot/he/deployment/verify-he-sensors.py \
@@ -70,5 +83,5 @@ restore_service
 bash dimos/robot/he/deployment/verify-he-readonly.sh
 
 trap - EXIT INT TERM
-rm -f "$binary"
+rm -f "$binary" "$sdk_stdout" "$sdk_stderr"
 printf 'Aurora SDK read-only probe complete: %s\n' "$output"

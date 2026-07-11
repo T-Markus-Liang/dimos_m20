@@ -66,6 +66,23 @@ void PrintArray(std::ostream& output, const T (&values)[Size]) {
   output << ']';
 }
 
+template <typename T>
+void PrintNullable(std::ostream& output, int status, const T& value) {
+  if (status == 0) {
+    output << value;
+  } else {
+    output << "null";
+  }
+}
+
+void PrintNullableString(std::ostream& output, int status, const std::string& value) {
+  if (status == 0) {
+    output << '"' << JsonEscape(value) << '"';
+  } else {
+    output << "null";
+  }
+}
+
 }  // namespace
 
 int main(int argc, char** argv) {
@@ -140,60 +157,84 @@ int main(int argc, char** argv) {
     return 7;
   }
   report << std::setprecision(9);
-  report << "{\n"
-            << "  \"device_count\": 1,\n"
-            << "  \"sdk_version\": \"" << JsonEscape(sdk_version) << "\",\n"
-            << "  \"device_name\": \"" << JsonEscape(description.device_name) << "\",\n"
-            << "  \"stream_sdk_version\": \""
-            << JsonEscape(description.stream_sdk_version) << "\",\n"
-            << "  \"rgb_firmware_version\": \""
-            << JsonEscape(description.rgb_firmware_version) << "\",\n"
-            << "  \"ir_firmware_version\": \""
-            << JsonEscape(description.ir_firmware_version) << "\",\n"
-            << "  \"vid\": " << description.vid << ",\n"
-            << "  \"pid\": " << description.pid << ",\n"
-            << "  \"return_codes\": {\n"
-            << "    \"device_info\": " << device_info_status << ",\n"
-            << "    \"support_info\": " << support_status << ",\n"
-            << "    \"camera_parameters\": " << parameters_status << ",\n"
-            << "    \"camera_temperature\": " << camera_temperature_status << ",\n"
-            << "    \"vcsel_temperature\": " << vcsel_temperature_status << ",\n"
-            << "    \"cpu_temperature\": " << cpu_temperature_status << ",\n"
-            << "    \"laser_current\": " << laser_current_status << ",\n"
-            << "    \"close\": " << close_status << "\n"
-            << "  },\n"
-            << "  \"support\": {\n"
-            << "    \"scan_face_mode\": " << static_cast<int>(support.scan_face_mode) << ",\n"
-            << "    \"scan_code_mode\": " << static_cast<int>(support.scan_code_mode) << ",\n"
-            << "    \"running_7x24_hours\": "
-            << static_cast<int>(support.running_7x24_hours) << ",\n"
-            << "    \"secure_encryption\": " << static_cast<int>(support.is_support_se) << ",\n"
-            << "    \"synced_two_images\": "
-            << static_cast<int>(support.is_support_synced_2_img) << ",\n"
-            << "    \"depth_range_length\": " << support.depth_range.data_len << ",\n"
-            << "    \"depth_range_hex\": \"" << DataHex(support.depth_range) << "\",\n"
-            << "    \"depth_range_ascii\": \""
-            << JsonEscape(DataAscii(support.depth_range)) << "\"\n"
-            << "  },\n"
-            << "  \"temperature_raw\": {\"camera\": " << camera_temperature
-            << ", \"vcsel\": " << vcsel_temperature << ", \"cpu\": "
-            << cpu_temperature << "},\n"
-            << "  \"laser_current_ma\": " << laser_current_ma << ",\n"
-            << "  \"ir_intrinsic\": {\"rows\": " << ir_intrinsic.rows
-            << ", \"cols\": " << ir_intrinsic.cols << ", \"focal_length\": ";
-  PrintArray(report, ir_intrinsic.focal_length);
-  report << ", \"principal_point\": ";
-  PrintArray(report, ir_intrinsic.principal_point);
-  report << "},\n  \"rgb_intrinsic\": {\"rows\": " << rgb_intrinsic.rows
-            << ", \"cols\": " << rgb_intrinsic.cols << ", \"focal_length\": ";
-  PrintArray(report, rgb_intrinsic.focal_length);
-  report << ", \"principal_point\": ";
-  PrintArray(report, rgb_intrinsic.principal_point);
-  report << "},\n  \"rgb_to_ir_extrinsic\": {\"rotation_row_major\": ";
-  PrintArray(report, rgb_to_ir.rotation_matrix);
-  report << ", \"translation_mm\": ";
-  PrintArray(report, rgb_to_ir.translation_vector);
-  report << "}\n}\n";
+  report << "{\n  \"device_count\": 1,\n  \"sdk_version\": \""
+         << JsonEscape(sdk_version) << "\",\n  \"device_name\": ";
+  PrintNullableString(report, device_info_status, description.device_name);
+  report << ",\n  \"stream_sdk_version\": ";
+  PrintNullableString(report, device_info_status, description.stream_sdk_version);
+  report << ",\n  \"rgb_firmware_version\": ";
+  PrintNullableString(report, device_info_status, description.rgb_firmware_version);
+  report << ",\n  \"ir_firmware_version\": ";
+  PrintNullableString(report, device_info_status, description.ir_firmware_version);
+  report << ",\n  \"vid\": ";
+  PrintNullable(report, device_info_status, description.vid);
+  report << ",\n  \"pid\": ";
+  PrintNullable(report, device_info_status, description.pid);
+  report << ",\n  \"return_codes\": {\n"
+         << "    \"device_info\": " << device_info_status << ",\n"
+         << "    \"support_info\": " << support_status << ",\n"
+         << "    \"camera_parameters\": " << parameters_status << ",\n"
+         << "    \"camera_temperature\": " << camera_temperature_status << ",\n"
+         << "    \"vcsel_temperature\": " << vcsel_temperature_status << ",\n"
+         << "    \"cpu_temperature\": " << cpu_temperature_status << ",\n"
+         << "    \"laser_current\": " << laser_current_status << ",\n"
+         << "    \"close\": " << close_status << "\n  },\n  \"support\": ";
+  if (support_status == 0) {
+    report << "{\n    \"scan_face_mode\": " << static_cast<int>(support.scan_face_mode)
+           << ",\n    \"scan_code_mode\": " << static_cast<int>(support.scan_code_mode)
+           << ",\n    \"running_7x24_hours\": "
+           << static_cast<int>(support.running_7x24_hours)
+           << ",\n    \"secure_encryption\": " << static_cast<int>(support.is_support_se)
+           << ",\n    \"synced_two_images\": "
+           << static_cast<int>(support.is_support_synced_2_img)
+           << ",\n    \"depth_range_length\": " << support.depth_range.data_len
+           << ",\n    \"depth_range_hex\": \"" << DataHex(support.depth_range)
+           << "\",\n    \"depth_range_ascii\": \""
+           << JsonEscape(DataAscii(support.depth_range)) << "\"\n  }";
+  } else {
+    report << "null";
+  }
+  report << ",\n  \"temperature_raw\": {\"camera\": ";
+  PrintNullable(report, camera_temperature_status, camera_temperature);
+  report << ", \"vcsel\": ";
+  PrintNullable(report, vcsel_temperature_status, vcsel_temperature);
+  report << ", \"cpu\": ";
+  PrintNullable(report, cpu_temperature_status, cpu_temperature);
+  report << "},\n  \"laser_current_ma\": ";
+  PrintNullable(report, laser_current_status, laser_current_ma);
+  report << ",\n  \"ir_intrinsic\": ";
+  if (parameters_status == 0) {
+    report << "{\"rows\": " << ir_intrinsic.rows << ", \"cols\": " << ir_intrinsic.cols
+           << ", \"focal_length\": ";
+    PrintArray(report, ir_intrinsic.focal_length);
+    report << ", \"principal_point\": ";
+    PrintArray(report, ir_intrinsic.principal_point);
+    report << '}';
+  } else {
+    report << "null";
+  }
+  report << ",\n  \"rgb_intrinsic\": ";
+  if (parameters_status == 0) {
+    report << "{\"rows\": " << rgb_intrinsic.rows << ", \"cols\": "
+           << rgb_intrinsic.cols << ", \"focal_length\": ";
+    PrintArray(report, rgb_intrinsic.focal_length);
+    report << ", \"principal_point\": ";
+    PrintArray(report, rgb_intrinsic.principal_point);
+    report << '}';
+  } else {
+    report << "null";
+  }
+  report << ",\n  \"rgb_to_ir_extrinsic\": ";
+  if (parameters_status == 0) {
+    report << "{\"rotation_row_major\": ";
+    PrintArray(report, rgb_to_ir.rotation_matrix);
+    report << ", \"translation_mm\": ";
+    PrintArray(report, rgb_to_ir.translation_vector);
+    report << '}';
+  } else {
+    report << "null";
+  }
+  report << "\n}\n";
 
   return close_status == 0 ? 0 : 6;
 }

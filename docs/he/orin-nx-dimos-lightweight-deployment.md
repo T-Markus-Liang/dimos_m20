@@ -1413,4 +1413,16 @@ code、depth-range 长度/hex/可打印文本、三类 temperature raw value、l
 SDK/firmware 版本和设备内部 RGB/IR 标定。`run-he-aurora-sdk-probe.sh` 在停服务前完成
 编译和 read-only gate，使用 EXIT trap 恢复 canonical Aurora service，并在结束后运行
 live sensor/read-only gates。VM 已用真实 1.1.22 header 通过 `-Werror` 编译，runner
-Bash syntax 通过；Orin live probe 尚待执行。
+Bash syntax 通过。
+
+首轮 Orin live probe 证明 `GetSupportInfo` 无需 stream/SetMode 即成功：设备返回 6 字节
+ASCII `0.3~1m`（hex `30 2e 33 7e 31 6d`）、`running_7x24_hours=1`、
+`synced_two_images=0`；三类 temperature raw value 为 camera/VCSEL/CPU
+65/63/70，laser current 为 1450mA。该设备声明范围明显窄于 150-4000mm 软件过滤
+窗口，后者不能继续作为硬件额定量程使用。
+
+同次调用中 `GetDeviceInfo/GetCameraParameters` 返回 `-1`，SDK stderr 明确要求先成功
+调用 `Open + SetMode`。getter-only 探针不为此调用 SetMode；修复版对失败 getter 输出
+`null`，不再序列化未初始化字段，并将含设备 serial 的 SDK stdout/stderr 限制在临时
+文件且退出时删除。首轮最终 read-only gate 还观察到旧 DDS publisher 短暂残留，EXIT
+trap 的下一轮 gate 已通过；恢复等待从 5 秒增至 10 秒。修复版 Orin rerun 待完成。

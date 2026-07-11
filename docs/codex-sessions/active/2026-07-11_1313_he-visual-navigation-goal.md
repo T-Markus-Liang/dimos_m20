@@ -518,6 +518,16 @@ health while keeping real motion disconnected.
   against the real SDK headers with `-Werror`, Bash syntax and diff checks pass
   on the VM. All 50 HE tests and an explicit SDK method-call safety audit also
   pass; live Orin evidence is pending.
+- The first Orin probe returned vendor depth range `0.3~1m`, 7x24 support,
+  no synced-two-image support, raw camera/VCSEL/CPU temperatures 65/63/70 and
+  1450mA laser current. This proves the configured 150-4000mm filter is not the
+  device-rated range.
+- `GetDeviceInfo` and `GetCameraParameters` returned `-1` because the SDK
+  requires `SetMode`; the getter-only contract remains stricter and those
+  outputs must be null. Fixed failed-getter serialization, moved SDK logs with
+  serial data to exit-cleaned temporary files, and increased DDS convergence
+  wait from five to ten seconds after the first final gate saw a stale endpoint.
+  The EXIT-trap gate passed; a clean main-path rerun is pending.
 
 ## Decisions
 
