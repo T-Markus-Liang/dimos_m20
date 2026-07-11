@@ -49,8 +49,6 @@ class AuroraDiagnostic(Node):
             )
 
     def _on_message(self, stream: str, message: Any) -> None:
-        if len(self.stamps[stream]) >= self.samples:
-            return
         self.stamps[stream].append(stamp_seconds(message))
         self.frames[stream] = message.header.frame_id
         if stream == "depth":

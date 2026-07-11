@@ -42,6 +42,13 @@ health while keeping real motion disconnected.
   VINS-Fusion, DPVO, DROID-SLAM, MASt3R-SLAM and DINOv3.
 - Drafted a unified candidate evaluation ledger plus ROS-independent depth and
   timestamp helpers, tests, an Aurora diagnostic CLI and bounded rosbag recorder.
+- Committed and pushed the first qualification workflow as `6418c0fe`; Orin
+  fast-forwarded to it and all 13 HE tests passed there.
+- The first live diagnostic measured about 20.6% global and 15.8% center depth
+  validity with especially sparse lower image tiles. Its initial IMU offset was
+  invalid because the faster IMU series stopped collecting before the RGB
+  window ended; fixed the tool to retain the full overlapping window and ignore
+  unmatched timestamp edges before drawing a hardware conclusion.
 
 ## Decisions
 
@@ -59,8 +66,9 @@ health while keeping real motion disconnected.
 ## Current State
 
 - Static safety and sensor service baseline are re-verified.
-- Candidate matrix and visual data tools are staged for VM validation; no
-  visual SLAM package has been installed or selected yet.
+- Candidate matrix and visual data tools are committed and synchronized; the
+  corrected live timing rerun is in progress. No visual SLAM package has been
+  installed or selected yet.
 - Aurora depth coverage and spatial-temporal qualification remain open gates.
 
 ## Resume Instructions

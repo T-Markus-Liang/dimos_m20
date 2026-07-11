@@ -122,4 +122,6 @@ bash dimos/robot/he/deployment/record-he-visual-dataset.sh --dry-run
 The diagnostic reports per-topic rate, RGB-nearest timestamp offset for depth,
 IR, point cloud and IMU, depth center coverage, a 3x3 valid-depth grid and valid
 range percentiles. It does not label the sensor as synchronized merely because
-messages arrived at similar rates.
+messages arrived at similar rates. Timestamp statistics use only the overlap
+between streams, so a faster stream ending before the reference window cannot
+inflate the reported edge offset.

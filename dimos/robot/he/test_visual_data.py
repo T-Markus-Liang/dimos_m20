@@ -12,8 +12,15 @@ class TestHEVisualData(unittest.TestCase):
     def test_timestamp_alignment_uses_nearest_samples(self) -> None:
         metrics = timestamp_alignment([1.0, 2.0, 3.0], [0.99, 2.02, 3.01])
         self.assertEqual(metrics["pairs"], 3)
+        self.assertEqual(metrics["reference_samples"], 3)
         self.assertAlmostEqual(metrics["absolute_median_ms"], 10.0)
         self.assertAlmostEqual(topic_rate([0.0, 0.1, 0.2]), 10.0)
+
+    def test_timestamp_alignment_ignores_non_overlapping_edges(self) -> None:
+        metrics = timestamp_alignment([0.0, 1.0, 2.0, 3.0], [0.99, 2.01])
+        self.assertEqual(metrics["reference_samples"], 4)
+        self.assertEqual(metrics["pairs"], 2)
+        self.assertAlmostEqual(metrics["absolute_median_ms"], 10.0)
 
     def test_depth_array_handles_padding(self) -> None:
         rows = np.array([[0, 100, 0xFFFF], [150, 4000, 0xFFFF]], dtype="<u2")

@@ -27,6 +27,8 @@ def timestamp_alignment(reference: list[float], candidate: list[float]) -> dict[
     ordered = np.asarray(sorted(candidate), dtype=np.float64)
     signed_offsets: list[float] = []
     for stamp in reference:
+        if stamp < ordered[0] or stamp > ordered[-1]:
+            continue
         index = int(np.searchsorted(ordered, stamp))
         choices = []
         if index < len(ordered):
@@ -34,10 +36,13 @@ def timestamp_alignment(reference: list[float], candidate: list[float]) -> dict[
         if index:
             choices.append(float(ordered[index - 1] - stamp))
         signed_offsets.append(min(choices, key=abs))
+    if not signed_offsets:
+        raise ValueError("timestamp series do not overlap")
     offsets_ms = np.asarray(signed_offsets, dtype=np.float64) * 1000.0
     absolute_ms = np.abs(offsets_ms)
     return {
         "pairs": len(offsets_ms),
+        "reference_samples": len(reference),
         "signed_median_ms": float(np.median(offsets_ms)),
         "absolute_median_ms": float(np.median(absolute_ms)),
         "absolute_p95_ms": float(np.percentile(absolute_ms, 95)),
