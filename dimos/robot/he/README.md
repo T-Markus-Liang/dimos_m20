@@ -53,7 +53,23 @@ Run the bridge conversion tests with:
 
 ```bash
 .venv/bin/python -m unittest -v \
-  dimos.robot.he.test_connection dimos.robot.he.test_sensors
+  dimos.robot.he.test_connection dimos.robot.he.test_sensors \
+  dimos.robot.he.test_visual_data
+```
+
+Collect a bounded SLAM-input diagnostic without enabling motion:
+
+```bash
+.venv/bin/python dimos/robot/he/deployment/diagnose-he-aurora.py \
+  --samples 30 --timeout 15 --output /tmp/he-aurora-diagnostic.json
+```
+
+Preview or make a time-bounded raw dataset recording:
+
+```bash
+bash dimos/robot/he/deployment/record-he-visual-dataset.sh --dry-run
+bash dimos/robot/he/deployment/record-he-visual-dataset.sh \
+  --duration 10 --label static
 ```
 
 See [Chassis characterization](docs/chassis-characterization-2026-07-11.md) for
@@ -64,3 +80,5 @@ changing camera/point-cloud rates or adding a full-rate perception pipeline.
 
 The version-controlled deployment plan is
 [Orin NX lightweight deployment](../../../docs/he/orin-nx-dimos-lightweight-deployment.md).
+The visual SLAM evidence ledger and pilot order are in
+[visual navigation candidate evaluation](../../../docs/he/visual-navigation-candidate-evaluation.md).

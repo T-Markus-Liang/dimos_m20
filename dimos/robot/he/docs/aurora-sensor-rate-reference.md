@@ -50,8 +50,9 @@ Rerun retains latest-only entities in a 256MB recording window.
   internal multicast traffic was not exported at its local data rate.
 - `he-dimos-sense` stabilized around 1008-1020MiB with `NRestarts=0`.
 - The service limits remain `MemoryHigh=1GiB` and `MemoryMax=1.25GiB`.
-- The current depth frame had only about 17.6-17.7% nonzero pixels. Increasing
-  frame rate does not fix this coverage problem.
+- Depth validity has ranged from about 17.6% to 20.4% in static checks.
+  Increasing frame rate does not fix this coverage problem. Global validity
+  alone is insufficient; the center ROI and 3x3 spatial distribution must pass.
 
 ## Algorithm Guidance
 
@@ -109,3 +110,16 @@ bash dimos/robot/he/deployment/verify-he-readonly.sh
 systemctl show he-dimos-sense.service \
   -p MemoryCurrent -p MemoryPeak -p MemoryHigh -p MemoryMax -p NRestarts
 ```
+
+SLAM admission diagnostic and bounded recording:
+
+```bash
+.venv/bin/python dimos/robot/he/deployment/diagnose-he-aurora.py \
+  --samples 30 --timeout 15 --output /tmp/he-aurora-diagnostic.json
+bash dimos/robot/he/deployment/record-he-visual-dataset.sh --dry-run
+```
+
+The diagnostic reports per-topic rate, RGB-nearest timestamp offset for depth,
+IR, point cloud and IMU, depth center coverage, a 3x3 valid-depth grid and valid
+range percentiles. It does not label the sensor as synchronized merely because
+messages arrived at similar rates.

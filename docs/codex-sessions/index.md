@@ -1,9 +1,10 @@
 # Codex Sessions
 
-Last updated: 2026-07-11 12:53 CST
+Last updated: 2026-07-11 14:00 CST
 
 ## Active
 
+- [2026-07-11_1313_he-visual-navigation-goal.md](/home/markus/work/dimos_wd_m20/docs/codex-sessions/active/2026-07-11_1313_he-visual-navigation-goal.md)
 - [2026-07-11_0010_he-orin-deployment-plan.md](/home/markus/work/dimos_wd_m20/docs/codex-sessions/active/2026-07-11_0010_he-orin-deployment-plan.md)
 
 ## Completed

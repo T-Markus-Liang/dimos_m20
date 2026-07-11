@@ -887,3 +887,33 @@ multicast 没有把该带宽外发到无线网络。
 部署完整性和前后只读门全部 PASS；`/he/nav_cmd_vel` 保持 0 个发布者，真实运动
 仍为 disabled。深度图有效像素比例本轮为 17.6%-17.7%，与此前异常一致，是
 视觉 SLAM 阶段的首个待解决问题，不能因为六路数据已经接通就宣称 RGB-D 定位可用。
+
+## 14. 视觉导航候选审计与数据准入（2026-07-11）
+
+视觉导航阶段已启动，但仍保持真实控制断开。统一候选矩阵、官方来源、DimOS
+内部分支审计和测试顺序集中记录在
+`docs/he/visual-navigation-candidate-evaluation.md`，避免把排行榜、不同数据集和
+HE 实测混为同一评分。
+
+当前优先测试顺序是：
+
+1. 先解决 Aurora 深度空间覆盖、RGB/depth/IR/point cloud/IMU 时间关系、内参、
+   camera-to-base 和 camera-to-IMU 外参；
+2. 第一硬件候选为 Isaac ROS Visual SLAM 的 RGB-D 模式，因为官方当前版本具备
+   Orin/ROS 2、RGB-D 测试、状态、地图保存/加载和重定位接口；
+3. RTAB-Map ROS 2 RGB-D 作为定位/稠密地图备选，并评估与首选位姿前端组合；
+4. OpenVINS 仅在相机/IMU 同步通过后作为轻量 VIO 备选；DPVO 作为离线 learned
+   comparator；DROID-SLAM 因官方要求至少 11GB GPU 内存不进入 NX 8GB 部署；
+5. DINOv3 只能作为地点识别、回环或重定位增强，不能代替几何位姿估计。
+
+仓库新增两项无运动工具：
+
+- `diagnose-he-aurora.py`：有界采样并输出跨模态最近时间戳偏差、帧率、深度中心
+  ROI、3x3 空间有效率和有效量程分位数；
+- `record-he-visual-dataset.sh`：默认 10 秒，录制原始 RGB/depth/IR/point cloud、
+  IMU、CameraInfo、TF、诊断和控制 topic，并生成 manifest 与 SHA-256。脚本拒绝
+  在剩余空间低于 8GiB 时运行，也不会发布控制命令。
+
+本阶段的静态录制可以在车辆抬起时进行。直线、转弯、矩形、大闭环、遮挡和
+重定位数据必须等待新的车辆落地现场安全确认。任何候选在没有 HE 数据和 Orin
+实测前都不能写入最终 ADR，也不能接入 `MovementManager` 或 `HEConnection`。

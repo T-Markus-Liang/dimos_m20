@@ -1,0 +1,78 @@
+# HE Visual Navigation Goal
+
+## Metadata
+
+- Date: 2026-07-11 13:13 CST
+- Session id: current Codex goal thread
+- Project: dimos-wd-m20
+- Workspace: VM `/home/markus/work/dimos_wd_m20`; Orin `/home/ubuntu/he/dimos_wd_m20`
+- Task: research, benchmark, select and integrate a visual SLAM navigation foundation for HE
+- Status: active - sensor admission tooling and candidate matrix implementation in progress
+- Branch if relevant: `codex/he-orin` from `e495dadb`
+
+## User Request Summary
+
+Build a vision-only HE navigation foundation using Aurora RGB/depth/IR/point
+cloud and IMU. Audit DimOS branches and current external SOTA candidates,
+benchmark them against HE and Orin constraints, select one main solution, and
+integrate a safe `he-visual-slam-shadow` stack with pose, map, TF and localization
+health while keeping real motion disconnected.
+
+## Work Done
+
+- Read the complete goal objective and canonical HE deployment/sensor context.
+- Confirmed VM and Orin are clean at `e495dadb` and the sensor service is active
+  with zero restarts.
+- Established a seven-step execution plan from baseline evidence through
+  internal/external candidate audit, HE benchmark tooling, ADR, shadow
+  integration and completion audit.
+- Re-ran the full Orin static closeout in a clean ROS 2 Humble shell. Deployment
+  integrity, 10 unit tests, isolated control dry-run, live sensors and both
+  read-only gates passed. Motion remained disabled.
+- Recorded current Orin evidence: `he-dimos-sense` 1006-1009MiB, zero restarts,
+  about 3.5GiB available memory, 579MiB zram use, GPU about 11%, temperature
+  about 59C and depth validity 20.4% in the latest check.
+- Audited isolated DimOS refs for ORB-SLAM3, RTAB-Map, SLAM evaluation, PGO,
+  relocalization, semantic mapping, visual-navigation sketches and learned
+  depth. The existing ORB wrapper has an incomplete input contract and known
+  transform defect; the existing RTAB module is an external-odometry map
+  backend rather than a complete Aurora visual frontend.
+- Gathered official repository, maintenance, license, platform and benchmark
+  scope evidence for Isaac ROS Visual SLAM, RTAB-Map, ORB-SLAM3, OpenVINS,
+  VINS-Fusion, DPVO, DROID-SLAM, MASt3R-SLAM and DINOv3.
+- Drafted a unified candidate evaluation ledger plus ROS-independent depth and
+  timestamp helpers, tests, an Aurora diagnostic CLI and bounded rosbag recorder.
+
+## Decisions
+
+- Preserve `HEConnection.enabled=False` and zero `/he/nav_cmd_vel` publishers
+  throughout research, benchmark and shadow integration.
+- Treat public leaderboard scores as supporting evidence only; HE data and Orin
+  runtime evidence decide the final selection.
+- Keep full-rate local algorithm inputs separate from bounded latest-only Rerun.
+- Pilot Isaac ROS Visual SLAM RGB-D first, with RTAB-Map as fallback/map
+  candidate. This is a test order, not final selection; HE/Orin evidence and
+  the ADR gate remain mandatory.
+- Exclude DROID-SLAM from Orin deployment because its current official README
+  requires at least 11GB GPU memory for inference.
+
+## Current State
+
+- Static safety and sensor service baseline are re-verified.
+- Candidate matrix and visual data tools are staged for VM validation; no
+  visual SLAM package has been installed or selected yet.
+- Aurora depth coverage and spatial-temporal qualification remain open gates.
+
+## Resume Instructions
+
+1. Read this log and the active plan.
+2. Validate and commit the staged visual data tools and candidate ledger.
+3. Run the diagnostic and bounded static recorder on Orin, preserving JSON and
+   dataset manifest evidence.
+4. Do not enable motion or restore LD19.
+
+## Open Questions
+
+- Can Aurora depth coverage and synchronization meet RGB-D/VIO prerequisites?
+- Does Isaac ROS RGB-D mode accept Aurora calibration/topics without a stereo
+  pair, and what is its measured NX 8GB resource cost?
