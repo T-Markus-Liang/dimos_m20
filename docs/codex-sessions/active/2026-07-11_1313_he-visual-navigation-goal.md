@@ -339,6 +339,15 @@ health while keeping real motion disconnected.
   modes, missing/empty localization databases and unsafe mapping reuse. All 40
   HE tests, Ruff, Bash syntax and `git diff --check` pass on the VM; Orin static
   map creation and same-scene read-only reload are pending.
+- The first Orin mapping launch rejected the overrides before map creation:
+  RTAB-Map declares `Mem/*` ROS parameters as strings, while the new argv used
+  bool scalars. The wrapper raised `InvalidParameterTypeException`; DimOS and
+  native children stopped normally, the sensor service was restored, and no
+  mapping database or motion publisher remained.
+- Confirmed with a bounded native 0.23.7 probe that explicitly quoted YAML
+  string scalars are accepted and enter SLAM mode. Updated all mode overrides
+  and tests to preserve the quotes. All 40 HE tests and static checks pass again;
+  clean Orin mapping/localization rerun is pending.
 
 ## Decisions
 

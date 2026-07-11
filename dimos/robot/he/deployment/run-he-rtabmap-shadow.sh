@@ -37,17 +37,17 @@ validate_mode
 
 if [[ "$mode" == localization ]]; then
   rtabmap_mode_args=(
-    -p 'Mem/IncrementalMemory:=false'
-    -p 'Mem/InitWMWithAllNodes:=true'
-    -p 'Mem/LocalizationReadOnly:=true'
-    -p 'Mem/LocalizationDataSaved:=false'
+    -p "Mem/IncrementalMemory:='false'"
+    -p "Mem/InitWMWithAllNodes:='true'"
+    -p "Mem/LocalizationReadOnly:='true'"
+    -p "Mem/LocalizationDataSaved:='false'"
   )
 else
   rtabmap_mode_args=(
-    -p 'Mem/IncrementalMemory:=true'
-    -p 'Mem/InitWMWithAllNodes:=false'
-    -p 'Mem/LocalizationReadOnly:=false'
-    -p 'Mem/LocalizationDataSaved:=false'
+    -p "Mem/IncrementalMemory:='true'"
+    -p "Mem/InitWMWithAllNodes:='false'"
+    -p "Mem/LocalizationReadOnly:='false'"
+    -p "Mem/LocalizationDataSaved:='false'"
   )
 fi
 

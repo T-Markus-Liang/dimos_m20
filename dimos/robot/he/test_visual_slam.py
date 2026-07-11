@@ -240,7 +240,7 @@ class TestHERTABMapRuntimeBounds(unittest.TestCase):
         default = self.mode_check()
         self.assertEqual(default.returncode, 0, default.stderr)
         self.assertIn("mode: mapping", default.stdout)
-        self.assertIn("IncrementalMemory:=true", default.stdout)
+        self.assertIn("IncrementalMemory:='true'", default.stdout)
 
         self.assertEqual(self.mode_check({"HE_RTABMAP_MODE": "invalid"}).returncode, 2)
         self.assertEqual(self.mode_check({"HE_RTABMAP_MODE": "localization"}).returncode, 2)
@@ -264,10 +264,10 @@ class TestHERTABMapRuntimeBounds(unittest.TestCase):
                 {"HE_RTABMAP_MODE": "localization", "HE_RTABMAP_DB": str(database)}
             )
             self.assertEqual(localization.returncode, 0, localization.stderr)
-            self.assertIn("IncrementalMemory:=false", localization.stdout)
-            self.assertIn("InitWMWithAllNodes:=true", localization.stdout)
-            self.assertIn("LocalizationReadOnly:=true", localization.stdout)
-            self.assertIn("LocalizationDataSaved:=false", localization.stdout)
+            self.assertIn("IncrementalMemory:='false'", localization.stdout)
+            self.assertIn("InitWMWithAllNodes:='true'", localization.stdout)
+            self.assertIn("LocalizationReadOnly:='true'", localization.stdout)
+            self.assertIn("LocalizationDataSaved:='false'", localization.stdout)
 
     def watchdog(self, *args: str, env: dict[str, str] | None = None):
         clean_env = os.environ.copy()

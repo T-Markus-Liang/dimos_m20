@@ -990,6 +990,12 @@ HE_RTABMAP_MODE=localization HE_RTABMAP_DB=/var/tmp/he-rtabmap/he-map.db \
   .venv/bin/dimos run he-visual-slam-shadow --daemon
 ```
 
+首次 Orin 部署发现 ROS wrapper 将 `Mem/*` 算法参数声明为 string，而不是 ROS bool。
+使用 `-p Mem/IncrementalMemory:=true` 会抛
+`InvalidParameterTypeException` 并在创建地图前退出。runner 已改为传递显式 YAML
+字符串标量（例如 `Mem/IncrementalMemory:='true'`）。原生 0.23.7 探针确认该形式被
+解析为 RTAB-Map 字符串参数并正常进入 SLAM mode；失败尝试没有生成可复用数据库。
+
 OccupancyGrid 是 latched/event-driven，静止时不重发不代表地图失效。因此 map age
 默认作为诊断值，不直接阻断 health；需要该门时可显式设置 `max_map_age_s`。pose、
 TF、tracking、inliers、latency、RSS 和地图质量仍为默认门禁。
