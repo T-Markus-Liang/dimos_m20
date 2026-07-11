@@ -285,6 +285,13 @@ health while keeping real motion disconnected.
 - Reordered only the shadow blueprint lifecycle: Rerun starts first/stops last,
   and the native runner starts last/stops first. This cuts visual producers
   before bridge shutdown; a focused order assertion preserves the contract.
+- The second normal stop still escalated after 6.971 seconds even though the
+  native runner was stopped first. Core audit found `RpcCall.stop()` synchronously
+  spent up to five seconds closing the caller's own LCM RPC backend after its
+  `call_nowait` publication.
+- Moved only caller-backend cleanup to a named daemon thread. A focused test
+  proves stop returns under 100ms while cleanup starts and later terminates.
+  Thirty-six related core lifecycle/CLI tests and all 39 HE tests pass on VM.
 
 ## Decisions
 
@@ -333,9 +340,9 @@ health while keeping real motion disconnected.
   first threshold-only deployment failed, while the corrected unlinked-node
   persistence setting passed a full 600-second Orin soak with about 99.0%
   lower database growth. The 256MiB hard watchdog remains enabled.
-- Native child cleanup is fixed and unit-tested. The first Orin stop exposed a
-  second Rerun RPC starvation issue; the lifecycle-order correction is tested on
-  the VM and still needs a second normal non-force Orin verification.
+- Native child cleanup and lifecycle order are fixed. The second Orin attempt
+  exposed synchronous host RPC-client cleanup as the remaining five-second
+  blocker; its async correction is tested on VM and needs final Orin proof.
 
 ## Resume Instructions
 

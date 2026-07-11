@@ -2,7 +2,7 @@
 
 Date: 2026-07-11 21:28 CST
 
-Status: child cleanup fixed; Rerun RPC starvation fix pending Orin verification
+Status: child and host RPC cleanup fixes pending final Orin verification
 
 ## Safety Scope
 
@@ -70,9 +70,26 @@ runner is now last started and first stopped, cutting the source before bridge
 shutdown. A blueprint-order test locks this lifecycle contract while retaining
 the same five motion-free modules and connections.
 
+That ordering deployed correctly, but the second normal stop still escalated in
+6.971 seconds. It did stop the native runner first as intended, so the remaining
+five-second delay could no longer be attributed to Rerun load or module order.
+
+Core inspection found the host-side defect. `RpcCall.stop()` correctly publishes
+the remote stop with `call_nowait`, because a module closes its own RPC service
+before it can reply. It then synchronously called `stop_rpc_client()`, whose
+local LCM service can spend the full five seconds joining its handler thread.
+The coordinator was blocking on shutdown of its own caller backend, not waiting
+for the remote module.
+
+The third fix preserves synchronous publication of the stop request but closes
+the caller backend on a named daemon thread. Exceptions remain logged. A core
+test deliberately blocks client cleanup and proves that the stop call returns
+in under 100ms, cleanup starts, and the thread exits after release. The related
+36 core lifecycle/CLI tests and all 39 HE tests pass.
+
 ## Required Orin Evidence
 
-After the ordering commit and fast-forward sync, start the motion-free shadow blueprint,
+After the core RPC commit and fast-forward sync, start the motion-free shadow blueprint,
 wait for both native processes and `/he/visual_odom`, then use normal
 `dimos stop` without `--force`. Record elapsed time and require:
 

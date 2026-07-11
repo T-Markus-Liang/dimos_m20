@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import asyncio
 from collections.abc import Callable
+import threading
 from typing import TYPE_CHECKING, Any, Protocol
 
 from dimos.core.coordination.python_worker import Actor, MethodCallProxy
@@ -70,7 +71,19 @@ class RpcCall:
         if self._name == "stop":
             self._rpc.call_nowait(f"{self._remote_name}/{self._name}", (args, kwargs))  # type: ignore[arg-type]
             if self._stop_rpc_client:
-                self._stop_rpc_client()
+                stop_client = self._stop_rpc_client
+
+                def close_client() -> None:
+                    try:
+                        stop_client()
+                    except Exception:
+                        logger.warning("Failed to close stop RPC client", exc_info=True)
+
+                threading.Thread(
+                    target=close_client,
+                    name=f"{self._remote_name}-stop-rpc-cleanup",
+                    daemon=True,
+                ).start()
             return None
 
         result, unsub_fn = self._rpc.call_sync(

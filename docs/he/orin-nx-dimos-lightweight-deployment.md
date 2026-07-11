@@ -996,6 +996,14 @@ runner 已改为共享时间窗内并行 SIGINT -> SIGTERM -> SIGKILL，并最�
 模块不变，先切断生产者再关闭可视化。该顺序由测试锁定，仍需第二轮 Orin 普通 stop
 实测确认。
 
+第二轮按该顺序实测仍在 6.971 秒升级，日志也确认 runner 已第一个进入 stop，因此
+顺序并非最后阻塞。core 审计发现 `RpcCall.stop()` 在 `call_nowait` 发出远端 stop 后，
+同步关闭调用方自己的 RPC client；本地 LCM handler thread join 最长正好 5 秒。
+也就是说 coordinator 卡在 caller backend 清理，不是 remote module stop。修复为 stop
+消息仍同步发出，caller RPC backend 在具名 daemon thread 异步关闭并保留异常日志。
+新增 core 测试让 cleanup 故意阻塞，验证 stop 调用 100ms 内返回、cleanup 已启动且
+释放后线程退出；36 项相关 core 测试和 39 项 HE 测试通过，待第三轮 Orin 实测。
+
 ## 16. 公开基准与视觉外参准入复核（2026-07-11）
 
 公开数值基准已从官方论文补齐到
