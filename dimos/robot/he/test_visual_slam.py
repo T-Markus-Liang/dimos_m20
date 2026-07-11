@@ -26,6 +26,7 @@ from dimos.robot.he.visual_slam import (
     HEVisualMapAdapter,
     HEVisualSlamBridge,
     summarize_localization_health,
+    summarize_planner_map_withholding,
     system_memory_status,
     validate_shadow_health_report,
 )
@@ -478,6 +479,25 @@ class TestHELocalizationHealth(unittest.TestCase):
 
 
 class TestHEVisualMapAdapter(unittest.TestCase):
+    def test_unhealthy_localization_withholds_planner_map(self) -> None:
+        health = [{"healthy": False, "reasons": ("depth_bottom_coverage_low",)}]
+
+        summary = summarize_planner_map_withholding([1.0, 2.0], [], health)
+
+        self.assertEqual(summary["visual_map_messages"], 2)
+        self.assertEqual(summary["global_costmap_messages"], 0)
+        self.assertEqual(summary["reason_counts"]["depth_bottom_coverage_low"], 1)
+
+        invalid_cases = (
+            ([], [], health, "no visual map"),
+            ([1.0], [], [], "no localization health"),
+            ([1.0], [], [{"healthy": True, "reasons": ()}], "not continuously unhealthy"),
+            ([1.0], [2.0], health, "global costmap was published"),
+        )
+        for visual, global_map, samples, message in invalid_cases:
+            with self.subTest(message=message), self.assertRaisesRegex(ValueError, message):
+                summarize_planner_map_withholding(visual, global_map, samples)
+
     def test_quality_reports_known_and_free_space(self) -> None:
         grid = OccupancyGrid(grid=np.array([[-1, 0], [100, 0]], dtype=np.int8))
         valid, metrics = HEVisualMapAdapter.quality(grid)

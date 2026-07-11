@@ -234,3 +234,12 @@ Real navigation remains prohibited until moving ATE/RPE, loop closure,
 relocalization, map quality, camera extrinsics, tracking-loss detection,
 resource soak and control safety gates pass after a new vehicle-down safety
 confirmation.
+
+Planner-map withholding now has a bounded read-only runtime diagnostic in
+addition to structural tests. It requires `/visual_map` and continuously
+unhealthy `/localization_health` samples while proving that
+`/global_costmap` emits nothing. The collector retains timestamps and health
+reasons only, never map payloads, and cannot run outside a 5-120 second window.
+Any healthy sample, planner-facing map, or missing source fails the diagnostic.
+The implementation and pure negative cases pass VM qualification; Orin live
+qualification remains pending and this paragraph does not approve navigation.

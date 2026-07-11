@@ -833,6 +833,12 @@ health while keeping real motion disconnected.
   Sense and final deployment/read-only gates passed. Combined with the real
   outage stale report and production-function negative tests, missing, invalid,
   stale or incomplete depth evidence can no longer pass shadow admission.
+- Added a bounded read-only planner-map withholding diagnostic. It observes
+  `/visual_map`, `/localization_health` and `/global_costmap` without retaining
+  map payloads or publishing. A shared pure summary fails on missing sources,
+  any healthy sample or any planner map. All 66 HE tests, focused Ruff,
+  blueprint registry and diff checks pass; 30-second Orin live evidence remains
+  pending.
 
 ## Decisions
 
@@ -925,6 +931,9 @@ health while keeping real motion disconnected.
   bounded mode switching are also Orin-qualified. Physical calibration,
   multi-hour/moving resource behavior and every moving qualification gate
   remain open.
+- Planner-map withholding has a VM-qualified bounded diagnostic candidate, but
+  is not yet live-qualified on Orin. Keep `/global_costmap` absent and navigation
+  disabled until its real shadow capture is preserved as evidence.
 
 ## Resume Instructions
 

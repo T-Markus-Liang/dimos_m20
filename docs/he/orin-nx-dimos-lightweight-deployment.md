@@ -1799,3 +1799,16 @@ gate 继续采集 3 秒 live health report 后调用同一函数，不引入测�
 和 throttle 零重启。正常退出后 Sense 恢复，Aurora/Sense/throttle active、shadow
 inactive，最终部署完整性和只读门通过。结合此前真实停流产生的 stale report 与同一
 纯函数负向测试，可确认 stale/missing/invalid depth evidence 不会被 admission 放行。
+
+## 32. 规划地图实时阻断诊断（2026-07-12）
+
+为把“health unhealthy 时 planner map 被扣留”从结构测试提升为实时链路证据，新增
+`verify-he-planner-map-withheld.py`。工具只读订阅 `/visual_map`、
+`/localization_health` 和 `/global_costmap`，只保存接收时间、健康状态和原因，不保留
+地图 payload，也不发布任何消息；采集窗口被限制为 5-120 秒。
+
+判定要求是采集期内 `/visual_map` 和 health 均持续到达、所有 health 样本均为
+unhealthy，同时 `/global_costmap` 必须为零。任一健康样本、任一 planner-facing map、
+缺少视觉地图或缺少 health 都会 fail closed。纯函数覆盖以上五种情况；VM 66 项 HE
+unittest、聚焦 Ruff、blueprint registry 和 diff 检查通过。Orin 30 秒实时结果尚未
+采集，因此当前只接受诊断实现，不把 planner map 阻断标记为 live-qualified。

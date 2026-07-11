@@ -510,6 +510,37 @@ def validate_shadow_health_report(
             raise ValueError(f"shadow depth-quality ratios are invalid: {ratios}")
 
 
+def summarize_planner_map_withholding(
+    visual_map_receipts: Sequence[float],
+    global_costmap_receipts: Sequence[float],
+    health_samples: Sequence[Mapping[str, Any]],
+) -> dict[str, Any]:
+    """Prove that continuously unhealthy localization withholds planner maps."""
+    if not visual_map_receipts:
+        raise ValueError("no visual map was received")
+    if not health_samples:
+        raise ValueError("no localization health was received")
+    healthy_samples = sum(bool(sample.get("healthy", False)) for sample in health_samples)
+    if healthy_samples:
+        raise ValueError("localization health was not continuously unhealthy")
+    if global_costmap_receipts:
+        raise ValueError("planner-facing global costmap was published while unhealthy")
+
+    reason_counts: Counter[str] = Counter()
+    for sample in health_samples:
+        reason_counts.update(str(reason) for reason in sample.get("reasons", ()))
+    return {
+        "visual_map_messages": len(visual_map_receipts),
+        "global_costmap_messages": len(global_costmap_receipts),
+        "health_samples": len(health_samples),
+        "healthy_samples": healthy_samples,
+        "unhealthy_samples": len(health_samples),
+        "reason_counts": dict(sorted(reason_counts.items())),
+        "visual_map_first_received_at": visual_map_receipts[0],
+        "visual_map_last_received_at": visual_map_receipts[-1],
+    }
+
+
 class HELocalizationHealthConfig(ModuleConfig):
     evaluation_hz: float = Field(default=5.0, gt=0.0)
     max_pose_age_s: float = Field(default=0.5, gt=0.0)
