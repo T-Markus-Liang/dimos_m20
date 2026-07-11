@@ -49,6 +49,13 @@ if [[ -n "${available_kib:-}" && "$available_kib" -lt 8388608 ]]; then
   exit 1
 fi
 
+nav_info=$(ros2 topic info /he/nav_cmd_vel -v 2>/dev/null || true)
+nav_publishers=$(awk '/Publisher count:/ {print $3; exit}' <<<"$nav_info")
+if [[ -n "${nav_publishers:-}" && "$nav_publishers" != 0 ]]; then
+  echo 'Refusing static recording while /he/nav_cmd_vel has publishers' >&2
+  exit 1
+fi
+
 ros2 bag record --storage sqlite3 -o "$output" "${topics[@]}" &
 recorder_pid=$!
 cleanup() {
@@ -62,14 +69,23 @@ sleep "$duration"
 cleanup
 trap - EXIT INT TERM
 
+actual_duration_ns=$(awk '
+  $1 == "duration:" { getline; if ($1 == "nanoseconds:") { print $2; exit } }
+' "$output/metadata.yaml")
+message_count=$(awk '$1 == "message_count:" { print $2; exit }' "$output/metadata.yaml")
+
 {
   printf 'captured_at=%s\n' "$(date --iso-8601=seconds)"
-  printf 'duration_seconds=%s\n' "$duration"
+  printf 'requested_duration_seconds=%s\n' "$duration"
+  printf 'actual_duration_nanoseconds=%s\n' "$actual_duration_ns"
+  printf 'message_count=%s\n' "$message_count"
   printf 'label=%s\n' "$label"
   printf 'git_commit=%s\n' "$(git rev-parse HEAD 2>/dev/null || echo unknown)"
   printf 'vehicle_motion=disabled\n'
   printf 'topics=%s\n' "${topics[*]}"
 } >"$output/he-manifest.txt"
 
-find "$output" -maxdepth 1 -type f -print0 | sort -z | xargs -0 sha256sum >"$output/SHA256SUMS"
+find "$output" -maxdepth 1 -type f ! -name SHA256SUMS -print0 \
+  | sort -z \
+  | xargs -0 sha256sum >"$output/SHA256SUMS"
 printf 'Recording complete: %s\n' "$output"

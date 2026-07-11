@@ -49,6 +49,17 @@ health while keeping real motion disconnected.
   invalid because the faster IMU series stopped collecting before the RGB
   window ended; fixed the tool to retain the full overlapping window and ignore
   unmatched timestamp edges before drawing a hardware conclusion.
+- Corrected live evidence measured IMU-to-RGB nearest offset at 5.81ms median
+  and 10.29ms P95. Camera streams have occasional one-frame gaps; RGB-depth P95
+  was 68.35ms. Driver state is align/depth-correction enabled but RGB-D capture
+  disabled, so an isolated RGB-D mode A/B test is required.
+- Recorded a motion-disabled static rosbag at
+  `/home/ubuntu/he/data/visual-navigation/20260711_133901_static-qualification`:
+  3.541s, 280MiB, 669 messages, 52 samples for each Aurora stream and 171 IMU
+  samples. Control topics had zero messages and safety gates passed before and
+  after capture.
+- Found and fixed a recorder integrity bug where `SHA256SUMS` included itself.
+  Regenerated the existing list; bag, manifest and metadata all verify.
 
 ## Decisions
 
@@ -70,6 +81,8 @@ health while keeping real motion disconnected.
   corrected live timing rerun is in progress. No visual SLAM package has been
   installed or selected yet.
 - Aurora depth coverage and spatial-temporal qualification remain open gates.
+- The first static raw dataset and diagnostic evidence are preserved; moving
+  trajectory data remains gated on a new vehicle-down confirmation.
 
 ## Resume Instructions
 

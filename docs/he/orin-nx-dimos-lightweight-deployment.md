@@ -917,3 +917,15 @@ HE 实测混为同一评分。
 本阶段的静态录制可以在车辆抬起时进行。直线、转弯、矩形、大闭环、遮挡和
 重定位数据必须等待新的车辆落地现场安全确认。任何候选在没有 HE 数据和 Orin
 实测前都不能写入最终 ADR，也不能接入 `MovementManager` 或 `HEConnection`。
+
+首轮修正后的传感诊断表明，IMU 相对 RGB 最近时间戳偏差中位数约 5.81ms、P95
+约 10.29ms；相机流多数帧时间戳相同，但存在约一帧缺口，RGB-depth P95 达
+68.35ms。驱动当前为 `align_mode=true`、`depth_correction=true`、
+`rgbd_enable=false`。驱动文档说明开启 RGB-D 模式后 RGB、depth、IR 和点云来自
+同一个 RGB-D frame，因此下一步要做隔离 A/B 测试，不能仅依赖当前时间戳相同帧。
+
+同次测量的深度全局有效率约 20.51%，中心 40% 约 15.76%，下方三块仅约
+4.9%-5.7%，不满足导航准入。JSON 证据和静态数据集索引保存在
+`docs/he/evidence/`。静态 bag 实际 3.541s、280MiB、669 条消息，六路 Aurora
+各 52 帧、IMU 171 帧，控制命令为 0 条；修复自包含 checksum 清单后所有文件
+通过 SHA-256 校验，录制前后只读安全门均 PASS。

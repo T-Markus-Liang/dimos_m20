@@ -28,6 +28,20 @@ retired, and `/odom_raw` is excluded as SLAM truth.
 - Full-rate algorithm input stays local. The bounded latest-only Rerun path is
   not an algorithm input and remains independently rate-limited.
 
+The corrected 60-sample diagnostic on 2026-07-11 measured RGB 14.60Hz, depth
+14.08Hz, IR 14.39Hz, point cloud 14.71Hz and IMU 47.22Hz. IMU-to-RGB nearest
+offset was 5.81ms median and 10.29ms P95. Camera streams often shared exact
+timestamps, but occasional one-frame gaps raised RGB-depth P95 to 68.35ms.
+The driver was `align_mode=true`, `depth_correction=true`, but
+`rgbd_enable=false`; driver documentation says RGB-D mode obtains RGB, depth,
+IR and point cloud from one RGB-D frame. That mode must be tested in isolation
+before declaring hardware synchronization.
+
+Depth was 20.51% valid globally and 15.76% in the center 40%. The latest lower
+third tiles were only 4.93-5.72% valid, while upper corners were about 45%.
+This is a spatial coverage failure for navigation until scene/mounting and
+driver-mode tests explain it. Evidence is under `docs/he/evidence/`.
+
 ## DimOS Internal Audit
 
 The refs below were fetched into isolated `research/*` refs. The HE worktree was
