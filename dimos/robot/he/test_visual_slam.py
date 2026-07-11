@@ -23,6 +23,7 @@ from dimos.robot.he.visual_slam import (
     HERTABMapShadowRunner,
     HEVisualMapAdapter,
     HEVisualSlamBridge,
+    summarize_localization_health,
 )
 
 DEPLOYMENT_DIR = Path(__file__).parent / "deployment"
@@ -127,6 +128,43 @@ class TestHEVisualSlamBridge(unittest.TestCase):
 
 
 class TestHELocalizationHealth(unittest.TestCase):
+    def test_health_summary_preserves_fault_and_recovery_transitions(self) -> None:
+        samples = [
+            {
+                "received_at": 1.0,
+                "checked_at": 1.0,
+                "healthy": False,
+                "reasons": ("map_known_ratio_low",),
+                "pose_age_s": 0.1,
+                "tf_age_s": 0.1,
+            },
+            {
+                "received_at": 2.0,
+                "checked_at": 2.0,
+                "healthy": False,
+                "reasons": ("pose_stale", "tf_stale", "map_known_ratio_low"),
+                "pose_age_s": 1.1,
+                "tf_age_s": 1.1,
+            },
+            {
+                "received_at": 3.0,
+                "checked_at": 3.0,
+                "healthy": False,
+                "reasons": ("map_known_ratio_low",),
+                "pose_age_s": 0.1,
+                "tf_age_s": 0.1,
+            },
+        ]
+
+        summary = summarize_localization_health(samples)
+
+        self.assertEqual(summary["samples"], 3)
+        self.assertEqual(summary["healthy_samples"], 0)
+        self.assertEqual(summary["reason_counts"]["pose_stale"], 1)
+        self.assertEqual(summary["max_pose_age_s"], 1.1)
+        self.assertEqual(len(summary["transitions"]), 3)
+        self.assertEqual(summary["transitions"][1]["reasons"][0], "pose_stale")
+
     def test_missing_inputs_are_unhealthy(self) -> None:
         result = HELocalizationHealth().evaluate(now=100.0)
         self.assertFalse(result.healthy)

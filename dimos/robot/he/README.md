@@ -81,7 +81,15 @@ Measure bounded stationary drift for a running shadow odometry topic:
   --duration 60 --output /tmp/he-visual-odom-benchmark.json
 .venv/bin/python dimos/robot/he/deployment/benchmark-he-visual-map.py \
   --duration 15 --output /tmp/he-visual-map-benchmark.json
+.venv/bin/python dimos/robot/he/deployment/benchmark-he-localization-health.py \
+  --duration 30 --output /tmp/he-localization-health.json
 ```
+
+The localization-health benchmark is a read-only pLCM subscriber. It records
+bounded samples, reason counts and every change in the `(healthy, reasons)`
+state. Because poor map coverage is already an expected baseline reason, fault
+tests must compare added and removed reasons instead of assuming the baseline
+is healthy.
 
 The current RTAB-Map pilot can be checked or run without motion output:
 

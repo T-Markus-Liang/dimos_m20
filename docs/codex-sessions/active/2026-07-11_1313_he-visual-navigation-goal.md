@@ -367,6 +367,11 @@ health while keeping real motion disconnected.
   any file could reach RTAB-Map. The runner now opens SQLite read-only and
   requires the core `Admin/Data/Info/Node` schema before launch. Tests cover
   malformed SQLite and missing-schema files; all 40 HE tests still pass.
+- Added a bounded, read-only `/localization_health` pLCM benchmark that records
+  every sample, reason counts, maximum pose/map/TF ages and state transitions.
+  Added a pure summary test covering baseline -> stale-input fault -> baseline
+  recovery. All 41 HE tests, Ruff and `git diff --check` pass on the VM; live
+  Aurora outage/recovery fault injection is pending.
 
 ## Decisions
 
@@ -420,27 +425,31 @@ health while keeping real motion disconnected.
   CLI SIGTERM grace with one shutdown round, no error and no residue.
 - The map-load contract and static same-scene read-only reload are verified on
   Orin. Moving/displaced-start relocalization and loop closure remain open.
+- Real health-transition instrumentation is VM-tested and awaits the bounded
+  Aurora input outage/recovery run on Orin.
 
 ## Resume Instructions
 
 1. Read this log, ADR-001 and the final shadow soak evidence.
-2. Run a static matte-target and camera pitch/height experiment to separate
+2. Deploy the health benchmark and run a bounded Aurora input outage/recovery
+   fault injection while shadow SLAM remains motion-disconnected.
+3. Run a static matte-target and camera pitch/height experiment to separate
    floor reflectivity/grazing-angle effects from sensor defects.
-3. Evaluate a controlled move from the shared USB 2.0 hub to the available
+4. Evaluate a controlled move from the shared USB 2.0 hub to the available
    10Gbps root port if physical access is approved.
-4. Escalate firmware 2.0.8/SDK 1.1.22 evidence to the vendor if target coverage
+5. Escalate firmware 2.0.8/SDK 1.1.22 evidence to the vendor if target coverage
    remains abnormal, requesting optical specifications and the documented
    `SupportedInfo.depth_range` interpretation.
-5. Use the new nominal-extrinsics audit to plan physical camera-to-base and
+6. Use the new nominal-extrinsics audit to plan physical camera-to-base and
    camera-to-IMU calibration; do not promote the nominal values to calibrated.
-6. Keep public benchmark tables source-scoped and update them only when a new
+7. Keep public benchmark tables source-scoped and update them only when a new
    candidate has code, license, runtime and deployability evidence.
-7. After a new vehicle-down confirmation, record moving, loop-closure and
+8. After a new vehicle-down confirmation, record moving, loop-closure and
    relocalization datasets and decide whether RTAB-Map can graduate beyond the
    shadow baseline.
-8. Preserve the verified normal shadow shutdown path; do not replace it with
+9. Preserve the verified normal shadow shutdown path; do not replace it with
    `--force` in deployment procedures.
-9. Do not enable motion or restore LD19.
+10. Do not enable motion or restore LD19.
 
 ## Open Questions
 

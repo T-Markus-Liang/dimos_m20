@@ -3,7 +3,8 @@
 from __future__ import annotations
 
 import asyncio
-from collections.abc import AsyncGenerator
+from collections import Counter
+from collections.abc import AsyncGenerator, Mapping, Sequence
 import ctypes
 from dataclasses import dataclass, field
 import math
@@ -289,6 +290,49 @@ class LocalizationHealth:
     known_ratio: float | None = None
     free_ratio_of_known: float | None = None
     details: dict[str, Any] = field(default_factory=dict)
+
+
+def summarize_localization_health(samples: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
+    if not samples:
+        return {"samples": 0, "healthy_samples": 0, "unhealthy_samples": 0}
+
+    reason_counts: Counter[str] = Counter()
+    transitions: list[dict[str, Any]] = []
+    previous_state: tuple[bool, tuple[str, ...]] | None = None
+    for index, sample in enumerate(samples):
+        reasons = tuple(str(reason) for reason in sample.get("reasons", ()))
+        healthy = bool(sample.get("healthy", False))
+        reason_counts.update(reasons)
+        state = (healthy, reasons)
+        if state != previous_state:
+            transitions.append(
+                {
+                    "sample_index": index,
+                    "received_at": sample.get("received_at"),
+                    "checked_at": sample.get("checked_at"),
+                    "healthy": healthy,
+                    "reasons": list(reasons),
+                }
+            )
+            previous_state = state
+
+    def maximum(name: str) -> float | None:
+        values = [float(sample[name]) for sample in samples if sample.get(name) is not None]
+        return max(values) if values else None
+
+    healthy_samples = sum(bool(sample.get("healthy", False)) for sample in samples)
+    return {
+        "samples": len(samples),
+        "healthy_samples": healthy_samples,
+        "unhealthy_samples": len(samples) - healthy_samples,
+        "first_received_at": samples[0].get("received_at"),
+        "last_received_at": samples[-1].get("received_at"),
+        "reason_counts": dict(sorted(reason_counts.items())),
+        "max_pose_age_s": maximum("pose_age_s"),
+        "max_map_age_s": maximum("map_age_s"),
+        "max_tf_age_s": maximum("tf_age_s"),
+        "transitions": transitions,
+    }
 
 
 class HELocalizationHealthConfig(ModuleConfig):

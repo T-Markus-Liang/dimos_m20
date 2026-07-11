@@ -1079,6 +1079,17 @@ DimOS、RTAB-Map、watchdog、Rerun 进程及 7779/9877/9878 端口均无残留�
 实时质量门通过，本轮 depth valid 28.4%，独立只读门通过，导航发布者仍为 0。由此
 优雅启停子任务关闭；车辆移动、ATE/RPE、回环和重定位门仍未开放。
 
+新增只读 `benchmark-he-localization-health.py`，直接订阅 DimOS
+`/localization_health` pLCM 通道，保存每个有界样本、reason 计数、pose/map/TF 最大
+age 以及 `(healthy, reasons)` 状态转换。当前地图覆盖不足会让正常基线自带
+`map_known_ratio_low`；传感失效测试必须验证新增 `pose_stale`/`tf_stale` 等原因，
+以及输入恢复后这些新增原因消失，不能错误地要求整体 `healthy=true`。
+
+```bash
+.venv/bin/python dimos/robot/he/deployment/benchmark-he-localization-health.py \
+  --duration 30 --output /tmp/he-localization-health.json
+```
+
 ## 16. 公开基准与视觉外参准入复核（2026-07-11）
 
 公开数值基准已从官方论文补齐到
