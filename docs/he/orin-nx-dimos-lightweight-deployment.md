@@ -1793,3 +1793,9 @@ Orin 正常 admission、停流拒绝和恢复仍待验证。
 `depth_quality_missing`、`slam_memory_high`、年龄 1.1 秒和缺字段样本均被拒绝。真实
 gate 继续采集 3 秒 live health report 后调用同一函数，不引入测试后门。VM shell、
 65 项 HE unittest、聚焦 Ruff、blueprint registry 和 diff 检查通过。
+
+部署后标准 wrapper 在 42 秒内完成正常 live admission 并返回 0，第二次独立 gate
+再次通过。shadow cgroup 在两次检查时约 1217/1354MiB，swap 保持 580MiB，shadow
+和 throttle 零重启。正常退出后 Sense 恢复，Aurora/Sense/throttle active、shadow
+inactive，最终部署完整性和只读门通过。结合此前真实停流产生的 stale report 与同一
+纯函数负向测试，可确认 stale/missing/invalid depth evidence 不会被 admission 放行。

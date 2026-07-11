@@ -68,6 +68,27 @@ Both runs returned through the normal mode wrapper. Final state was Aurora,
 Sense and throttle active with zero restarts, shadow inactive, no native SLAM
 residue, and deployment-integrity/read-only gates passing.
 
+## Readiness Admission Hardening
+
+The shadow gate now validates its three-second live health report with the same
+`validate_shadow_health_report` function used by deterministic tests. It rejects
+runtime pressure plus missing, invalid or stale depth evidence, and verifies
+that every sample has a finite 0-1s age and finite `[0,1]` global/center/bottom
+ratios. Known low coverage is deliberately not an admission error because the
+shadow must remain available to observe unhealthy state.
+
+Tests prove that a complete sample containing only
+`depth_bottom_coverage_low` is admitted, while `depth_quality_stale`,
+`depth_quality_missing`, `slam_memory_high`, age 1.1s and missing ratio fields
+are rejected. The previously captured real outage supplied the live stale
+transition; no production fault override was added.
+
+After deployment, the standard wrapper completed live admission in 42 seconds
+and returned status 0. A second independent gate also passed. Shadow cgroup
+memory was 1217MiB at admission and 1354MiB at the second check; swap stayed at
+580MiB and both shadow/throttle restart counts were zero. Normal return restored
+Sense and passed final deployment/read-only gates.
+
 ## Evidence
 
 - `2026-07-12_0723_depth-quality-health.json`, SHA-256
@@ -82,4 +103,3 @@ regional limits are conservative interlocks, not proof that depth is suitable
 for navigation. The current bottom-third result remains failed. Matte-target,
 camera pitch/height, direct USB3, vendor specification and moving-map evidence
 are still required before changing thresholds or enabling navigation.
-

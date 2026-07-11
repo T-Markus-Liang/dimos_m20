@@ -826,6 +826,13 @@ health while keeping real motion disconnected.
   ratio fields are rejected. The live gate still captures its own three-second
   report and has no fault override. All 65 HE tests, focused Ruff, shell,
   registry and diff checks pass; final Orin positive admission remains pending.
+- Deployed admission hardening through `f1cef694`. The standard wrapper captured
+  a live report, passed in 42 seconds and returned status 0; an independent gate
+  passed again. Shadow cgroup memory was 1217/1354MiB at the two checks, swap
+  stayed at 580MiB and restart counts remained zero. Normal return restored
+  Sense and final deployment/read-only gates passed. Combined with the real
+  outage stale report and production-function negative tests, missing, invalid,
+  stale or incomplete depth evidence can no longer pass shadow admission.
 
 ## Decisions
 
