@@ -320,6 +320,14 @@ health while keeping real motion disconnected.
   10ms, removing about 0.45 seconds of cumulative delay while retaining a
   bounded immediate-cleanup opportunity. Fifty core tests, 39 HE tests and
   static checks pass; the sixth Orin timing run is pending.
+- The sixth Orin run completed the shutdown gate. CLI reported
+  `Stopped with SIGTERM`; source inspection confirms this means exit inside the
+  five-second post-signal loop. The 5500ms outer measurement included CLI cold
+  start before signal delivery.
+- The final log had five module stops, one worker shutdown round and no errors
+  or SIGKILL. No process or port remained. Restored `he-dimos-sense` active with
+  zero restarts; live sensor quality and independent read-only gates passed,
+  with zero navigation publishers.
 
 ## Decisions
 
@@ -369,8 +377,8 @@ health while keeping real motion disconnected.
   persistence setting passed a full 600-second Orin soak with about 99.0%
   lower database growth. The 256MiB hard watchdog remains enabled.
 - Native child cleanup, lifecycle order, host RPC-client cleanup and non-parent
-  worker waits are fixed. The fifth Orin attempt is functionally clean; a final
-  timing run with the reduced RPC cleanup window remains pending.
+  worker waits are fixed and verified on Orin. Normal stop completes inside the
+  CLI SIGTERM grace with one shutdown round, no error and no residue.
 
 ## Resume Instructions
 
@@ -389,8 +397,8 @@ health while keeping real motion disconnected.
 7. After a new vehicle-down confirmation, record moving, loop-closure and
    relocalization datasets and decide whether RTAB-Map can graduate beyond the
    shadow baseline.
-8. Deploy and verify the corrected normal shadow shutdown path on Orin without
-   `--force`, then preserve elapsed time and cleanup evidence.
+8. Preserve the verified normal shadow shutdown path; do not replace it with
+   `--force` in deployment procedures.
 9. Do not enable motion or restore LD19.
 
 ## Open Questions

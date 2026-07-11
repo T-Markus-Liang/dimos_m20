@@ -2,7 +2,7 @@
 
 Date: 2026-07-11 21:28 CST
 
-Status: daemon/non-parent worker cleanup fix pending final Orin verification
+Status: verified on Orin without SIGKILL escalation or shutdown errors
 
 ## Safety Scope
 
@@ -159,15 +159,30 @@ for immediate cleanup while preserving the intended nonblocking behavior under
 load. The focused RPC threshold returns to 100ms; the same 50 core tests, 39 HE
 tests and static checks pass on the VM. One final Orin timing run is pending.
 
-## Required Orin Evidence
+## Sixth Live Attempt And Final Result
 
-After the reduced RPC cleanup-window commit and fast-forward sync, start the
-motion-free shadow blueprint, wait for both native processes and
-`/he/visual_odom`, then use normal
-`dimos stop` without `--force`. Record elapsed time and require:
+Commit `1aada0ac` passed the final motion-free lifecycle run on Orin:
+
+- `/he/visual_odom` emitted and `/he/nav_cmd_vel` had zero publishers;
+- CLI reported `Stopped with SIGTERM`, proving the daemon exited inside the
+  50 x 100ms post-signal grace loop;
+- the outer shell measurement was 5500ms because it also included Python CLI
+  cold start and registry discovery before SIGTERM;
+- logs contained exactly five module stops and one worker-manager shutdown;
+- no assertion, worker error, traceback or SIGKILL was logged;
+- no DimOS, RTAB-Map, watchdog, Rerun process or ports 7779/9877/9878 remained.
+
+The sensor service was then restored. `he-dimos-sense` is active with zero
+restarts, the live RGB/depth/IR/point-cloud/IMU gate passed, depth validity was
+28.4% in this sample, and the independent read-only gate returned success.
+Motion remains closed and navigation publishers remain zero.
+
+## Verified Orin Evidence
+
+The final run used normal `dimos stop` without `--force` and met these gates:
 
 - CLI reports `Stopped with SIGTERM`, not escalation to SIGKILL;
-- elapsed stop time is below five seconds;
+- post-signal exit is inside the CLI five-second grace loop;
 - no `can only join a child process` or `Error shutting down worker` log;
 - no native odometry, SLAM, watchdog, Rerun port or DimOS process remains;
 - `he-dimos-sense` restores active with zero restarts;

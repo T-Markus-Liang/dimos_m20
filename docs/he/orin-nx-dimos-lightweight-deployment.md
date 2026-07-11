@@ -1038,6 +1038,17 @@ core 测试、39 项 HE 测试及静态检查已在 VM 通过，待第五轮 Ori
 真正的非阻塞语义；RPC 测试时限恢复为 100ms。50 项 core、39 项 HE 及静态检查在
 VM 再次通过，待第六轮 Orin 时序复测确认低于 5 秒并保留全部清理结果。
 
+第六轮在 `1aada0ac` 上最终通过。停止前 `/he/visual_odom` 正常输出，
+`/he/nav_cmd_vel` 为 0 个发布者；CLI 报告 `Stopped with SIGTERM`，该结果按源码语义
+证明主 PID 在发出信号后的 `50 x 100ms` 窗口内退出。外层 shell 计时 5500ms 还包含
+Python CLI 冷启动和信号前 registry 查询，不应误作 signal-to-exit 时间。日志只有 5 个
+模块 stop 和 1 轮 worker shutdown，没有 assertion、worker error、traceback 或 SIGKILL；
+DimOS、RTAB-Map、watchdog、Rerun 进程及 7779/9877/9878 端口均无残留。
+
+收尾已恢复 `he-dimos-sense`：服务 active、`NRestarts=0`，RGB/depth/IR/点云/IMU
+实时质量门通过，本轮 depth valid 28.4%，独立只读门通过，导航发布者仍为 0。由此
+优雅启停子任务关闭；车辆移动、ATE/RPE、回环和重定位门仍未开放。
+
 ## 16. 公开基准与视觉外参准入复核（2026-07-11）
 
 公开数值基准已从官方论文补齐到
