@@ -1729,3 +1729,12 @@ Sense 后无 RTAB-Map 或临时 throttle 残留。第一次 shadow admission 曾
 gate 和 30 秒后的独立 gate 分别在 1196MiB、1402MiB cgroup memory 下通过。返回
 Sense 后，Sense/throttle enabled+active、shadow static+inactive、服务零重启，无
 RTAB-Map 或临时 throttle 残留，部署完整性和最终只读门通过。
+
+最终文档同步时，Orin 到 GitHub 的 HTTPS 连续两次出现 `GnuTLS recv error (-110)`。
+没有复制源码覆盖工作树，而是从已推送的 VM 仓库生成完整 Git bundle，经 macOS 转送
+后在 Orin 执行 `git pull --ff-only <bundle> codex/he-orin`，再从同一 bundle 更新
+`origin/codex/he-orin` 跟踪引用。三者 commit object 保持一致。
+
+只读门应作为独立 shell 命令运行。若父级 `ssh` 命令行同时包含明文 `rtabmap` 等受检
+进程名，脚本内 `pgrep -f` 会匹配父 shell 并产生假阳性；这不是进程残留。诊断进程
+清单与 gate 分开执行，或在父命令中使用同样的方括号避匹配写法。

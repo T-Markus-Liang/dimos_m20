@@ -776,6 +776,13 @@ health while keeping real motion disconnected.
   throttle are enabled/active, shadow is static/inactive, all services have zero
   restarts, no RTAB-Map or temporary throttle residue remains, and deployment
   integrity plus the final read-only gate passed.
+- Final Orin HTTPS sync failed twice with GnuTLS receive error -110. Preserved
+  the fast-forward-only rule by transferring a complete bundle from the pushed
+  VM repository and running `git pull --ff-only` against it, then updating the
+  local origin tracking ref from the same bundle. Also identified one false
+  read-only-gate result caused by a parent SSH command line containing the
+  protected `rtabmap` process name; the standalone gate passed. Documented both
+  operational hazards and their bounded workarounds.
 
 ## Decisions
 
