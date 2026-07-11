@@ -1465,3 +1465,24 @@ window 的 10 分钟基线，再测试 `128MB`。必须保留八个 latest-only 
 RGB/depth/IR/point cloud/CameraInfo、IMU 和 odom；不得同步修改 teleop 或 visual-SLAM
 蓝图。只有 cgroup 内存实测明显下降、服务零重启、所有模态帧率和远程 Rerun 可用性
 无回归、`/he/nav_cmd_vel` 仍为零发布者时才保留 128MB，否则恢复 256MB。
+
+256MB canonical baseline 已在不重启既有服务的条件下完成 11 次快照，覆盖
+2026-07-12 02:30:31 至 02:40:36 CST。cgroup `MemoryCurrent` 最小/中位/最大为
+1047842816/1050038272/1055834112 bytes（999.3/1001.4/1006.9MiB）。Rerun worker
+PSS 中位 595964928 bytes、private dirty 中位 570478592 bytes，最大 anonymous
+mapping 中位 430915584 bytes；HESensorBridge worker PSS 中位 172328960 bytes。
+`MemAvailable` 中位约 3.30GiB，swap used 起止不变，`NRestarts=0`。
+
+后置 live gate 通过：RGB 15.62Hz、depth 10.10Hz/25.7% valid、IR 16.13Hz、点云
+256000 点，RGB 与 IR/depth CameraInfo 均存在。`9877` 从 macOS 可连接，服务 active，
+`/he/nav_cmd_vel` 为 0 个发布者。最终原始 profiler JSON 保存为
+`docs/he/evidence/2026-07-12_0240_he-sense-memory-256mb.json`，SHA-256
+`4257eed850bc64937d09a73c7d654062f0bea789b47fdf94abd53e3e6aae1d05`；完整 11 次
+runtime 目录保留在 Orin
+`/home/ubuntu/he/logs/he-memory-ab/20260712_023031_256mb`。
+
+基于该基线，源码只将 `he_sense_headless` 改为 `128MB`；teleop 和 visual-SLAM
+继续为 256MB。新增结构测试锁定蓝图仍只有 `HESensorBridge + RerunBridgeModule`、
+八个 latest-only entity 和全部默认 Aurora modality。VM 上 53 项 HE unittest、Ruff、
+blueprint registry 检查和 diff 检查通过。此处记录的是提交前状态：Orin 当前进程仍是
+256MB 配置，必须在提交、推送和 `git pull --ff-only` 后受控重启，才能开始 128MB soak。

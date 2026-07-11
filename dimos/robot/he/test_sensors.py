@@ -6,7 +6,9 @@ import unittest
 import numpy as np
 
 from dimos.msgs.sensor_msgs.Image import ImageFormat
-from dimos.robot.he.sensors import HESensorBridge
+from dimos.robot.he.blueprints import he_sense_headless
+from dimos.robot.he.sensors import HESensorBridge, HESensorBridgeConfig
+from dimos.visualization.rerun.bridge import RerunBridgeModule
 
 
 def header(frame_id: str = "camera") -> types.SimpleNamespace:
@@ -17,6 +19,35 @@ def header(frame_id: str = "camera") -> types.SimpleNamespace:
 
 
 class TestHESensorBridge(unittest.TestCase):
+    def test_headless_blueprint_keeps_bounded_full_sensor_surface(self) -> None:
+        atoms = {atom.module: atom for atom in he_sense_headless.blueprints}
+
+        self.assertEqual(set(atoms), {HESensorBridge, RerunBridgeModule})
+        self.assertEqual(atoms[HESensorBridge].kwargs, {})
+        sensor_config = HESensorBridgeConfig(**atoms[HESensorBridge].kwargs)
+        self.assertTrue(sensor_config.enable_color_image)
+        self.assertTrue(sensor_config.enable_depth_image)
+        self.assertTrue(sensor_config.enable_ir_image)
+        self.assertTrue(sensor_config.enable_pointcloud)
+        self.assertTrue(sensor_config.enable_camera_info)
+        self.assertEqual(
+            atoms[RerunBridgeModule].kwargs,
+            {
+                "rerun_open": "none",
+                "memory_limit": "128MB",
+                "latest_only_entities": [
+                    "world/color_image",
+                    "world/depth_image",
+                    "world/ir_image",
+                    "world/pointcloud",
+                    "world/camera_info",
+                    "world/depth_camera_info",
+                    "world/odom",
+                    "world/imu",
+                ],
+            },
+        )
+
     def test_all_aurora_modalities_are_enabled_by_default(self) -> None:
         bridge = HESensorBridge()
 

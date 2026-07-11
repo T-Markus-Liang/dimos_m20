@@ -192,6 +192,11 @@ restarts the service nor reads sensor payloads. Use `sudo` when procfs access is
 restricted; run repeated snapshots at fixed intervals for comparable soak
 evidence rather than adding a resident monitor to the sensor service.
 
+`he_sense_headless` uses a 128MB Rerun recording window while retaining all
+eight latest-only entities. The teleop and visual-SLAM blueprints keep their
+existing 256MB limits; this scoped setting must not be generalized without
+separate runtime evidence.
+
 The version-controlled deployment plan is
 [Orin NX lightweight deployment](../../../docs/he/orin-nx-dimos-lightweight-deployment.md).
 The visual SLAM evidence ledger and pilot order are in

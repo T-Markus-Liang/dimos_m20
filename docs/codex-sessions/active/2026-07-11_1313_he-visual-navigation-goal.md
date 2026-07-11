@@ -564,6 +564,23 @@ health while keeping real motion disconnected.
   teardown errors from its global thread monitor for pre-existing HE LCM daemon
   threads even though all 52 assertions pass, so the established HE unittest
   entry point remains the canonical result for this scoped change.
+- The profiler landed as `770a967a`, was pushed and fast-forwarded cleanly to
+  Orin. The pre-baseline read-only gate passed with the existing 256MB service,
+  zero restarts and zero navigation publishers.
+- Captured 11 identical profiler snapshots from 02:30:31 through 02:40:36 CST
+  without restarting the service. Cgroup memory min/median/max was
+  1047842816/1050038272/1055834112 bytes. Rerun worker median PSS/private dirty
+  was 595964928/570478592 bytes; HESensorBridge median PSS was 172328960 bytes.
+  Available-memory median was about 3.30GiB, swap did not grow and restarts
+  remained zero.
+- The 256MB post-gates passed: RGB 15.62Hz, depth 10.10Hz with 25.7% validity,
+  IR 16.13Hz, 256000-point cloud and both calibrations. The Rerun `9877` port
+  was reachable from macOS and `/he/nav_cmd_vel` still had zero publishers.
+- Prepared the scoped 128MB change only in `he_sense_headless`. A new structural
+  regression test locks the two-module surface, eight latest-only entities and
+  all default sensor modalities. All 53 HE unittests, focused Ruff, blueprint
+  registry generation and diff checks passed on VM; Orin had not yet restarted
+  onto this setting at this log update.
 - Pushed the probe, failed-getter fix, bounded DDS convergence and final
   evidence as `1655079a`, `b7b56853`, `a4af65e6` and `64cfeb4c`; Orin
   fast-forwarded cleanly and the macOS deployment mirror was synchronized.
@@ -641,9 +658,10 @@ health while keeping real motion disconnected.
 - Structural malformed/missing CameraInfo and runtime drift beyond the approved
   intrinsic tolerance are proven. Physical target calibration and physical
   camera-to-base/camera-to-IMU extrinsics remain open.
-- HE Sense memory profiling is being committed before runtime tuning. The
-  canonical 256MB Orin snapshot and 10-minute 128MB A/B are still pending; no
-  Rerun setting has changed yet.
+- The canonical 256MB baseline is complete. The 128MB source change is ready
+  for commit; Orin pull, controlled service restart and 10-minute soak remain
+  pending. Teleop, visual-SLAM, worker policy and all control modules are
+  unchanged.
 
 ## Resume Instructions
 
