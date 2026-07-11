@@ -534,6 +534,8 @@ class TestHERTABMapRuntimeBounds(unittest.TestCase):
         self.assertNotIn("--daemon", shadow_unit)
         self.assertNotIn("--force", switch)
         self.assertIn("restore_sense", switch)
+        self.assertIn("wait_gate", switch)
+        self.assertIn('wait_gate "$deployment/verify-he-readonly.sh"', switch)
         self.assertIn("verify-he-shadow-readonly.sh", switch)
         self.assertIn("Publisher count: 0", shadow_gate)
         self.assertIn("swap_growth_high", shadow_gate)

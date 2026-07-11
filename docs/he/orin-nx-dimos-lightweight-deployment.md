@@ -1621,3 +1621,9 @@ health 中没有 stale/invalid/resource failure。任一步失败都会停止 sh
 这项变更只建立服务级隔离和故障恢复，不改变已验收的 6-worker/128MB shadow 参数，
 也不开放控制链。安装后的 Orin 实测还必须确认 systemd 属性、生效 cgroup、无 OOM/
 重启/swap 增长、普通 SIGTERM 清理和 Sense 恢复，才能关闭本节部署门。
+
+`systemctl is-active` 只代表主进程已经进入 running，不代表 DimOS worker 和 ROS 订阅
+已经完成注册。首次从 shadow 切回 Sense 时，立即执行只读门曾在 Aurora topic 的
+`dimos_he_sensors` 订阅检查上短暂失败，数秒后同一门通过。切换脚本因此对 Sense 和
+shadow 使用相同的有限 readiness 重试：最多 6 次、间隔 5 秒；每次仍执行完整原门，
+不放宽 topic、资源或运动条件，超时仍视为失败。

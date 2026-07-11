@@ -685,6 +685,11 @@ health while keeping real motion disconnected.
   existing read-only gate, and no force-stop path is exposed. VM validation
   passed 25 visual-SLAM and 50 focused HE tests, unit verification, shell syntax
   and diff checks; Orin installation and service-level soak remain pending.
+- The first service-level Orin return to Sense exposed a readiness race:
+  systemd was active before the sensor worker registered every ROS subscriber.
+  The unchanged gate passed seconds later. Refactored both mode admissions to a
+  bounded six-attempt/five-second readiness loop and added structural coverage;
+  timeout still fails and shadow-error restoration still returns to Sense.
 - Pushed the probe, failed-getter fix, bounded DDS convergence and final
   evidence as `1655079a`, `b7b56853`, `a4af65e6` and `64cfeb4c`; Orin
   fast-forwarded cleanly and the macOS deployment mirror was synchronized.
