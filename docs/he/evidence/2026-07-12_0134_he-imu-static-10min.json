@@ -1,0 +1,309 @@
+{
+  "captured_at": "2026-07-12T01:43:46+0800",
+  "requested_duration_seconds": 600.0,
+  "streams": {
+    "raw": {
+      "angular_velocity_rad_s": {
+        "mean": [
+          0.032529861720384766,
+          -0.0020022618457827763,
+          -0.0018352823513375254
+        ],
+        "norm_median": 0.03266190567051308,
+        "norm_p95": 0.034337505866211274,
+        "samples": 27918,
+        "static_stability": {
+          "allan_deviation": [
+            {
+              "cluster_samples": 5,
+              "complete_clusters": 5583,
+              "effective_cluster_seconds": 0.10710712660647277,
+              "requested_cluster_seconds": 0.1,
+              "value": [
+                0.00042598822323315497,
+                0.00047037406847159484,
+                0.0003964182519109912
+              ]
+            },
+            {
+              "cluster_samples": 9,
+              "complete_clusters": 3102,
+              "effective_cluster_seconds": 0.19279282789165098,
+              "requested_cluster_seconds": 0.2,
+              "value": [
+                0.0003328112098022985,
+                0.00036158569602303135,
+                0.00030615562219159665
+              ]
+            },
+            {
+              "cluster_samples": 23,
+              "complete_clusters": 1213,
+              "effective_cluster_seconds": 0.49269278238977476,
+              "requested_cluster_seconds": 0.5,
+              "value": [
+                0.00023731516752870997,
+                0.00023885045117462113,
+                0.00020935286701577027
+              ]
+            },
+            {
+              "cluster_samples": 47,
+              "complete_clusters": 594,
+              "effective_cluster_seconds": 1.006806990100844,
+              "requested_cluster_seconds": 1.0,
+              "value": [
+                0.00019460940593255777,
+                0.0001786047110452378,
+                0.00013750477180078424
+              ]
+            },
+            {
+              "cluster_samples": 93,
+              "complete_clusters": 300,
+              "effective_cluster_seconds": 1.9921925548803936,
+              "requested_cluster_seconds": 2.0,
+              "value": [
+                0.00017238015487857443,
+                0.0001316629184180317,
+                0.00011163099402657058
+              ]
+            },
+            {
+              "cluster_samples": 233,
+              "complete_clusters": 119,
+              "effective_cluster_seconds": 4.991192099861631,
+              "requested_cluster_seconds": 5.0,
+              "value": [
+                0.00018418799324713384,
+                0.0001169911752230906,
+                8.415695304979975e-05
+              ]
+            },
+            {
+              "cluster_samples": 467,
+              "complete_clusters": 59,
+              "effective_cluster_seconds": 10.003805625044556,
+              "requested_cluster_seconds": 10.0,
+              "value": [
+                0.0001889765915008953,
+                0.00010158111758362882,
+                7.076010979308842e-05
+              ]
+            },
+            {
+              "cluster_samples": 934,
+              "complete_clusters": 29,
+              "effective_cluster_seconds": 20.007611250089113,
+              "requested_cluster_seconds": 20.0,
+              "value": [
+                0.00015226416416068945,
+                7.15727416881852e-05,
+                6.8597333920439e-05
+              ]
+            },
+            {
+              "cluster_samples": 2801,
+              "complete_clusters": 9,
+              "effective_cluster_seconds": 60.001412324946045,
+              "requested_cluster_seconds": 60.0,
+              "value": [
+                0.00018409705156485502,
+                9.474672533031094e-05,
+                5.50405117030224e-05
+              ]
+            }
+          ],
+          "complete_windows": 9,
+          "effective_sample_period_seconds": 0.021421425321294554,
+          "method": "non-overlapping adjacent cluster means",
+          "window_mean_span": [
+            0.00047874756026693166,
+            0.00028294275328298027,
+            0.0001993828176280728
+          ],
+          "window_mean_stddev": [
+            0.00015933870419965096,
+            8.341673100859876e-05,
+            5.753731892051283e-05
+          ],
+          "window_samples": 2801,
+          "window_seconds_requested": 60.0
+        },
+        "stationary_mean_integral_deg": [
+          1114.6074982140628,
+          -68.6057655541431,
+          -62.88435800078606
+        ],
+        "stddev": [
+          0.0009967714776557039,
+          0.0009804645054379412,
+          0.0007305482598871859
+        ]
+      },
+      "duration_seconds": 598.0219306945801,
+      "frame_ids": [
+        "imu_link"
+      ],
+      "interval_ms": {
+        "max": 29.25848960876465,
+        "median": 21.274089813232422,
+        "nonpositive_count": 0,
+        "p95": 22.40777015686035
+      },
+      "linear_acceleration_m_s2": {
+        "mean": [
+          0.31953077273975167,
+          0.10595440053091973,
+          9.976475462761393
+        ],
+        "norm_median": 9.982312878169537,
+        "norm_p95": 9.987137087806136,
+        "samples": 27918,
+        "static_stability": {
+          "allan_deviation": [
+            {
+              "cluster_samples": 5,
+              "complete_clusters": 5583,
+              "effective_cluster_seconds": 0.10710712660647277,
+              "requested_cluster_seconds": 0.1,
+              "value": [
+                0.001088032463646857,
+                0.0011436664628468908,
+                0.0015317520878831987
+              ]
+            },
+            {
+              "cluster_samples": 9,
+              "complete_clusters": 3102,
+              "effective_cluster_seconds": 0.19279282789165098,
+              "requested_cluster_seconds": 0.2,
+              "value": [
+                0.0012454811280732218,
+                0.0013260029706682257,
+                0.0017503466909732806
+              ]
+            },
+            {
+              "cluster_samples": 23,
+              "complete_clusters": 1213,
+              "effective_cluster_seconds": 0.49269278238977476,
+              "requested_cluster_seconds": 0.5,
+              "value": [
+                0.0009426600711106006,
+                0.0009778568343618691,
+                0.001313486993951685
+              ]
+            },
+            {
+              "cluster_samples": 47,
+              "complete_clusters": 594,
+              "effective_cluster_seconds": 1.006806990100844,
+              "requested_cluster_seconds": 1.0,
+              "value": [
+                0.00069663251904247,
+                0.0008074918168262763,
+                0.0010421682383715992
+              ]
+            },
+            {
+              "cluster_samples": 93,
+              "complete_clusters": 300,
+              "effective_cluster_seconds": 1.9921925548803936,
+              "requested_cluster_seconds": 2.0,
+              "value": [
+                0.0005490716267974254,
+                0.0006517731341798742,
+                0.0008508381423270451
+              ]
+            },
+            {
+              "cluster_samples": 233,
+              "complete_clusters": 119,
+              "effective_cluster_seconds": 4.991192099861631,
+              "requested_cluster_seconds": 5.0,
+              "value": [
+                0.00047161666390214355,
+                0.0005471912984775752,
+                0.0008161467609525482
+              ]
+            },
+            {
+              "cluster_samples": 467,
+              "complete_clusters": 59,
+              "effective_cluster_seconds": 10.003805625044556,
+              "requested_cluster_seconds": 10.0,
+              "value": [
+                0.0004060685876763378,
+                0.0004639531639105866,
+                0.0007668823762731641
+              ]
+            },
+            {
+              "cluster_samples": 934,
+              "complete_clusters": 29,
+              "effective_cluster_seconds": 20.007611250089113,
+              "requested_cluster_seconds": 20.0,
+              "value": [
+                0.0004635594987940139,
+                0.0005410224018526567,
+                0.000553502323242124
+              ]
+            },
+            {
+              "cluster_samples": 2801,
+              "complete_clusters": 9,
+              "effective_cluster_seconds": 60.001412324946045,
+              "requested_cluster_seconds": 60.0,
+              "value": [
+                0.0002635575973694334,
+                0.00040563459840116725,
+                0.0006124290786002263
+              ]
+            }
+          ],
+          "complete_windows": 9,
+          "effective_sample_period_seconds": 0.021421425321294554,
+          "method": "non-overlapping adjacent cluster means",
+          "window_mean_span": [
+            0.001532169395155325,
+            0.003454539810611029,
+            0.005672659520753243
+          ],
+          "window_mean_stddev": [
+            0.0005354527159865637,
+            0.0010893586738723287,
+            0.0020002491387728894
+          ],
+          "window_samples": 2801,
+          "window_seconds_requested": 60.0
+        },
+        "stddev": [
+          0.001819633891134974,
+          0.002215862280736104,
+          0.003323725639560605
+        ]
+      },
+      "orientation": {
+        "final_rotation_from_first_deg": null,
+        "final_rpy_deg": [],
+        "first_rpy_deg": [],
+        "max_rotation_from_first_deg": null,
+        "norm_max_error_from_one": 1.0,
+        "norm_median": 0.0,
+        "rpy_delta_deg": [],
+        "zero_norm_count": 27918
+      },
+      "orientation_covariance": {
+        "all_zero_count": 0,
+        "nonfinite_count": 0,
+        "unknown_count": 0
+      },
+      "rate_hz": 46.68223449192816,
+      "samples": 27918
+    }
+  },
+  "topics": {
+    "raw": "/ros_robot_controller/imu_raw"
+  }
+}

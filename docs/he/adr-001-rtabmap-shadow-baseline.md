@@ -39,6 +39,11 @@ localization unhealthy and withholds `global_costmap` from planners.
   0.48/2.58mm final/maximum position drift and 108/137ms median/P95 latency.
 - Odometry peak RSS: about 214MiB and about 58% of one CPU core.
 - Mapping process short-run RSS: about 255MiB.
+- A 598-second raw IMU capture found a stable but unacceptable x gyro mean of
+  0.03253rad/s (about 1.864deg/s), versus a 0.000479rad/s span across nine
+  60-second block means. Uncompensated mean integration was 1114.6deg. Raw IMU
+  remains excluded pending physical calibration; see
+  `evidence/2026-07-12_0134_imu-static-stability.md`.
 - Dynamic `he_map -> he_visual_odom -> base_link` TF was observed without
   missing-TF or bad-sync warnings after tuning synchronization to 20ms.
 - Raw evidence is under `docs/he/evidence/2026-07-11_1418_rtabmap-*` and
@@ -49,8 +54,9 @@ localization unhealthy and withholds `global_costmap` from planners.
 - Isaac ROS Visual SLAM remains the preferred accelerated platform-upgrade
   candidate, but RGB-D requires release 4.4+ on Noble/Jazzy. Humble-compatible
   release 3.2 does not provide equivalent RGB-D support.
-- OpenVINS remains the lightweight VIO fallback after camera/IMU calibration
-  and timing qualification. It does not directly solve occupancy mapping.
+- OpenVINS remains the lightweight VIO fallback only after camera/IMU
+  calibration and timing qualification. Current raw gyro fails admission and
+  cannot be connected as-is. OpenVINS does not directly solve occupancy mapping.
 - ORB-SLAM3 remains an offline comparator due to GPL-3.0, old ROS integration,
   an incomplete DimOS wrapper and a known transform defect.
 - DPVO is an offline learned comparator. DROID-SLAM exceeds the 8GB target's

@@ -490,7 +490,18 @@ health while keeping real motion disconnected.
   non-overlapping Allan deviation at bounded cluster durations and the
   stationary gyro-mean integral. Added fail-closed input validation and two
   focused tests; the five IMU helper tests and focused Ruff pass on the VM.
-  The 10-minute Orin static evidence run is pending.
+  The initial 10-minute Orin static evidence run was then completed.
+- Captured 27,918 raw samples across 598.022s at 46.682Hz with zero nonpositive
+  timestamps and nine complete 60-second windows. Gyro x mean was
+  0.032530rad/s (1.864deg/s), while the 60-second mean span was only
+  0.000479rad/s; uncompensated mean integration was 1114.61deg.
+- Preserved `docs/he/evidence/2026-07-12_0134_imu-static-stability.md` and raw
+  JSON. The post-capture read-only gate passed, services had zero restarts,
+  available memory remained about 3.2-3.3GiB and navigation publishers stayed
+  zero. Raw IMU remains rejected for VIO; six-position, axis, temperature and
+  physical camera-IMU calibration remain open.
+- Evidence closeout passed all 50 HE unit tests, focused Ruff, JSON parsing and
+  exact sample/duration/window/bias/hash assertions, plus `git diff --check`.
 
 ## Decisions
 
@@ -554,7 +565,8 @@ health while keeping real motion disconnected.
 - Real health-transition instrumentation and total Aurora input outage/recovery
   are verified on Orin. Partial and bad-but-fresh input faults remain open.
 - Raw IMU orientation is unusable as published. Madgwick is runnable but failed
-  the static admission gate, so the shadow chain remains RGB-D-only.
+  the static admission gate. A 598-second raw run also proved a stable but large
+  x gyro offset, so the shadow chain remains RGB-D-only.
 - Static bad-but-fresh RGB/depth transitions and recovery are proven on Orin.
   Static CameraInfo-only synchronization loss is also proven. Moving tracking
   loss and dynamic scenes remain open.

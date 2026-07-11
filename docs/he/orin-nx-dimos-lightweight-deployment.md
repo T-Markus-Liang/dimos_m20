@@ -1328,8 +1328,20 @@ sensor/read-only gates 均通过，两服务 active/零重启，导航发布者�
 0.033rad/s 不是 ROS 单位漏转换，但还不能区分板载 IMU 固有偏置、温度影响或安装轴
 问题。诊断现已增加 60 秒分段均值、多个 cluster duration 的 non-overlapping Allan
 deviation 和静止 gyro 均值积分量；这些只量化一姿态时域稳定性，不会自动生成或应用
-补偿。10 分钟 Orin 静态基线仍待部署采集，六面加速度计/陀螺标定和物理轴向核对仍需
-现场操作。
+补偿。
+
+10 分钟 Orin 静态基线已完成：27,918 条样本覆盖 598.022 秒 header 时间，均值
+46.682Hz、无非递增 timestamp，并形成 9 个完整 60 秒窗口。gyro x/y/z 均值为
+0.032530/-0.002002/-0.001835rad/s，60 秒窗口均值跨度仅
+0.000479/0.000283/0.000199rad/s；x 轴均值约 1.864deg/s，若不补偿在本次 capture
+内等效积分 1114.61deg。0.107/1.007/10.004/60.001 秒 cluster 的 x 轴
+non-overlapping Allan deviation 分别约 0.000426/0.000195/0.000189/0.000184rad/s。
+这证明偏置相对稳定但绝对量不可接受，当前 raw gyro 不准直接接入 VIO。
+
+完整证据见 `docs/he/evidence/2026-07-12_0134_imu-static-stability.md` 和同名 JSON。
+结束后 read-only gate 通过、服务 active/零重启、导航发布者为零。六面标定、物理轴向、
+温度特性和 camera-to-IMU 空间/时间标定仍需现场操作；不得把本次单姿态均值直接写成
+生产补偿参数。
 
 ## 20. Fresh visual fault 注入工具（2026-07-12）
 

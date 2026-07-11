@@ -1,6 +1,6 @@
 # HE Visual Navigation Candidate Evaluation
 
-Updated: 2026-07-11 15:39 CST
+Updated: 2026-07-12 01:46 CST
 
 ## Decision Status
 
@@ -20,8 +20,11 @@ retired, and `/odom_raw` is excluded as SLAM truth.
 - Aurora provides one 640x400 RGB image, one depth image, one IR image and an
   organized 256,000-point cloud at about 13-15Hz. This is not a conventional
   calibrated stereo pair.
-- The control-board IMU is about 47Hz. Camera-to-IMU extrinsics and clock
-  alignment are not yet qualified.
+- The control-board IMU is about 47Hz. A 598-second static run measured x gyro
+  mean 0.03253rad/s (about 1.864deg/s) with only 0.000479rad/s span across nine
+  60-second means. The driver applies correct deg/s-to-rad/s conversion but no
+  calibration. Raw IMU fails VIO admission; camera-to-IMU extrinsics, clock,
+  axes, temperature and six-position calibration are not yet qualified.
 - Live depth validity is only 17.6-20.4% globally in the samples seen so far.
   Spatial coverage and center ROI validity are a hard RGB-D admission gate.
 - `he-dimos-sense` uses about 1006-1009MiB. The system currently has about
@@ -175,8 +178,9 @@ Every runnable candidate receives the same artifact set:
    input. Record launch configuration, pose/status/map outputs and resources.
 4. Keep Isaac ROS RGB-D deferred unless HE deliberately migrates to a supported
    Noble/Jazzy Jetson baseline; release 3.2 is not an equivalent RGB-D test.
-5. Run OpenVINS only if camera/IMU timing passes and RGB-D tracking is not
-   reliable. Run DPVO only offline as a learned comparator.
+5. Run OpenVINS only after the raw IMU bias/axis and camera/IMU spatial/time
+   calibration gates pass, and only if RGB-D tracking is not reliable. Run DPVO
+   only offline as a learned comparator.
 6. Produce the ADR only after repeatable HE trajectory and Orin measurements.
 7. Integrate one selected runtime. A mapping backend may be paired with it, but
    multiple heavyweight SLAM frameworks must not remain resident on Orin.
