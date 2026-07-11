@@ -60,7 +60,7 @@ he_visual_slam_shadow = autoconnect(
     HESensorBridge.blueprint(),
     RerunBridgeModule.blueprint(
         rerun_open="none",
-        memory_limit="256MB",
+        memory_limit="128MB",
         latest_only_entities=[
             "world/color_image",
             "world/depth_image",

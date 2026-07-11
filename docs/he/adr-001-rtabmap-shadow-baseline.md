@@ -171,6 +171,15 @@ full-rate ROS SLAM path and the sampled latest-only Rerun sensor path; Sense is
 stopped and later restored under an EXIT trap. The combined runtime resource
 budget still requires Orin qualification before this architecture gate closes.
 
+The first combined 10-minute Orin run kept all eight sampled streams and native
+SLAM active, but failed the resource gate: four dedicated modules auto-scaled
+the pool from four to eight workers, tagged-process PSS was about 1.43GiB and
+runner-relative swap growth reached 84.25MiB. Health correctly reported
+`swap_growth_high` for all 251 final samples. The configuration is therefore
+not accepted as tested. The follow-up candidate removes the lightweight runner
+manager's dedicated worker and uses the already qualified 128MB sampled-sensor
+Rerun window; it requires a fresh equivalent Orin soak.
+
 Real navigation remains prohibited until moving ATE/RPE, loop closure,
 relocalization, map quality, camera extrinsics, tracking-loss detection,
 resource soak and control safety gates pass after a new vehicle-down safety

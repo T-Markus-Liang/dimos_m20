@@ -184,6 +184,11 @@ contains `HESensorBridge` itself: one coordinator runs the native full-rate ROS
 SLAM path and the sampled sensor-to-Rerun path simultaneously. Deployment still
 stops Sense under an EXIT restore trap and restores it after shadow stops.
 
+The combined shadow uses a 128MB latest-only Rerun window. The lightweight
+native runner manager shares the non-dedicated worker pool; the sensor bridge,
+visual ROS bridge and Rerun bridge retain dedicated workers. This avoids two
+otherwise idle worker processes while preserving native-process cleanup.
+
 See [Chassis characterization](docs/chassis-characterization-2026-07-11.md) for
 the measured command-chain limits, latency, precision, and feedback gaps.
 

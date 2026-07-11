@@ -641,6 +641,22 @@ health while keeping real motion disconnected.
   HESensorBridge presence, exact entity order and absence of all motion modules.
   All 24 visual-SLAM and 56 HE tests, Ruff, blueprint registry and diff checks
   pass on VM; combined Orin resource qualification is pending.
+- Deployed the first combined shadow as `a6053859` and completed an 11-point,
+  10-minute static soak. All eight sampled outputs persisted while native SLAM
+  ran, every navigation-publisher sample stayed zero and temperature peaked at
+  66.375C. A process-tree profiler based only on parentage missed daemonized
+  workers; a short tagged-process rerun correctly found 14 processes and about
+  1.43GiB total PSS.
+- The first candidate failed resource admission despite at least 2.56GiB
+  available memory: runner-relative swap growth reached 84.25MiB and all 251
+  final health samples reported `swap_growth_high`. The restore trap stopped
+  shadow normally and restored Sense; this configuration is not accepted.
+- Prepared a scoped second candidate: make only the lightweight native runner
+  manager non-dedicated, reducing expected workers from eight to six, and use
+  the previously qualified 128MB sensor Rerun window for the 14 latest-only
+  entities. Global worker policy and the three CPU/data-heavy dedicated modules
+  remain unchanged. VM 56-test, Ruff, registry and diff checks pass; Orin A/B
+  remains pending.
 - Pushed the probe, failed-getter fix, bounded DDS convergence and final
   evidence as `1655079a`, `b7b56853`, `a4af65e6` and `64cfeb4c`; Orin
   fast-forwarded cleanly and the macOS deployment mirror was synchronized.
@@ -724,9 +740,9 @@ health while keeping real motion disconnected.
   control modules remain unchanged; moving and physical-calibration gates are
   still open.
 - Shadow resource-health hardening is deployed and statically qualified. The
-  dual-path shadow blueprint is implemented and VM-verified but not yet
-  deployed. Its larger worker/process and Rerun footprint must pass Orin static
-  function, resource and safety soak before the architecture gate can close.
+  first dual-path runtime failed swap-growth admission and was safely removed.
+  The optimized six-worker/128MB candidate is VM-verified but not yet deployed;
+  the architecture gate remains open until its Orin soak passes.
 
 ## Resume Instructions
 

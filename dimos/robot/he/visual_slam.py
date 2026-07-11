@@ -713,7 +713,7 @@ class HERTABMapShadowRunnerConfig(ModuleConfig):
 class HERTABMapShadowRunner(Module):
     """Own the native RTAB-Map shadow process group and clean it on shutdown."""
 
-    dedicated_worker = True
+    dedicated_worker = False
     config: HERTABMapShadowRunnerConfig
     slam_runtime_status: Out[dict]
 

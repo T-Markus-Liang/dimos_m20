@@ -184,7 +184,8 @@ class TestHEVisualSlamBridge(unittest.TestCase):
 
         atoms = {atom.module: atom for atom in he_visual_slam_shadow.blueprints}
         self.assertEqual(atoms[HESensorBridge].kwargs, {})
-        self.assertEqual(atoms[RerunBridgeModule].kwargs["memory_limit"], "256MB")
+        self.assertEqual(atoms[RerunBridgeModule].kwargs["memory_limit"], "128MB")
+        self.assertFalse(HERTABMapShadowRunner.dedicated_worker)
         self.assertEqual(
             atoms[RerunBridgeModule].kwargs["latest_only_entities"],
             [

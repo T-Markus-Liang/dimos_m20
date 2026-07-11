@@ -1551,14 +1551,29 @@ Aurora raw ROS -> HESensorBridge sampled outputs
                -> bounded latest-only Rerun
 ```
 
-Rerun 的 256MB window 现在锁定 14 个 latest-only entity：原有 color/depth/IR/
+Rerun window 锁定 14 个 latest-only entity：原有 color/depth/IR/
 pointcloud、两路 CameraInfo、odom、IMU，加 visual odom/map/path/status、localization
 health 和受门禁的 global costmap。原始高带宽图像和点云仍不通过 Rerun 提升到全帧率；
 SLAM 继续直接订阅本机原始 ROS。
 
 蓝图仍无 `MovementManager`、`HEConnection`、follower 或速度输出。结构测试锁定
-`HESensorBridge` 存在、14 个 entity 完整、Rerun 256MB 不变和 runner 保持最后启动。
+`HESensorBridge` 存在、14 个 entity 完整和 runner 保持最后启动。
 VM 上 24 项 visual-SLAM、全部 56 项 HE unittest、Ruff、blueprint registry 和 diff
-检查通过。组合后 dedicated modules 从 3 增至 4，worker policy 预计将保持相同数量的
-non-dedicated worker，因此 Orin 必须重新测量完整进程树、available memory、swap、CPU、
-温度和全部 sampled modality；VM 结构通过不能替代实机资源准入。
+检查通过。
+
+第一版 256MB、4 个 dedicated module 的 Orin 组合实测没有通过资源门。worker policy
+把 4 个初始 worker 扩到 8 个；14 个 tagged process 的补充快照总 PSS 约 1.43GiB。
+11 个系统样本的 available 最低仍约 2.56GiB，主循环 swap 增长约 24.25MiB，但相对
+runner 启动到最终 health 采样累计增长 84.25MiB，超过 64MiB 门。251 个最终 health
+样本全部正确包含 `swap_growth_high`；配置不能按“功能有数据”视为验收。
+
+第一版 sampled 输出从开始到结束保持：图像约 3.7-4.0Hz、点云约 0.89Hz、两路
+CameraInfo 约 0.96Hz、odom/IMU 约 16Hz。native SLAM 和 Rerun 同时工作，温度最高
+66.375C，所有时间点 `/he/nav_cmd_vel` 为零，普通 SIGTERM 与 EXIT restore 均通过。
+功能面成立，但资源失败优先级更高。
+
+第二版只做两项证据驱动优化：`HERTABMapShadowRunner` 不再占专属 Python worker，
+使 3 个 dedicated module 对应 6-worker policy；combined Rerun 使用 HE Sense 已完成
+10 分钟 A/B 的 128MB window。runner 仍最后启动并保留 native process-group cleanup，
+全局 worker policy 不变。结构测试锁定这两个条件，VM 56 项 HE 测试通过；该候选必须
+重新做同口径 Orin soak 才能决定保留或回滚。
