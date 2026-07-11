@@ -124,11 +124,12 @@ def main() -> None:
             raise RuntimeError("refusing timing capture while /he/nav_cmd_vel has publishers")
 
         node.collecting = True
+        started = time.monotonic()
         deadline = time.monotonic() + args.duration
         while time.monotonic() < deadline:
             rclpy.spin_once(node, timeout_sec=0.1)
         node.collecting = False
-        report = summarize(node, args.duration)
+        report = summarize(node, time.monotonic() - started)
         if report["navigation_publishers"]:
             raise RuntimeError("/he/nav_cmd_vel gained a publisher during timing capture")
     finally:

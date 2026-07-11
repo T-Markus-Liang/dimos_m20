@@ -76,8 +76,9 @@ cloud payloads in the diagnostic process:
 
 The timing diagnostic keeps only bounded source/receipt timestamps (at most
 200,000 per stream by default), refuses to run with a navigation publisher,
-and reports source/receipt jitter, timestamp regressions and duplicates,
-estimated missing frames, callback age, and RGB-nearest cross-stream offsets.
+and reports median-period plus full-window source/receipt rates, jitter,
+timestamp regressions and duplicates, estimated missing frames/ratio, callback
+age, and RGB-nearest cross-stream offsets.
 It does not replace a synchronized rosbag needed for moving ATE/RPE work.
 
 Query the vendor SDK's read-only support, temperature, laser-current and

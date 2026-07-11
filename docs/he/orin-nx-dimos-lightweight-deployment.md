@@ -1645,9 +1645,14 @@ enabled/active、shadow static/inactive。短往返中的 runner-relative swap �
 receipt timestamp，不保留 payload；默认每路最多 200000 个样本，持续时间限制为
 10-3600 秒，因此不会随相机字节流形成无界内存。
 
-输出分别记录 RGB、depth、IR、point cloud 和 IMU 的 source/receipt rate、interval
-median/P95/max、时间戳回退与重复、按中位周期估计的缺帧数、callback transport age，
+输出分别记录 RGB、depth、IR、point cloud 和 IMU 的中位周期帧率、全窗口有效帧率、
+interval median/P95/max、时间戳回退与重复、按中位周期估计的缺帧数/比例、callback age，
 以及以 RGB 为参考的最近时间戳偏差。开始和结束都检查 `/he/nav_cmd_vel` 零发布者。
 该工具用于关闭长时软件时间同步证据缺口，不代表硬件同步，也不能替代车辆落地后的
 同步 rosbag、ATE/RPE、回环或重定位验证。VM 上 59 项 HE unittest、Ruff、blueprint
 registry 和 diff 检查通过；Orin 长时结果仍待部署实测。
+
+首轮 10 分钟实测暴露出只报告中位周期会掩盖间歇性整帧缺失：多数相邻帧仍是
+68-75ms，但有效样本总数明显更低。工具因此补充 source/receipt span rate 和估计
+missing ratio，并使用实际 monotonic 运行时长。该修复不改变订阅或 payload 行为；
+需要用更新版本执行 Sense 并发与隔离单订阅者 A/B 后再给出同步准入结论。

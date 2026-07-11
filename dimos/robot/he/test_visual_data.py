@@ -70,7 +70,10 @@ class TestHEVisualData(unittest.TestCase):
             [1.01, 1.11, 1.215, 1.415],
         )
         self.assertAlmostEqual(metrics["source_rate_hz"], 10.0)
+        self.assertAlmostEqual(metrics["source_span_rate_hz"], 7.5)
+        self.assertAlmostEqual(metrics["receipt_span_rate_hz"], 3.0 / 0.405)
         self.assertEqual(metrics["estimated_missing_frames"], 1)
+        self.assertAlmostEqual(metrics["estimated_missing_ratio"], 0.2)
         self.assertEqual(metrics["source_regressions"], 0)
         self.assertEqual(metrics["source_duplicates"], 0)
         self.assertAlmostEqual(metrics["transport_age_ms"]["signed_median"], 12.5)

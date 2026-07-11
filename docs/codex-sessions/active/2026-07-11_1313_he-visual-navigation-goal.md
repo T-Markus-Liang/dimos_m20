@@ -707,6 +707,12 @@ health while keeping real motion disconnected.
   RGB-nearest cross-stream alignment. This avoids the payload retention in the
   short depth-quality diagnostic. All 59 HE tests, Ruff, registry and diff
   checks pass on VM; Orin timing evidence remains pending.
+- The first 10-minute timing run showed that median period alone masks
+  intermittent whole-frame gaps. Added full-window source/receipt rates,
+  sampling spans and estimated missing ratios, and now records actual monotonic
+  duration. The unchanged payload-free collector remains bounded; a paired
+  Sense-concurrent versus isolated-subscriber A/B is required before assigning
+  the gaps to Aurora/USB rather than diagnostic subscription pressure.
 - Pushed the probe, failed-getter fix, bounded DDS convergence and final
   evidence as `1655079a`, `b7b56853`, `a4af65e6` and `64cfeb4c`; Orin
   fast-forwarded cleanly and the macOS deployment mirror was synchronized.

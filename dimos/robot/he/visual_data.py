@@ -100,16 +100,25 @@ def timing_series_quality(stamps: list[float], receipts: list[float]) -> dict[st
     )
     ages_ms = (np.asarray(receipts, dtype=np.float64) - np.asarray(stamps)) * 1000.0
     absolute_ages_ms = np.abs(ages_ms)
+    source_span = float(np.max(stamps) - np.min(stamps))
+    receipt_span = float(receipts[-1] - receipts[0])
+    if source_span <= 0.0 or receipt_span <= 0.0:
+        raise ValueError("source and receipt series must have a positive span")
+    estimated_expected_frames = len(stamps) + missing
 
     return {
         "samples": len(stamps),
         "source_rate_hz": 1.0 / median_stamp_delta,
+        "source_span_seconds": source_span,
+        "source_span_rate_hz": (len(stamps) - 1) / source_span,
         "source_interval_ms": {
             "median": median_stamp_delta * 1000.0,
             "p95": float(np.percentile(positive_stamp_deltas, 95)) * 1000.0,
             "max": float(np.max(positive_stamp_deltas)) * 1000.0,
         },
         "receipt_rate_hz": 1.0 / float(np.median(receipt_deltas)),
+        "receipt_span_seconds": receipt_span,
+        "receipt_span_rate_hz": (len(receipts) - 1) / receipt_span,
         "receipt_interval_ms": {
             "median": float(np.median(receipt_deltas)) * 1000.0,
             "p95": float(np.percentile(receipt_deltas, 95)) * 1000.0,
@@ -118,6 +127,7 @@ def timing_series_quality(stamps: list[float], receipts: list[float]) -> dict[st
         "source_regressions": int(np.count_nonzero(stamp_deltas < 0.0)),
         "source_duplicates": int(np.count_nonzero(stamp_deltas == 0.0)),
         "estimated_missing_frames": missing,
+        "estimated_missing_ratio": missing / estimated_expected_frames,
         "transport_age_ms": {
             "signed_median": float(np.median(ages_ms)),
             "absolute_p95": float(np.percentile(absolute_ages_ms, 95)),
