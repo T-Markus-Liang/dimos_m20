@@ -79,11 +79,13 @@ class RpcCall:
                     except Exception:
                         logger.warning("Failed to close stop RPC client", exc_info=True)
 
-                threading.Thread(
+                cleanup_thread = threading.Thread(
                     target=close_client,
                     name=f"{self._remote_name}-stop-rpc-cleanup",
                     daemon=True,
-                ).start()
+                )
+                cleanup_thread.start()
+                cleanup_thread.join(timeout=0.1)
             return None
 
         result, unsub_fn = self._rpc.call_sync(

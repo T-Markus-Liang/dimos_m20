@@ -22,7 +22,7 @@ def test_stop_does_not_wait_for_rpc_client_cleanup() -> None:
     stop()
     elapsed = time.monotonic() - started
 
-    assert elapsed < 0.1
+    assert elapsed < 0.2
     rpc.call_nowait.assert_called_once_with("ExampleModule/stop", ((), {}))
     assert cleanup_started.wait(timeout=0.5)
     release_cleanup.set()

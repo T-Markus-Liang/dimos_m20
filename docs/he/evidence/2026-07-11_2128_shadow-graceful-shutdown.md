@@ -2,7 +2,7 @@
 
 Date: 2026-07-11 21:28 CST
 
-Status: child and host RPC cleanup fixes pending final Orin verification
+Status: daemon/non-parent worker cleanup fix pending final Orin verification
 
 ## Safety Scope
 
@@ -87,14 +87,44 @@ test deliberately blocks client cleanup and proves that the stop call returns
 in under 100ms, cleanup starts, and the thread exits after release. The related
 36 core lifecycle/CLI tests and all 39 HE tests pass.
 
+## Third Live Attempt And Daemon Parent Mismatch
+
+Commit `37bb0f78` was fast-forwarded to Orin. The third normal stop no longer
+needed SIGKILL:
+
+- the CLI reported `Stopped with SIGTERM`;
+- elapsed stop time was 4926ms;
+- no native RTAB-Map process or Rerun port remained.
+
+This proves that synchronous caller-backend cleanup was the five-second host
+blocker. The attempt was not clean, however: six worker shutdowns logged
+`AssertionError: can only join a child process`.
+
+The workers are created before `daemonize()` performs its double fork. The
+resulting daemon process inherits `multiprocessing.Process` objects but is not
+their recorded parent, so `Process.join()` is invalid there. The correction
+uses `multiprocessing.join()` only in the original parent. A daemon/non-parent
+waits for the same PID with the existing `psutil` dependency, preserving the
+five-second graceful wait and the SIGTERM/SIGKILL fallback without raising.
+The run registry now also treats a zombie PID as exited instead of reporting a
+stale run as alive.
+
+The RPC cleanup thread receives a bounded 100ms join. This keeps ordinary test
+cleanup deterministic while preserving nonblocking stop behavior under a busy
+LCM backend. The focused parent/non-parent, zombie registry and RPC tests raise
+the related core selection to 49 passing tests; all 39 HE tests, Ruff and
+`git diff --check` also pass on the VM.
+
 ## Required Orin Evidence
 
-After the core RPC commit and fast-forward sync, start the motion-free shadow blueprint,
-wait for both native processes and `/he/visual_odom`, then use normal
+After the daemon/non-parent worker commit and fast-forward sync, start the
+motion-free shadow blueprint, wait for both native processes and
+`/he/visual_odom`, then use normal
 `dimos stop` without `--force`. Record elapsed time and require:
 
 - CLI reports `Stopped with SIGTERM`, not escalation to SIGKILL;
 - elapsed stop time is below five seconds;
+- no `can only join a child process` or `Error shutting down worker` log;
 - no native odometry, SLAM, watchdog, Rerun port or DimOS process remains;
 - `he-dimos-sense` restores active with zero restarts;
 - the independent read-only gate passes and navigation publishers remain zero.

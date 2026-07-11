@@ -24,6 +24,8 @@ import re
 import signal
 import time
 
+import psutil
+
 from dimos.constants import STATE_DIR
 from dimos.core.coordination.process_lifecycle import kill_run_processes
 from dimos.utils.logging_config import setup_logger
@@ -79,11 +81,10 @@ def generate_run_id(blueprint: str) -> str:
 def is_pid_alive(pid: int) -> bool:
     """Check whether a process with the given PID is still running."""
     try:
-        os.kill(pid, 0)
-        return True
-    except ProcessLookupError:
+        return psutil.Process(pid).status() != psutil.STATUS_ZOMBIE
+    except psutil.NoSuchProcess:
         return False
-    except PermissionError:
+    except psutil.AccessDenied:
         # Process exists but we can't signal it — still alive.
         return True
 

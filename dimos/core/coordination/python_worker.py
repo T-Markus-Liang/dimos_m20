@@ -24,6 +24,8 @@ import threading
 import traceback
 from typing import TYPE_CHECKING, Any
 
+import psutil
+
 from dimos.core.coordination.worker_messages import (
     CallMethodRequest,
     DeployModuleRequest,
@@ -44,6 +46,19 @@ if TYPE_CHECKING:
     from dimos.core.module import ModuleBase
 
 logger = setup_logger()
+
+
+def _wait_for_process_exit(process: multiprocessing.Process, timeout: float) -> bool:
+    if process._parent_pid == os.getpid():
+        process.join(timeout=timeout)
+        return not process.is_alive()
+    try:
+        psutil.Process(process.pid).wait(timeout=timeout)
+        return True
+    except psutil.NoSuchProcess:
+        return True
+    except psutil.TimeoutExpired:
+        return False
 
 
 class ActorFuture:
@@ -292,14 +307,18 @@ class PythonWorker:
                 self._conn = None
 
         if self._process is not None:
-            self._process.join(timeout=5)
-            if self._process.is_alive():
+            if not _wait_for_process_exit(self._process, timeout=5):
                 logger.warning(
                     "Worker still alive after 5s, terminating.",
                     worker_id=self._worker_id,
                 )
                 self._process.terminate()
-                self._process.join(timeout=1)
+                if not _wait_for_process_exit(self._process, timeout=1):
+                    try:
+                        os.kill(self._process.pid, signal.SIGKILL)
+                    except ProcessLookupError:
+                        pass
+                    _wait_for_process_exit(self._process, timeout=1)
             self._process = None
 
 

@@ -1004,6 +1004,19 @@ runner 已改为共享时间窗内并行 SIGINT -> SIGTERM -> SIGKILL，并最�
 新增 core 测试让 cleanup 故意阻塞，验证 stop 调用 100ms 内返回、cleanup 已启动且
 释放后线程退出；36 项相关 core 测试和 39 项 HE 测试通过，待第三轮 Orin 实测。
 
+第三轮 Orin 普通 stop 已不再升级 SIGKILL：CLI 报告 `Stopped with SIGTERM`，耗时
+4926ms，native 进程和 Rerun 端口均无残留。这证明 caller RPC backend 是此前的五秒
+主阻塞，但日志仍出现 6 次 `can only join a child process`，所以该轮不能视为干净通过。
+根因是 worker 在 `daemonize()` 双重 fork 前创建；daemon 继承
+`multiprocessing.Process` 对象后已不是其父进程，不能调用 `Process.join()`。
+
+修复保持原父进程使用 `multiprocessing.join()`，daemon/non-parent 改用已有 `psutil`
+按 PID 等待；五秒优雅窗口和 SIGTERM/SIGKILL fallback 不变。run registry 同时把
+zombie PID 视为已退出，避免残留状态误报。RPC cleanup thread 增加最多 100ms 的
+有界 join，兼顾普通测试清理和繁忙 LCM backend 下的非阻塞 stop。49 项相关 core
+测试、39 项 HE 测试、Ruff 和 diff 检查已在 VM 通过；最终 Orin 无异常日志普通 stop
+复测仍待执行。
+
 ## 16. 公开基准与视觉外参准入复核（2026-07-11）
 
 公开数值基准已从官方论文补齐到

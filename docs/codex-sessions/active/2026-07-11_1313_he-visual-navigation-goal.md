@@ -292,6 +292,17 @@ health while keeping real motion disconnected.
 - Moved only caller-backend cleanup to a named daemon thread. A focused test
   proves stop returns under 100ms while cleanup starts and later terminates.
   Thirty-six related core lifecycle/CLI tests and all 39 HE tests pass on VM.
+- The third Orin normal stop reported `Stopped with SIGTERM` in 4926ms and left
+  no native process or Rerun port. It still logged six
+  `can only join a child process` errors, so it is not a clean pass.
+- Confirmed workers are created before the daemon double fork. The daemon is
+  not the `multiprocessing.Process` parent and cannot call `join()`. Added a
+  parent-aware wait that retains `multiprocessing.join()` in the original
+  parent and uses `psutil.Process(pid).wait()` in the daemon/non-parent.
+- Made registry liveness zombie-aware and gave the asynchronous RPC cleanup
+  thread a bounded 100ms join. Forty-nine related core tests, 39 HE tests,
+  Ruff and `git diff --check` pass on the VM; clean Orin lifecycle proof is
+  pending.
 
 ## Decisions
 
@@ -340,9 +351,9 @@ health while keeping real motion disconnected.
   first threshold-only deployment failed, while the corrected unlinked-node
   persistence setting passed a full 600-second Orin soak with about 99.0%
   lower database growth. The 256MiB hard watchdog remains enabled.
-- Native child cleanup and lifecycle order are fixed. The second Orin attempt
-  exposed synchronous host RPC-client cleanup as the remaining five-second
-  blocker; its async correction is tested on VM and needs final Orin proof.
+- Native child cleanup, lifecycle order and host RPC-client cleanup are fixed.
+  The third Orin attempt stopped normally but exposed daemon/non-parent worker
+  joins. The parent-aware wait is tested on VM and needs final clean Orin proof.
 
 ## Resume Instructions
 
