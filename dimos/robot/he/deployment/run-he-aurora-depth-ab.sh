@@ -33,8 +33,10 @@ esac
   exit 2
 }
 
+set +u
 source /opt/ros/humble/setup.bash
 source /home/ubuntu/third_party/aurora_ws/install/setup.bash
+set -u
 cd "$repo"
 
 stop_isolated_driver() {

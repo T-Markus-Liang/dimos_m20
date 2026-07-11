@@ -187,6 +187,10 @@ health while keeping real motion disconnected.
 - Added a restore-guarded Aurora A/B runner that accepts one effective parameter,
   owns the temporary process group, restores systemd on every exit path and
   reruns live sensor/read-only gates.
+- The first runner invocation exited before installing the trap or stopping the
+  service because ROS 2 `setup.bash` is not nounset-safe. Scoped `set +u` to the
+  two environment sources and immediately restored `set -u`; no camera state or
+  parameter changed during the failed invocation.
 
 ## Decisions
 

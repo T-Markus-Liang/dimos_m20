@@ -1062,3 +1062,9 @@ laser mode、resolution mode 和 RGB-D stream selection。完整调用链证据�
 或异常退出都清理完整进程组、恢复 `aurora930.service`，并重新执行 live sensor 和
 read-only gates。每轮同时保存 Git HEAD、canonical 参数值和 test value sidecar，
 不能用动态 `ros2 param set` 冒充设备 SDK 已重新配置。
+
+脚本首次在 Orin 调用时，ROS 2 `setup.bash` 在 `set -u` 下读取未定义的
+`AMENT_TRACE_SETUP_FILES` 并立即退出；退出发生在安装 restore trap 和停止
+systemd 服务之前，因此没有改变相机状态。修复为只在 source ROS/Aurora 环境期间
+临时关闭 nounset，加载完成后立即恢复。后续 Bash 脚本若启用 `set -u`，必须沿用
+这一兼容方式，不能把环境脚本失败误判成相机或 SDK 故障。
