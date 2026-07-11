@@ -476,6 +476,11 @@ health while keeping real motion disconnected.
   A broad HE Ruff scan still reports eight pre-existing import-order findings
   in untouched connection, sensor and deployment files; they are not mixed into
   this evidence-only closeout.
+- Committed and pushed the evidence closeout as `7cc9ab79`, fast-forwarded the
+  Orin worktree, and synchronized the canonical deployment guide to the macOS
+  Downloads mirror. Post-sync checks kept `HEConnection.enabled=False`, the
+  sensor service active with zero restarts, no SLAM/fault process and zero
+  `/he/nav_cmd_vel` publishers.
 
 ## Decisions
 
