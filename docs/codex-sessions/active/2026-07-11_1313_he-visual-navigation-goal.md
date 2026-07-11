@@ -68,6 +68,17 @@ health while keeping real motion disconnected.
   apt repositories: RGB-D starts in 4.4 on Noble/Jazzy; Jammy/Humble 3.2 lacks
   RGB-D. Confirmed official RTAB-Map 0.23.7 Humble arm64 packages are available
   on Orin without installing them yet.
+- Installed only RTAB-Map 0.23.7 odometry/SLAM runtime packages on Orin. Direct
+  ROS repository downloads repeatedly stalled, so official apt URIs were
+  downloaded through the Tsinghua ROS mirror, checked against apt-provided MD5,
+  copied to the apt cache and installed locally. Disk increase was 66,953,216
+  bytes; no GUI/demo/meta package was installed.
+- Live RGB-D odometry produced pose at about 8-10Hz. Bounding approximate sync
+  to 20ms removed bad-pair warnings, reduced processing to about 63-76ms and
+  used about 190-197MiB RSS with roughly 30-36% of one CPU core.
+- Found that `ros2 run` can leave the RTAB-Map child alive after signaling the
+  wrapper. Cleaned the process and switched experiments to the native binary
+  under `timeout`; no persistent SLAM service exists yet.
 
 ## Decisions
 

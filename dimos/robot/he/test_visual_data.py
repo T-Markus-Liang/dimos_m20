@@ -5,7 +5,14 @@ import unittest
 
 import numpy as np
 
-from dimos.robot.he.visual_data import depth_array, depth_quality, timestamp_alignment, topic_rate
+from dimos.robot.he.visual_data import (
+    depth_array,
+    depth_quality,
+    quaternion_distance_degrees,
+    stationary_trajectory_metrics,
+    timestamp_alignment,
+    topic_rate,
+)
 
 
 class TestHEVisualData(unittest.TestCase):
@@ -44,6 +51,28 @@ class TestHEVisualData(unittest.TestCase):
         self.assertAlmostEqual(metrics["center_40_percent_valid_ratio"], 1.0)
         self.assertEqual(metrics["valid_depth_mm_percentiles"]["50"], 1000.0)
         self.assertEqual(len(metrics["grid_3x3_valid_ratio"]), 3)
+
+    def test_stationary_trajectory_metrics(self) -> None:
+        metrics = stationary_trajectory_metrics(
+            [10.0, 10.5, 11.0],
+            [[0.0, 0.0, 0.0], [0.01, 0.0, 0.0], [0.0, 0.02, 0.0]],
+            [[0.0, 0.0, 0.0, 1.0]] * 3,
+            [0.01, 0.02, 0.03],
+        )
+        self.assertEqual(metrics["samples"], 3)
+        self.assertEqual(metrics["output_rate_hz"], 2.0)
+        self.assertAlmostEqual(metrics["final_position_drift_m"], 0.02)
+        self.assertAlmostEqual(metrics["max_rotation_drift_deg"], 0.0)
+        self.assertAlmostEqual(metrics["latency_median_ms"], 20.0)
+
+    def test_quaternion_distance_uses_shortest_rotation(self) -> None:
+        self.assertAlmostEqual(
+            quaternion_distance_degrees(
+                np.array([0.0, 0.0, 0.0, 1.0]),
+                np.array([0.0, 0.0, np.sin(np.pi / 4), np.cos(np.pi / 4)]),
+            ),
+            90.0,
+        )
 
 
 if __name__ == "__main__":

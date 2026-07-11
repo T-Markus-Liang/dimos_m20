@@ -102,3 +102,52 @@ def depth_quality(
         "grid_3x3_valid_ratio": grid,
         "valid_depth_mm_percentiles": percentiles,
     }
+
+
+def quaternion_distance_degrees(first: np.ndarray, second: np.ndarray) -> float:
+    first = np.asarray(first, dtype=np.float64)
+    second = np.asarray(second, dtype=np.float64)
+    first /= np.linalg.norm(first)
+    second /= np.linalg.norm(second)
+    dot = float(np.clip(abs(np.dot(first, second)), 0.0, 1.0))
+    return float(np.degrees(2.0 * np.arccos(dot)))
+
+
+def stationary_trajectory_metrics(
+    stamps: list[float],
+    positions: list[list[float]],
+    orientations: list[list[float]],
+    latencies: list[float],
+) -> dict[str, float | int]:
+    if len(stamps) < 2 or not (len(stamps) == len(positions) == len(orientations)):
+        raise ValueError("at least two equally sized pose samples are required")
+    position_array = np.asarray(positions, dtype=np.float64)
+    displacement = np.linalg.norm(position_array - position_array[0], axis=1)
+    steps = np.linalg.norm(np.diff(position_array, axis=0), axis=1)
+    rotations = [
+        quaternion_distance_degrees(np.asarray(orientations[0]), np.asarray(orientation))
+        for orientation in orientations
+    ]
+    duration = stamps[-1] - stamps[0]
+    if duration <= 0.0:
+        raise ValueError("pose timestamps must span a positive duration")
+    result: dict[str, float | int] = {
+        "samples": len(stamps),
+        "duration_seconds": duration,
+        "output_rate_hz": (len(stamps) - 1) / duration,
+        "final_position_drift_m": float(displacement[-1]),
+        "max_position_drift_m": float(np.max(displacement)),
+        "accumulated_position_motion_m": float(np.sum(steps)),
+        "final_rotation_drift_deg": rotations[-1],
+        "max_rotation_drift_deg": max(rotations),
+    }
+    if latencies:
+        latency_ms = np.asarray(latencies, dtype=np.float64) * 1000.0
+        result.update(
+            {
+                "latency_median_ms": float(np.median(latency_ms)),
+                "latency_p95_ms": float(np.percentile(latency_ms, 95)),
+                "latency_max_ms": float(np.max(latency_ms)),
+            }
+        )
+    return result

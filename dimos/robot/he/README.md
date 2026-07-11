@@ -72,6 +72,13 @@ bash dimos/robot/he/deployment/record-he-visual-dataset.sh \
   --duration 10 --label static
 ```
 
+Measure bounded stationary drift for a running shadow odometry topic:
+
+```bash
+.venv/bin/python dimos/robot/he/deployment/benchmark-he-visual-odom.py \
+  --duration 60 --output /tmp/he-visual-odom-benchmark.json
+```
+
 See [Chassis characterization](docs/chassis-characterization-2026-07-11.md) for
 the measured command-chain limits, latency, precision, and feedback gaps.
 
