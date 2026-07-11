@@ -544,6 +544,11 @@ health while keeping real motion disconnected.
 - Evidence closeout passed all 50 HE tests, C++ `-Werror` compilation against
   the real SDK headers, Bash syntax, JSON/hash/support-range/live-depth
   cross-assertions, serial-pattern exclusion and `git diff --check`.
+- Pushed the probe, failed-getter fix, bounded DDS convergence and final
+  evidence as `1655079a`, `b7b56853`, `a4af65e6` and `64cfeb4c`; Orin
+  fast-forwarded cleanly and the macOS deployment mirror was synchronized.
+  The final repository-version read-only gate passed at about 1001MiB sensor
+  bridge memory and 3.3GiB available memory with zero navigation publishers.
 
 ## Decisions
 
