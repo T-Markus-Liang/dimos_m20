@@ -107,7 +107,13 @@ The bridge now validates the exact RTAB-Map CameraInfo directly. Zero focal
 lengths triggered `camera_info_invalid` in 0.363s and the reason cleared 0.009s
 after valid calibration resumed. A missing calibration re-test triggered
 `camera_info_stale` in 0.946s and recovered in 0.103s. Structurally valid but
-physically wrong calibration remains outside this static gate.
+out-of-baseline calibration was then tested separately: 31 RGB CameraInfo
+messages with focal lengths shifted by 10% and principal points by 10px added
+`camera_info_invalid` in 0.286s, cleared it 0.135s after recovery and restored
+the original baseline in 0.510s. The database hash and all motion gates remained
+unchanged. This qualifies runtime configuration-drift detection only; physical
+target calibration and camera-to-base/camera-to-IMU extrinsics remain outside
+the static gate. See `evidence/2026-07-12_0118_intrinsic-baseline-drift.md`.
 
 A later 600-second stationary soak exposed a separate active-database growth
 failure: 0.480m of accumulated frame jitter grew one database from 16.7MiB to

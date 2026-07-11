@@ -9,7 +9,7 @@
 - Task: research, benchmark, select and integrate a visual SLAM navigation foundation for HE
 - Status: active - shadow integrated; static IMU qualification complete;
   physical calibration and moving gates pending
-- Branch if relevant: `codex/he-orin`; documentation update based on `87549530`
+- Branch if relevant: `codex/he-orin`; evidence closeout based on `c14578fd`
 
 ## User Request Summary
 
@@ -459,8 +459,23 @@ health while keeping real motion disconnected.
   bridge memory, services had zero restarts and navigation publishers were zero.
 - Added a versioned HE runtime intrinsic baseline with 2% focal and 2px
   principal-point tolerances, plus `shift-camera-intrinsics` fault injection.
-  This detects runtime drift but does not claim physical calibration accuracy;
-  VM verification and live Orin proof are pending.
+  This detects runtime drift but does not claim physical calibration accuracy.
+- Completed the isolated Orin intrinsic-drift proof. Thirty-one structurally
+  valid RGB CameraInfo messages with 10% focal and 10px principal-point shifts
+  triggered `camera_info_invalid` in 0.286s. The reason cleared 0.135s after
+  recovery and the original baseline returned in 0.510s; TF freshness failed
+  later at about 1.030s and became unavailable at about 5.083s.
+- Preserved both raw JSON files and
+  `docs/he/evidence/2026-07-12_0118_intrinsic-baseline-drift.md`. The database
+  hash stayed unchanged, final sensor/read-only gates passed, services had zero
+  restarts, bridge memory was about 822MiB, available memory was about 3.5GiB
+  and navigation publishers remained zero.
+- Closeout verification passed all 48 HE unit tests, focused Ruff checks for the
+  CameraInfo/visual-SLAM implementation, machine-parsed both JSON files and
+  asserted the 0.286/0.135/0.510s timeline, and passed `git diff --check`.
+  A broad HE Ruff scan still reports eight pre-existing import-order findings
+  in untouched connection, sensor and deployment files; they are not mixed into
+  this evidence-only closeout.
 
 ## Decisions
 
@@ -527,14 +542,17 @@ health while keeping real motion disconnected.
   the static admission gate, so the shadow chain remains RGB-D-only.
 - Static bad-but-fresh RGB/depth transitions and recovery are proven on Orin.
   Static CameraInfo-only synchronization loss is also proven. Moving tracking
-  Structural malformed/missing CameraInfo is also proven. Plausible-but-wrong
-  calibration, moving tracking loss and dynamic scenes remain open.
+  loss and dynamic scenes remain open.
+- Structural malformed/missing CameraInfo and runtime drift beyond the approved
+  intrinsic tolerance are proven. Physical target calibration and physical
+  camera-to-base/camera-to-IMU extrinsics remain open.
 
 ## Resume Instructions
 
 1. Read this log, ADR-001 and the final shadow soak evidence.
-- Preserve the CameraInfo evidence boundary: missing and structurally invalid
-  calibration are covered; plausible-but-wrong values require physical baseline.
+- Preserve the CameraInfo evidence boundary: missing, structurally invalid and
+  runtime values beyond the approved intrinsic tolerance are covered. The
+  approved baseline itself still requires physical calibration-target proof.
 - Read the fresh-content fault evidence before changing health thresholds; do
   not treat blank-depth freshness fallback as explicit tracking-loss status.
 - Read the static IMU evidence before changing RTAB-Map inputs. Do not run an

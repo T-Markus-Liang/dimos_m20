@@ -243,5 +243,10 @@ status. See `evidence/2026-07-12_0052_camera-info-fault.md`.
 Direct calibration validation now adds explicit missing/invalid/stale reasons.
 Zero-focal-length CameraInfo was rejected in 0.363s and valid calibration
 restored the reason in 0.009s. See
-`evidence/2026-07-12_0107_camera-info-health-gate.md`. Plausible-but-wrong
-intrinsics and physical extrinsics remain calibration gates.
+`evidence/2026-07-12_0107_camera-info-health-gate.md`. A separate runtime
+baseline-drift test kept images fresh while shifting focal lengths by 10% and
+principal points by 10px. The bridge rejected the first fault state in 0.286s,
+cleared it 0.135s after recovery and returned to the original map-quality-only
+baseline in 0.510s. See
+`evidence/2026-07-12_0118_intrinsic-baseline-drift.md`. This detects runtime
+configuration drift; physical target calibration and extrinsics remain gates.

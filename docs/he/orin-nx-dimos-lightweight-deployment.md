@@ -1368,4 +1368,12 @@ malformed CameraInfo 已关闭；plausible-but-wrong 数值与物理外参仍需
 
 新增版本化运行内参基线：640x400、fx/fy 417.2417/418.1166、cx/cy
 320.1967/191.8275；焦距允许 2% 相对偏差，主点允许 2px 偏差。该基线用于检测运行时
-配置漂移，不代表物理标定已通过。`shift-camera-intrinsics` live 证据仍待完成。
+配置漂移，不代表物理标定已通过。`shift-camera-intrinsics` 已在 Orin 完成静态隔离
+验证：fault 阶段保持 RGB/depth 有效并发布 31 条结构合法但焦距放大 10%、主点偏移
+10px 的 RGB CameraInfo；`camera_info_invalid` 在 0.286 秒触发，恢复合法内参后
+0.135 秒消失，并在 0.510 秒回到原 `map_known_ratio_low` 基线。随后约 1.030 秒出现
+`tf_stale`、约 5.083 秒转为 `tf_unavailable`，说明直接内参门早于下游 TF freshness
+兜底。只读数据库 SHA-256 全程不变，最终 sensor/read-only gates、服务零重启和零导航
+发布者均通过。完整证据见
+`docs/he/evidence/2026-07-12_0118_intrinsic-baseline-drift.md`。运行时超容差配置漂移已
+关闭；标定板物理内参验证和 camera-to-base/camera-to-IMU 外参仍是准入门。
