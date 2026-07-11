@@ -175,6 +175,18 @@ health while keeping real motion disconnected.
   stable connected region, depth/IR correlation and point-cloud XYZ quality.
 - Added four focused tests. All 33 HE unit tests pass, including under
   `-W error`; Ruff and `git diff --check` pass on the modified files.
+- Pushed `673be17f` and fast-forwarded Orin to it. The enhanced 30-frame live
+  baseline completed between read-only gates with no configuration change.
+- Baseline depth was 24.26% valid and 75.74% zero; below-range, above-range and
+  `65535` ratios were all zero. Point-cloud usable and zero XYZ ratios matched
+  depth exactly, and all XYZ values were finite.
+- Across 39 depth frames, 69.88% of pixels were never valid, 18.97% were always
+  valid and only 11.15% were intermittent. The 90%-stable mask covered 20.84%
+  of the image, but its largest connected region covered only 5.27%. This is a
+  stable spatial-coverage defect rather than ordinary random frame loss.
+- Added a restore-guarded Aurora A/B runner that accepts one effective parameter,
+  owns the temporary process group, restores systemd on every exit path and
+  reruns live sensor/read-only gates.
 
 ## Decisions
 
@@ -216,16 +228,16 @@ health while keeping real motion disconnected.
   unhealthy and no planner costmap or motion command is released.
 - Aurora depth coverage, camera extrinsics, moving accuracy, loop closure and
   relocalization remain open gates. Real motion remains prohibited.
-- The enhanced diagnostic and 33-test VM regression are ready for Git-based
-  Orin synchronization. Live enhanced baseline and parameter A/B evidence are
-  the next task; no persistent Aurora setting has changed.
+- The enhanced diagnostic is synchronized and live-verified on Orin. Controlled
+  effective-parameter A/B evidence is the next task; no persistent Aurora
+  setting has changed.
 
 ## Resume Instructions
 
 1. Read this log, ADR-001 and the final shadow soak evidence.
-2. Push and fast-forward the enhanced Aurora diagnostic to Orin, then capture a
-   bounded default baseline and run only Aurora-effective single-variable A/B
-   tests. Restore systemd defaults and both read-only gates after every test.
+2. Push and fast-forward the restore-guarded A/B runner, then test only
+   Aurora-effective single-variable changes. Preserve the baseline JSON and
+   restore systemd defaults and both read-only gates after every test.
 3. Use the new nominal-extrinsics audit to plan physical camera-to-base and
    camera-to-IMU calibration; do not promote the nominal values to calibrated.
 4. Keep public benchmark tables source-scoped and update them only when a new

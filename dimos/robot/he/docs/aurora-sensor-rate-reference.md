@@ -119,6 +119,19 @@ SLAM admission diagnostic and bounded recording:
 bash dimos/robot/he/deployment/record-he-visual-dataset.sh --dry-run
 ```
 
+Controlled single-parameter experiments must use the restore-guarded runner:
+
+```bash
+sudo -n true
+bash dimos/robot/he/deployment/run-he-aurora-depth-ab.sh \
+  threshold_size 30 /tmp/he-aurora-threshold-30.json 30
+```
+
+The runner accepts only Aurora-effective parameters, stops the canonical driver,
+launches one isolated override, records an experiment sidecar, kills the full
+temporary process group, restores `aurora930.service`, and runs both live sensor
+and read-only gates. It is not a dynamic `ros2 param set` wrapper.
+
 The diagnostic reports per-topic rate and RGB-nearest timestamp offset for
 depth, IR, point cloud and IMU. Depth output now separates zero, non-zero below
 minimum, valid, above maximum and `65535` pixels; reports center/3x3/row/column

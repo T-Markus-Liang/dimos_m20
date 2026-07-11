@@ -1055,3 +1055,10 @@ laser mode、resolution mode 和 RGB-D stream selection。完整调用链证据�
 `git diff --check` 通过。代码同步到 Orin 后先采集默认基线，再只对 Aurora 真正
 生效的参数做单变量、无运动 A/B。任何实验后都必须恢复 systemd 默认值并重新
 通过 sensor/read-only gates。
+
+为避免临时 launch 遗留子进程或异常退出后相机服务未恢复，新增
+`run-he-aurora-depth-ab.sh`。脚本只接受 Aurora930 实际生效的单个参数覆盖，实验前
+先通过只读门；停止 canonical systemd 服务后用独立进程组启动临时驱动；无论正常
+或异常退出都清理完整进程组、恢复 `aurora930.service`，并重新执行 live sensor 和
+read-only gates。每轮同时保存 Git HEAD、canonical 参数值和 test value sidecar，
+不能用动态 `ros2 param set` 冒充设备 SDK 已重新配置。
