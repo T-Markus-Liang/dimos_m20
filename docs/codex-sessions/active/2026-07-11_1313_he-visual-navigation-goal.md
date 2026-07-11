@@ -148,6 +148,10 @@ health while keeping real motion disconnected.
   remains an explicit VIO gate.
 - Verified the documentation update with all 29 HE unit tests, the generated
   blueprint registry test, `git diff --check` and required-file integrity.
+- During the post-sync closeout, traced an intermittent stale-RGB failure to
+  `verify-he-sensors.py` checking the first collected samples after waiting for
+  slower endpoints. Changed every bounded stream to evaluate its latest N
+  samples; a genuinely stopped stream still fails on its newest timestamp.
 
 ## Decisions
 
@@ -171,8 +175,8 @@ health while keeping real motion disconnected.
 
 ## Current State
 
-- VM, origin and Orin were synchronized at `87549530` before this documentation
-  update; the update is verified and ready for commit/push/Orin fast-forward.
+- VM, origin and Orin are synchronized at `4aeb3d5e`. The latest-sample sensor
+  gate correction is under verification before its follow-up commit.
 - The final static closeout passed all 29 HE tests, blueprint discovery,
   deployment integrity, isolated control dry-run, Aurora live quality and both
   read-only gates. `he-dimos-sense` is active with zero restarts.

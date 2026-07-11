@@ -1013,3 +1013,9 @@ aarch64 证据；MASt3R-SLAM 的官方约 14.6 FPS 来自 RTX 4090；DROID-SLAM 
 camera-IMU 空间/时间标定、IMU 轴向与噪声标定。RTAB-Map 可以继续作为受限 shadow
 输出验证，但其 pose/map 不能批准给导航。完整审计证据位于
 `docs/he/evidence/2026-07-11_1539_visual-benchmark-extrinsics-audit.md`。
+
+同步后的静态封板首次在 live sensor gate 间歇报告 `RGB timestamp is stale`。
+调查确认 Aurora 最新帧仍在发布，误报来自验证器收集期间保存全部 callback，却截取
+最早 N 帧执行 freshness 检查；等待较慢点云或 DDS 发现时，最早 RGB 可能已经超过
+2 秒。验证器已改为检查最后 N 帧。真实停流仍会因为“最新帧”过期而失败，不会
+降低传感准入标准。修复后完整静态封板及最终只读门均以返回码 0 通过。

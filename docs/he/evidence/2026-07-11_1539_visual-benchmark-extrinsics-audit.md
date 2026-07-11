@@ -56,3 +56,18 @@ orientation estimate.
 Safety state after the audit: `he-dimos-sense.service=active`, `NRestarts=0`,
 no RTAB-Map/rgbd_odometry process remained, and `/he/nav_cmd_vel` had zero
 publishers.
+
+## Static closeout follow-up
+
+The first post-sync static closeout passed its preflight gate, deployment
+integrity, 29 tests and isolated control dry-run, then intermittently reported
+`RGB timestamp is stale` in the live sensor gate. The verifier was retaining
+all callbacks but slicing the first requested samples before checking freshness.
+Waiting for a slower point cloud or DDS endpoint could therefore age the first
+RGB samples past two seconds even while newer images were arriving.
+
+`verify-he-sensors.py` now evaluates the last requested samples for every
+camera stream. A genuinely stopped stream still fails because its newest
+sample remains stale. The corrected complete static closeout passed with an
+explicit zero return code; the final read-only gate again confirmed zero
+navigation publishers and no localization process.

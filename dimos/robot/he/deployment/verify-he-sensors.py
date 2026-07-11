@@ -4,13 +4,14 @@
 from __future__ import annotations
 
 import argparse
+from itertools import pairwise
 import statistics
 import time
 from typing import Any
 
+from nav_msgs.msg import Odometry
 import numpy as np
 import rclpy
-from nav_msgs.msg import Odometry
 from rclpy.node import Node
 from rclpy.qos import qos_profile_sensor_data
 from sensor_msgs.msg import CameraInfo, Image, Imu, PointCloud2
@@ -22,7 +23,7 @@ def stamp_seconds(message: Any) -> float:
 
 def median_rate(messages: list[Any]) -> float:
     stamps = [stamp_seconds(message) for message in messages]
-    intervals = [later - earlier for earlier, later in zip(stamps, stamps[1:])]
+    intervals = [later - earlier for earlier, later in pairwise(stamps)]
     positive = [interval for interval in intervals if interval > 0.0]
     if not positive:
         raise RuntimeError("message timestamps are not increasing")
@@ -107,10 +108,10 @@ def main() -> None:
         require(imus, "received no IMU messages")
         require(odoms, "received no odometry messages")
 
-        rgb = rgb[: args.image_samples]
-        depth = depth[: args.image_samples]
-        ir = ir[: args.image_samples]
-        points = points[: args.pointcloud_samples]
+        rgb = rgb[-args.image_samples :]
+        depth = depth[-args.image_samples :]
+        ir = ir[-args.image_samples :]
+        points = points[-args.pointcloud_samples :]
         require_image(rgb[-1], "bgr8", "rgb_camera_link")
         require_image(depth[-1], "mono16", "depth_camera_link")
         require_image(ir[-1], "mono8", "depth_camera_link")
