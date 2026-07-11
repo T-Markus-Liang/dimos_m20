@@ -234,6 +234,14 @@ health while keeping real motion disconnected.
 - Confirmed the shared USB 2 topology has no kernel reset/stall/overflow errors.
   Treat it as throughput risk requiring a paired USB 3 test, not as proof of the
   stable mask's cause.
+- Audited and visually rendered relevant pages of the vendor Aurora900 SDK Guide
+  V1.7. It confirms current API semantics but publishes no Aurora930 FOV,
+  reflectivity, accuracy, grazing-angle, USB or mounting specification.
+- Corrected a documentation assumption: 150-4000mm is the configured
+  `FilterOutRangeDepthMap` window, not proven hardware rated range. The SDK has
+  unexposed `SupportedInfo.depth_range`, edge trim, temperature and laser-current
+  calls that the ROS driver does not surface; no undocumented direct SDK change
+  is approved.
 
 ## Decisions
 
@@ -287,7 +295,8 @@ health while keeping real motion disconnected.
 3. Evaluate a controlled move from the shared USB 2.0 hub to the available
    10Gbps root port if physical access is approved.
 4. Escalate firmware 2.0.8/SDK 1.1.22 evidence to the vendor if target coverage
-   remains abnormal.
+   remains abnormal, requesting optical specifications and the documented
+   `SupportedInfo.depth_range` interpretation.
 5. Use the new nominal-extrinsics audit to plan physical camera-to-base and
    camera-to-IMU calibration; do not promote the nominal values to calibrated.
 6. Keep public benchmark tables source-scoped and update them only when a new

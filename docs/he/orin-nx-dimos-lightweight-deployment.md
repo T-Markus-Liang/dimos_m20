@@ -1105,3 +1105,12 @@ USB 2 更可能影响点云吞吐而不是制造固定 mask。后续获得现场
 Aurora 直连高速 root 并在固定场景做成对测试。隐私相关 RGB 原图不进入 Git，只在
 Orin `/tmp` 和本机临时证据目录保留；仓库保存脱敏统计和文件 SHA-256。完整报告见
 `docs/he/evidence/2026-07-11_1843_aurora-field-of-view-usb-audit.md`。
+
+厂商 `Aurora 900 SDK Developer guide` V1.7（2025-03-04）复核确认，当前
+150-4000mm 是 `FilterOutRangeDepthMap` 的可配置过滤窗口，不是厂商公布的硬件额定
+量程；indoor/outdoor API 文档描述曝光/增益适配，也没有承诺提高深度覆盖。手册未给
+Aurora930 的 FOV、反射率/距离精度、掠射角、环境光、USB 带宽或安装高度规格，不能
+用来证明当前地板 mask“符合规格”。SDK 虽然有 `GetSupportInfo.depth_range`、edge
+trim、温度和 laser current API，但 ROS 2 驱动没有调用/发布。完整证据见
+`docs/he/evidence/2026-07-11_1848_aurora-sdk-guide-audit.md`；不得在缺少厂商依据时
+增加猜测参数或修改 laser current/firmware。
