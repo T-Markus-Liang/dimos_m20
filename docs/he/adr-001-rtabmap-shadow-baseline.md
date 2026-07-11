@@ -154,6 +154,21 @@ values, RSS above 768MB, available memory below 1GiB or swap growth above
 64MB. These thresholds protect the shadow baseline from stale monitoring and
 system pressure; they do not replace the database watchdog or systemd limits.
 
+Static Orin fault qualification proved the contract with real runner values.
+An 8GiB test threshold added `system_memory_low` to all 184 health samples;
+restoring the 1GiB default removed that reason from all 187 samples while the
+existing `map_known_ratio_low` remained. Process-group RSS was about 434-435MB,
+available memory about 3.29-3.30GiB, swap growth zero and maximum runtime status
+age about 1.08s. Both runs stopped with ordinary SIGTERM and the final sensor
+and read-only gates passed. See
+`evidence/2026-07-12_0325_slam-resource-health.md`.
+
+The same test exposed a remaining service architecture gate: Coordinator RPC
+is host-global, so `he-dimos-sense` and the complete shadow blueprint cannot run
+as concurrent DimOS coordinators. Sense was stopped under an EXIT restore trap
+for this test. Simultaneous sampled-sensor visualization and full-rate local
+SLAM with independent resource limits remains unqualified.
+
 Real navigation remains prohibited until moving ATE/RPE, loop closure,
 relocalization, map quality, camera extrinsics, tracking-loss detection,
 resource soak and control safety gates pass after a new vehicle-down safety

@@ -1523,6 +1523,17 @@ Rerun worker PSS 中位下降 178.117MiB，最大 anonymous mapping 中位下降
 保留原始资源值，benchmark summary 新增最大 runtime status age。
 
 该实现没有新增常驻模块或依赖，也没有改变 RTAB-Map、数据库、传感器或控制参数。
-VM 上 visual-SLAM 24 项和全部 HE 56 项 unittest、Ruff、diff 检查通过。Orin 静态
-shadow 的真实字段、正常基线以及合成资源 fault/recovery 尚待部署后验证；验证期间继续
-保持无 `MovementManager`、无 `HEConnection`、`/he/nav_cmd_vel` 零发布者。
+VM 上 visual-SLAM 24 项和全部 HE 56 项 unittest、Ruff、diff 检查通过。
+
+Orin 静态验证使用真实 runner 字段，并仅通过配置把 available 门从 1GiB 临时提高到
+8GiB。强制轮 184 个 health 样本全部包含 `system_memory_low`；恢复默认后 187 个样本
+全部清除该 reason，只保留既有 `map_known_ratio_low`。两轮 RSS 约 434-435MB、available
+约 3.29-3.30GiB、swap growth 为零、runtime age 最大约 1.08 秒，均普通 SIGTERM
+停止且无残留。恢复 Sense 后 live sensor/read-only gate PASS，导航发布者为零。完整证据
+见 `docs/he/evidence/2026-07-12_0325_slam-resource-health.md`。
+
+本轮也确认当前 Coordinator RPC 是 host-global：常驻 `he-dimos-sense` 与完整 shadow
+不能作为两个 DimOS coordinator 并发；第一次并发尝试在 RTAB-Map 和数据库启动前
+fail-fast。验证流程必须停 Sense 并用 EXIT trap 恢复。目标中的“本机 full-rate SLAM +
+sampled Aurora Rerun 两条路径同时常驻且独立限资源”仍是未关闭的架构门，不能用本轮
+顺序运行结果代替并发验收。

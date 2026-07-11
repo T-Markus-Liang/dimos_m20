@@ -616,6 +616,21 @@ health while keeping real motion disconnected.
   tests. All 24 visual-SLAM and 56 HE unittest cases, focused Ruff and diff
   checks passed on VM. Orin deployment and real static shadow evidence remain
   pending at this log update.
+- Committed and pushed resource health as `bf5f8215`, then fast-forwarded Orin
+  after a clean pre-deployment read-only gate. A first concurrent start failed
+  before native SLAM because the active Sense coordinator already owns the
+  host-global Coordinator RPC; no database, OOM or navigation residue resulted.
+- Re-ran under one EXIT restore trap with Sense stopped. The forced 8GiB
+  available threshold produced `system_memory_low` in all 184 health samples.
+  A second fresh run at the 1GiB default cleared that reason in all 187 samples
+  and retained only `map_known_ratio_low`.
+- Real runtime values were valid and fresh: process-group RSS about 434-435MB,
+  system available about 3.29-3.30GiB, swap used 548.523MB, swap growth zero and
+  maximum status age about 1.08s. Both runs stopped with ordinary SIGTERM and
+  left no native process or error log.
+- The restore trap restarted `he-dimos-sense`; final RGB/depth/IR were
+  15.50/10.26/15.62Hz, point cloud had 256000 points, calibrations were present,
+  service restarts remained zero and the independent read-only gate passed.
 - Pushed the probe, failed-getter fix, bounded DDS convergence and final
   evidence as `1655079a`, `b7b56853`, `a4af65e6` and `64cfeb4c`; Orin
   fast-forwarded cleanly and the macOS deployment mirror was synchronized.
@@ -698,9 +713,10 @@ health while keeping real motion disconnected.
   870MiB steady cgroup memory. Teleop, visual-SLAM, worker policy and all
   control modules remain unchanged; moving and physical-calibration gates are
   still open.
-- Shadow resource-health hardening is implemented and VM-verified but not yet
-  deployed. The next action is a motion-disabled Orin shadow run proving valid
-  live fields plus bounded synthetic resource-fault transitions and recovery.
+- Shadow resource-health hardening is deployed and statically qualified. The
+  newly proven host-global Coordinator restriction means full-rate SLAM and the
+  complete sampled Sense/Rerun blueprint are not yet concurrent. Resolving that
+  dual-path architecture is the next non-motion integration task.
 
 ## Resume Instructions
 

@@ -1,0 +1,47 @@
+[
+  {
+    "process_alive": true,
+    "received_at": 1783797721.690084,
+    "rss_mb": 430.96875,
+    "stamp": 1783797721.64676,
+    "swap_growth_mb": 0.0,
+    "swap_used_mb": 548.5234375,
+    "system_available_mb": 3293.4296875
+  },
+  {
+    "process_alive": true,
+    "received_at": 1783797722.724962,
+    "rss_mb": 431.66796875,
+    "stamp": 1783797722.6918035,
+    "swap_growth_mb": 0.0,
+    "swap_used_mb": 548.5234375,
+    "system_available_mb": 3293.359375
+  },
+  {
+    "process_alive": true,
+    "received_at": 1783797723.7727807,
+    "rss_mb": 433.78125,
+    "stamp": 1783797723.726313,
+    "swap_growth_mb": 0.0,
+    "swap_used_mb": 548.5234375,
+    "system_available_mb": 3289.51953125
+  },
+  {
+    "process_alive": true,
+    "received_at": 1783797724.8115284,
+    "rss_mb": 435.0703125,
+    "stamp": 1783797724.7753434,
+    "swap_growth_mb": 0.0,
+    "swap_used_mb": 548.5234375,
+    "system_available_mb": 3287.59765625
+  },
+  {
+    "process_alive": true,
+    "received_at": 1783797725.8413742,
+    "rss_mb": 435.19921875,
+    "stamp": 1783797725.8134365,
+    "swap_growth_mb": 0.0,
+    "swap_used_mb": 548.5234375,
+    "system_available_mb": 3287.203125
+  }
+]

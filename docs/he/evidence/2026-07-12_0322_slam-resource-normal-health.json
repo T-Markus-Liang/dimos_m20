@@ -1,0 +1,4896 @@
+{
+  "actual_duration_seconds": 10.058179140090942,
+  "captured_at": "2026-07-12T03:23:12+0800",
+  "requested_duration_seconds": 10.0,
+  "samples": [
+    {
+      "camera_info_age_s": 0.21182894706726074,
+      "checked_at": 1783797782.194829,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 78.09901237487793,
+        "slam_rss_mb": 435.70703125,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3287.89453125,
+        "tf_rotation_jump_deg": 0.03700461797855288,
+        "tf_translation_jump_m": 0.001168182856953348
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 215,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 21.352828979492188,
+      "pose_age_s": 0.0768289566040039,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797782.1972685,
+      "runtime_status_age_s": 0.5291905403137207,
+      "tf_age_s": 0.3488290309906006
+    },
+    {
+      "camera_info_age_s": 0.0639803409576416,
+      "checked_at": 1783797782.2489803,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 72.36695289611816,
+        "slam_rss_mb": 435.70703125,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3287.89453125,
+        "tf_rotation_jump_deg": 0.034533404110247065,
+        "tf_translation_jump_m": 0.00090990104592381
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 348,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 21.406980276107788,
+      "pose_age_s": 0.1309802532196045,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797782.2498813,
+      "runtime_status_age_s": 0.5833418369293213,
+      "tf_age_s": 0.1309802532196045
+    },
+    {
+      "camera_info_age_s": 0.07266402244567871,
+      "checked_at": 1783797782.257664,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 72.36695289611816,
+        "slam_rss_mb": 435.70703125,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3287.89453125,
+        "tf_rotation_jump_deg": 0.034533404110247065,
+        "tf_translation_jump_m": 0.00090990104592381
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 348,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 21.415663957595825,
+      "pose_age_s": 0.1396639347076416,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797782.258434,
+      "runtime_status_age_s": 0.5920255184173584,
+      "tf_age_s": 0.1396639347076416
+    },
+    {
+      "camera_info_age_s": 0.05947160720825195,
+      "checked_at": 1783797782.4494717,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 72.36695289611816,
+        "slam_rss_mb": 435.70703125,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3287.89453125,
+        "tf_rotation_jump_deg": 0.0,
+        "tf_translation_jump_m": 0.0
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 348,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 21.607471704483032,
+      "pose_age_s": 0.33147168159484863,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797782.4500525,
+      "runtime_status_age_s": 0.7838332653045654,
+      "tf_age_s": 0.33147168159484863
+    },
+    {
+      "camera_info_age_s": 0.07010197639465332,
+      "checked_at": 1783797782.460102,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 72.36695289611816,
+        "slam_rss_mb": 435.70703125,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3287.89453125,
+        "tf_rotation_jump_deg": 0.0,
+        "tf_translation_jump_m": 0.0
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 348,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 21.618102073669434,
+      "pose_age_s": 0.34210205078125,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797782.4608378,
+      "runtime_status_age_s": 0.7944636344909668,
+      "tf_age_s": 0.34210205078125
+    },
+    {
+      "camera_info_age_s": 0.144270658493042,
+      "checked_at": 1783797782.5342708,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 72.36695289611816,
+        "slam_rss_mb": 435.70703125,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3287.89453125,
+        "tf_rotation_jump_deg": 0.0,
+        "tf_translation_jump_m": 0.0
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 348,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 21.692270755767822,
+      "pose_age_s": 0.0772707462310791,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797782.5350065,
+      "runtime_status_age_s": 0.8686323165893555,
+      "tf_age_s": 0.41627073287963867
+    },
+    {
+      "camera_info_age_s": 0.05556631088256836,
+      "checked_at": 1783797782.6495664,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 75.24323463439941,
+        "slam_rss_mb": 435.70703125,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3287.89453125,
+        "tf_rotation_jump_deg": 0.04220857567311247,
+        "tf_translation_jump_m": 0.00156794527209036
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 193,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 21.80756640434265,
+      "pose_age_s": 0.1925663948059082,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797782.650338,
+      "runtime_status_age_s": 0.9839279651641846,
+      "tf_age_s": 0.1925663948059082
+    },
+    {
+      "camera_info_age_s": 0.06722283363342285,
+      "checked_at": 1783797782.661223,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 75.24323463439941,
+        "slam_rss_mb": 435.70703125,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3287.89453125,
+        "tf_rotation_jump_deg": 0.04220857567311247,
+        "tf_translation_jump_m": 0.00156794527209036
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 193,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 21.819222927093506,
+      "pose_age_s": 0.2042229175567627,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797782.6619313,
+      "runtime_status_age_s": 0.9955844879150391,
+      "tf_age_s": 0.2042229175567627
+    },
+    {
+      "camera_info_age_s": 0.07919430732727051,
+      "checked_at": 1783797782.6731944,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 75.24323463439941,
+        "slam_rss_mb": 435.70703125,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3287.89453125,
+        "tf_rotation_jump_deg": 0.04220857567311247,
+        "tf_translation_jump_m": 0.00156794527209036
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 193,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 21.831194400787354,
+      "pose_age_s": 0.07919430732727051,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797782.6742253,
+      "runtime_status_age_s": 1.0075559616088867,
+      "tf_age_s": 0.21619439125061035
+    },
+    {
+      "camera_info_age_s": 0.13271737098693848,
+      "checked_at": 1783797782.7267175,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 75.24323463439941,
+        "slam_rss_mb": 435.96875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3273.9453125,
+        "tf_rotation_jump_deg": 0.04220857567311247,
+        "tf_translation_jump_m": 0.00156794527209036
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 193,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 21.88471746444702,
+      "pose_age_s": 0.13271737098693848,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797782.7275615,
+      "runtime_status_age_s": 0.025664329528808594,
+      "tf_age_s": 0.2697174549102783
+    },
+    {
+      "camera_info_age_s": 0.2633945941925049,
+      "checked_at": 1783797782.8573947,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 75.55031776428223,
+        "slam_rss_mb": 435.96875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3273.9453125,
+        "tf_rotation_jump_deg": 0.020612176560118916,
+        "tf_translation_jump_m": 0.00023704266332495643
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 446,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 22.015394687652588,
+      "pose_age_s": 0.2633945941925049,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797782.858029,
+      "runtime_status_age_s": 0.156341552734375,
+      "tf_age_s": 0.2633945941925049
+    },
+    {
+      "camera_info_age_s": 0.26659393310546875,
+      "checked_at": 1783797782.860594,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 75.55031776428223,
+        "slam_rss_mb": 435.96875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3273.9453125,
+        "tf_rotation_jump_deg": 0.020612176560118916,
+        "tf_translation_jump_m": 0.00023704266332495643
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 446,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 22.01859402656555,
+      "pose_age_s": 0.19759392738342285,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797782.8612967,
+      "runtime_status_age_s": 0.15954089164733887,
+      "tf_age_s": 0.26659393310546875
+    },
+    {
+      "camera_info_age_s": 0.2679896354675293,
+      "checked_at": 1783797782.8619897,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 75.55031776428223,
+        "slam_rss_mb": 435.96875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3273.9453125,
+        "tf_rotation_jump_deg": 0.020612176560118916,
+        "tf_translation_jump_m": 0.00023704266332495643
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 446,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 22.019989728927612,
+      "pose_age_s": 0.1989896297454834,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797782.8626027,
+      "runtime_status_age_s": 0.16093659400939941,
+      "tf_age_s": 0.2679896354675293
+    },
+    {
+      "camera_info_age_s": 0.29395008087158203,
+      "checked_at": 1783797782.8879502,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 75.55031776428223,
+        "slam_rss_mb": 435.96875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3273.9453125,
+        "tf_rotation_jump_deg": 0.020612176560118916,
+        "tf_translation_jump_m": 0.00023704266332495643
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 446,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 22.045950174331665,
+      "pose_age_s": 0.09095025062561035,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797782.8886747,
+      "runtime_status_age_s": 0.18689703941345215,
+      "tf_age_s": 0.29395008087158203
+    },
+    {
+      "camera_info_age_s": 0.3397252559661865,
+      "checked_at": 1783797782.9337254,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 75.55031776428223,
+        "slam_rss_mb": 435.96875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3273.9453125,
+        "tf_rotation_jump_deg": 0.020612176560118916,
+        "tf_translation_jump_m": 0.00023704266332495643
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 446,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 22.09172534942627,
+      "pose_age_s": 0.0707254409790039,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797782.9346988,
+      "runtime_status_age_s": 0.23267221450805664,
+      "tf_age_s": 0.3397252559661865
+    },
+    {
+      "camera_info_age_s": 0.06065559387207031,
+      "checked_at": 1783797783.0486555,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 68.64714622497559,
+        "slam_rss_mb": 435.96875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3273.9453125,
+        "tf_rotation_jump_deg": 0.07198617145410391,
+        "tf_translation_jump_m": 0.000276779081908886
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 314,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 22.206655502319336,
+      "pose_age_s": 0.1856555938720703,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797783.0494535,
+      "runtime_status_age_s": 0.34760236740112305,
+      "tf_age_s": 0.1856555938720703
+    },
+    {
+      "camera_info_age_s": 0.07564592361450195,
+      "checked_at": 1783797783.0636458,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 68.64714622497559,
+        "slam_rss_mb": 435.96875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3273.9453125,
+        "tf_rotation_jump_deg": 0.07198617145410391,
+        "tf_translation_jump_m": 0.000276779081908886
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 314,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 22.221645832061768,
+      "pose_age_s": 0.20064592361450195,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797783.064504,
+      "runtime_status_age_s": 0.3625926971435547,
+      "tf_age_s": 0.20064592361450195
+    },
+    {
+      "camera_info_age_s": 0.07820010185241699,
+      "checked_at": 1783797783.0662,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 68.64714622497559,
+        "slam_rss_mb": 435.96875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3273.9453125,
+        "tf_rotation_jump_deg": 0.07198617145410391,
+        "tf_translation_jump_m": 0.000276779081908886
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 314,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 22.224200010299683,
+      "pose_age_s": 0.07820010185241699,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797783.0667715,
+      "runtime_status_age_s": 0.3651468753814697,
+      "tf_age_s": 0.203200101852417
+    },
+    {
+      "camera_info_age_s": 0.04391789436340332,
+      "checked_at": 1783797783.249918,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 76.4303207397461,
+        "slam_rss_mb": 435.96875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3273.9453125,
+        "tf_rotation_jump_deg": 0.04635803873512303,
+        "tf_translation_jump_m": 0.001202837444977592
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 283,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 22.407917976379395,
+      "pose_age_s": 0.2619180679321289,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797783.250721,
+      "runtime_status_age_s": 0.5488648414611816,
+      "tf_age_s": 0.2619180679321289
+    },
+    {
+      "camera_info_age_s": 0.05860614776611328,
+      "checked_at": 1783797783.2646062,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 76.4303207397461,
+        "slam_rss_mb": 435.96875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3273.9453125,
+        "tf_rotation_jump_deg": 0.04635803873512303,
+        "tf_translation_jump_m": 0.001202837444977592
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 283,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 22.422606229782104,
+      "pose_age_s": 0.27660632133483887,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797783.2656922,
+      "runtime_status_age_s": 0.5635530948638916,
+      "tf_age_s": 0.27660632133483887
+    },
+    {
+      "camera_info_age_s": 0.0813741683959961,
+      "checked_at": 1783797783.2873743,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 76.4303207397461,
+        "slam_rss_mb": 435.96875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3273.9453125,
+        "tf_rotation_jump_deg": 0.04635803873512303,
+        "tf_translation_jump_m": 0.001202837444977592
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 283,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 22.445374250411987,
+      "pose_age_s": 0.0813741683959961,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797783.2884626,
+      "runtime_status_age_s": 0.5863211154937744,
+      "tf_age_s": 0.2993743419647217
+    },
+    {
+      "camera_info_age_s": 0.05260729789733887,
+      "checked_at": 1783797783.4486072,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 77.23021507263184,
+        "slam_rss_mb": 435.96875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3273.9453125,
+        "tf_rotation_jump_deg": 0.05948239371539679,
+        "tf_translation_jump_m": 0.0007190128192962157
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 197,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 22.60660719871521,
+      "pose_age_s": 0.24260711669921875,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797783.4494653,
+      "runtime_status_age_s": 0.7475540637969971,
+      "tf_age_s": 0.24260711669921875
+    },
+    {
+      "camera_info_age_s": 0.07049298286437988,
+      "checked_at": 1783797783.466493,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 77.23021507263184,
+        "slam_rss_mb": 435.96875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3273.9453125,
+        "tf_rotation_jump_deg": 0.05948239371539679,
+        "tf_translation_jump_m": 0.0007190128192962157
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 197,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 22.62449288368225,
+      "pose_age_s": 0.26049280166625977,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797783.467346,
+      "runtime_status_age_s": 0.7654397487640381,
+      "tf_age_s": 0.26049280166625977
+    },
+    {
+      "camera_info_age_s": 0.08912134170532227,
+      "checked_at": 1783797783.4851213,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 77.23021507263184,
+        "slam_rss_mb": 435.96875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3273.9453125,
+        "tf_rotation_jump_deg": 0.05948239371539679,
+        "tf_translation_jump_m": 0.0007190128192962157
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 197,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 22.643121242523193,
+      "pose_age_s": 0.08912134170532227,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797783.486136,
+      "runtime_status_age_s": 0.7840681076049805,
+      "tf_age_s": 0.27912116050720215
+    },
+    {
+      "camera_info_age_s": 0.23659896850585938,
+      "checked_at": 1783797783.6325989,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 77.23021507263184,
+        "slam_rss_mb": 435.96875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3273.9453125,
+        "tf_rotation_jump_deg": 0.05948239371539679,
+        "tf_translation_jump_m": 0.0007190128192962157
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 197,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 22.79059886932373,
+      "pose_age_s": 0.08859896659851074,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797783.6336076,
+      "runtime_status_age_s": 0.9315457344055176,
+      "tf_age_s": 0.42659878730773926
+    },
+    {
+      "camera_info_age_s": 0.040421247482299805,
+      "checked_at": 1783797783.6534212,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 86.08603477478027,
+        "slam_rss_mb": 435.96875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3273.9453125,
+        "tf_rotation_jump_deg": 0.0050069106907653545,
+        "tf_translation_jump_m": 0.00016584221995735206
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 376,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 22.811421155929565,
+      "pose_age_s": 0.1094212532043457,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797783.6543293,
+      "runtime_status_age_s": 0.9523680210113525,
+      "tf_age_s": 0.1094212532043457
+    },
+    {
+      "camera_info_age_s": 0.05543923377990723,
+      "checked_at": 1783797783.6684391,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 86.08603477478027,
+        "slam_rss_mb": 435.96875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3273.9453125,
+        "tf_rotation_jump_deg": 0.0050069106907653545,
+        "tf_translation_jump_m": 0.00016584221995735206
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 376,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 22.826439142227173,
+      "pose_age_s": 0.12443923950195312,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797783.6691678,
+      "runtime_status_age_s": 0.96738600730896,
+      "tf_age_s": 0.12443923950195312
+    },
+    {
+      "camera_info_age_s": 0.148024320602417,
+      "checked_at": 1783797783.7610242,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 86.08603477478027,
+        "slam_rss_mb": 435.96875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3274.84765625,
+        "tf_rotation_jump_deg": 0.0050069106907653545,
+        "tf_translation_jump_m": 0.00016584221995735206
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 376,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 22.919024229049683,
+      "pose_age_s": 0.2170243263244629,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797783.7616978,
+      "runtime_status_age_s": 0.03272366523742676,
+      "tf_age_s": 0.2170243263244629
+    },
+    {
+      "camera_info_age_s": 0.1543412208557129,
+      "checked_at": 1783797783.7673411,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 86.08603477478027,
+        "slam_rss_mb": 435.96875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3274.84765625,
+        "tf_rotation_jump_deg": 0.0050069106907653545,
+        "tf_translation_jump_m": 0.00016584221995735206
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 376,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 22.92534112930298,
+      "pose_age_s": 0.08534121513366699,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797783.7682555,
+      "runtime_status_age_s": 0.039040565490722656,
+      "tf_age_s": 0.2233412265777588
+    },
+    {
+      "camera_info_age_s": 0.0434722900390625,
+      "checked_at": 1783797783.8484724,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 83.18805694580078,
+        "slam_rss_mb": 435.96875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3274.84765625,
+        "tf_rotation_jump_deg": 0.017027631051177907,
+        "tf_translation_jump_m": 0.0003374762753065636
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 340,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 23.00647234916687,
+      "pose_age_s": 0.1664724349975586,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797783.8491123,
+      "runtime_status_age_s": 0.12017178535461426,
+      "tf_age_s": 0.1664724349975586
+    },
+    {
+      "camera_info_age_s": 0.06508994102478027,
+      "checked_at": 1783797783.87009,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 83.18805694580078,
+        "slam_rss_mb": 435.96875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3274.84765625,
+        "tf_rotation_jump_deg": 0.017027631051177907,
+        "tf_translation_jump_m": 0.0003374762753065636
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 340,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 23.028090000152588,
+      "pose_age_s": 0.18809008598327637,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797783.8708737,
+      "runtime_status_age_s": 0.14178943634033203,
+      "tf_age_s": 0.18809008598327637
+    },
+    {
+      "camera_info_age_s": 0.07861971855163574,
+      "checked_at": 1783797783.8836198,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 83.18805694580078,
+        "slam_rss_mb": 435.96875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3274.84765625,
+        "tf_rotation_jump_deg": 0.017027631051177907,
+        "tf_translation_jump_m": 0.0003374762753065636
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 340,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 23.041619777679443,
+      "pose_age_s": 0.07861971855163574,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797783.8841662,
+      "runtime_status_age_s": 0.1553192138671875,
+      "tf_age_s": 0.20161986351013184
+    },
+    {
+      "camera_info_age_s": 0.225494384765625,
+      "checked_at": 1783797784.0304945,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 83.18805694580078,
+        "slam_rss_mb": 435.96875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3274.84765625,
+        "tf_rotation_jump_deg": 0.017027631051177907,
+        "tf_translation_jump_m": 0.0003374762753065636
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 340,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 23.188494443893433,
+      "pose_age_s": 0.08049440383911133,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797784.0312068,
+      "runtime_status_age_s": 0.30219388008117676,
+      "tf_age_s": 0.3484945297241211
+    },
+    {
+      "camera_info_age_s": 0.26630544662475586,
+      "checked_at": 1783797784.0713055,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 83.18805694580078,
+        "slam_rss_mb": 435.96875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3274.84765625,
+        "tf_rotation_jump_deg": 0.017027631051177907,
+        "tf_translation_jump_m": 0.0003374762753065636
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 340,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 23.229305505752563,
+      "pose_age_s": 0.12130546569824219,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797784.072169,
+      "runtime_status_age_s": 0.3430049419403076,
+      "tf_age_s": 0.38930559158325195
+    },
+    {
+      "camera_info_age_s": 0.13090872764587402,
+      "checked_at": 1783797784.0809088,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 78.15241813659668,
+        "slam_rss_mb": 435.96875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3274.84765625,
+        "tf_rotation_jump_deg": 0.03562802743248579,
+        "tf_translation_jump_m": 0.0010095563427895532
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 238,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 23.238908767700195,
+      "pose_age_s": 0.13090872764587402,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797784.0817358,
+      "runtime_status_age_s": 0.35260820388793945,
+      "tf_age_s": 0.13090872764587402
+    },
+    {
+      "camera_info_age_s": 0.22765183448791504,
+      "checked_at": 1783797784.177652,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 78.15241813659668,
+        "slam_rss_mb": 435.96875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3274.84765625,
+        "tf_rotation_jump_deg": 0.03562802743248579,
+        "tf_translation_jump_m": 0.0010095563427895532
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 238,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 23.335651874542236,
+      "pose_age_s": 0.08965182304382324,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797784.1782568,
+      "runtime_status_age_s": 0.44935131072998047,
+      "tf_age_s": 0.22765183448791504
+    },
+    {
+      "camera_info_age_s": 0.026282787322998047,
+      "checked_at": 1783797784.2492828,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 87.43119239807129,
+        "slam_rss_mb": 435.96875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3274.84765625,
+        "tf_rotation_jump_deg": 0.01180406139434288,
+        "tf_translation_jump_m": 0.00028882589585049615
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 440,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 23.407282829284668,
+      "pose_age_s": 0.16128277778625488,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797784.2499335,
+      "runtime_status_age_s": 0.5209822654724121,
+      "tf_age_s": 0.16128277778625488
+    },
+    {
+      "camera_info_age_s": 0.050011396408081055,
+      "checked_at": 1783797784.2730114,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 87.43119239807129,
+        "slam_rss_mb": 435.96875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3274.84765625,
+        "tf_rotation_jump_deg": 0.01180406139434288,
+        "tf_translation_jump_m": 0.00028882589585049615
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 440,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 23.43101143836975,
+      "pose_age_s": 0.1850113868713379,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797784.2737236,
+      "runtime_status_age_s": 0.5447108745574951,
+      "tf_age_s": 0.1850113868713379
+    },
+    {
+      "camera_info_age_s": 0.08750271797180176,
+      "checked_at": 1783797784.3105028,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 87.43119239807129,
+        "slam_rss_mb": 435.96875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3274.84765625,
+        "tf_rotation_jump_deg": 0.01180406139434288,
+        "tf_translation_jump_m": 0.00028882589585049615
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 440,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 23.46850275993347,
+      "pose_age_s": 0.08750271797180176,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797784.3114235,
+      "runtime_status_age_s": 0.5822021961212158,
+      "tf_age_s": 0.2225027084350586
+    },
+    {
+      "camera_info_age_s": 0.22593474388122559,
+      "checked_at": 1783797784.4489348,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 87.43119239807129,
+        "slam_rss_mb": 435.96875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3274.84765625,
+        "tf_rotation_jump_deg": 0.01180406139434288,
+        "tf_translation_jump_m": 0.00028882589585049615
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 440,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 23.606934785842896,
+      "pose_age_s": 0.08893489837646484,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797784.4495282,
+      "runtime_status_age_s": 0.7206342220306396,
+      "tf_age_s": 0.3609347343444824
+    },
+    {
+      "camera_info_age_s": 0.03235602378845215,
+      "checked_at": 1783797784.449356,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 84.34414863586426,
+        "slam_rss_mb": 435.96875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3274.84765625,
+        "tf_rotation_jump_deg": 0.0293267767057879,
+        "tf_translation_jump_m": 0.000621871381657756
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 360,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 23.607356071472168,
+      "pose_age_s": 0.0893561840057373,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797784.4498382,
+      "runtime_status_age_s": 0.7210555076599121,
+      "tf_age_s": 0.0893561840057373
+    },
+    {
+      "camera_info_age_s": 0.056838035583496094,
+      "checked_at": 1783797784.473838,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 84.34414863586426,
+        "slam_rss_mb": 435.96875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3274.84765625,
+        "tf_rotation_jump_deg": 0.0293267767057879,
+        "tf_translation_jump_m": 0.000621871381657756
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 360,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 23.631838083267212,
+      "pose_age_s": 0.11383819580078125,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797784.4750009,
+      "runtime_status_age_s": 0.745537519454956,
+      "tf_age_s": 0.11383819580078125
+    },
+    {
+      "camera_info_age_s": 0.028472423553466797,
+      "checked_at": 1783797784.6494725,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 84.34414863586426,
+        "slam_rss_mb": 435.96875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3274.84765625,
+        "tf_rotation_jump_deg": 0.0,
+        "tf_translation_jump_m": 0.0
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 292,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 23.807472467422485,
+      "pose_age_s": 0.2894725799560547,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797784.6500099,
+      "runtime_status_age_s": 0.9211719036102295,
+      "tf_age_s": 0.2894725799560547
+    },
+    {
+      "camera_info_age_s": 0.05416440963745117,
+      "checked_at": 1783797784.6751645,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 84.34414863586426,
+        "slam_rss_mb": 435.96875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3274.84765625,
+        "tf_rotation_jump_deg": 0.0,
+        "tf_translation_jump_m": 0.0
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 292,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 23.83316445350647,
+      "pose_age_s": 0.31516456604003906,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797784.6763432,
+      "runtime_status_age_s": 0.9468638896942139,
+      "tf_age_s": 0.31516456604003906
+    },
+    {
+      "camera_info_age_s": 0.16940855979919434,
+      "checked_at": 1783797784.7904086,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 84.34414863586426,
+        "slam_rss_mb": 435.96875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3274.84765625,
+        "tf_rotation_jump_deg": 0.0,
+        "tf_translation_jump_m": 0.0
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 292,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 23.948408603668213,
+      "pose_age_s": 0.0884087085723877,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797784.7911954,
+      "runtime_status_age_s": 1.062108039855957,
+      "tf_age_s": 0.4304087162017822
+    },
+    {
+      "camera_info_age_s": 0.19273877143859863,
+      "checked_at": 1783797784.8137388,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 84.34414863586426,
+        "slam_rss_mb": 437.2421875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3272.73828125,
+        "tf_rotation_jump_deg": 0.0,
+        "tf_translation_jump_m": 0.0
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 292,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 23.971738815307617,
+      "pose_age_s": 0.11173892021179199,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797784.814389,
+      "runtime_status_age_s": 0.050539493560791016,
+      "tf_age_s": 0.4537389278411865
+    },
+    {
+      "camera_info_age_s": 0.02794814109802246,
+      "checked_at": 1783797784.8489482,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 86.34734153747559,
+        "slam_rss_mb": 437.2421875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3272.73828125,
+        "tf_rotation_jump_deg": 0.04905023966954123,
+        "tf_translation_jump_m": 0.001474929148581508
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 229,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 24.006948232650757,
+      "pose_age_s": 0.14694833755493164,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797784.8495817,
+      "runtime_status_age_s": 0.08574891090393066,
+      "tf_age_s": 0.14694833755493164
+    },
+    {
+      "camera_info_age_s": 0.05572247505187988,
+      "checked_at": 1783797784.8767226,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 86.34734153747559,
+        "slam_rss_mb": 437.2421875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3272.73828125,
+        "tf_rotation_jump_deg": 0.04905023966954123,
+        "tf_translation_jump_m": 0.001474929148581508
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 229,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 24.034722566604614,
+      "pose_age_s": 0.17472267150878906,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797784.877811,
+      "runtime_status_age_s": 0.11352324485778809,
+      "tf_age_s": 0.17472267150878906
+    },
+    {
+      "camera_info_age_s": 0.17553186416625977,
+      "checked_at": 1783797784.996532,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 86.34734153747559,
+        "slam_rss_mb": 437.2421875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3272.73828125,
+        "tf_rotation_jump_deg": 0.04905023966954123,
+        "tf_translation_jump_m": 0.001474929148581508
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 229,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 24.154531955718994,
+      "pose_age_s": 0.09153199195861816,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797784.9973552,
+      "runtime_status_age_s": 0.23333263397216797,
+      "tf_age_s": 0.29453206062316895
+    },
+    {
+      "camera_info_age_s": 0.08820652961730957,
+      "checked_at": 1783797785.0492065,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 89.53976631164551,
+        "slam_rss_mb": 437.2421875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3272.73828125,
+        "tf_rotation_jump_deg": 0.01978988926983495,
+        "tf_translation_jump_m": 0.0002566551912335229
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 407,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 24.20720648765564,
+      "pose_age_s": 0.14420652389526367,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797785.04997,
+      "runtime_status_age_s": 0.2860071659088135,
+      "tf_age_s": 0.14420652389526367
+    },
+    {
+      "camera_info_age_s": 0.11765599250793457,
+      "checked_at": 1783797785.078656,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 89.53976631164551,
+        "slam_rss_mb": 437.2421875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3272.73828125,
+        "tf_rotation_jump_deg": 0.01978988926983495,
+        "tf_translation_jump_m": 0.0002566551912335229
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 407,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 24.236655950546265,
+      "pose_age_s": 0.17365598678588867,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797785.0804012,
+      "runtime_status_age_s": 0.3154566287994385,
+      "tf_age_s": 0.17365598678588867
+    },
+    {
+      "camera_info_age_s": 0.16115999221801758,
+      "checked_at": 1783797785.12216,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 89.53976631164551,
+        "slam_rss_mb": 437.2421875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3272.73828125,
+        "tf_rotation_jump_deg": 0.01978988926983495,
+        "tf_translation_jump_m": 0.0002566551912335229
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 407,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 24.280159950256348,
+      "pose_age_s": 0.0831599235534668,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797785.1229799,
+      "runtime_status_age_s": 0.3589606285095215,
+      "tf_age_s": 0.21715998649597168
+    },
+    {
+      "camera_info_age_s": 0.07384729385375977,
+      "checked_at": 1783797785.2498474,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 79.65230941772461,
+        "slam_rss_mb": 437.2421875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3272.73828125,
+        "tf_rotation_jump_deg": 0.027896630231757674,
+        "tf_translation_jump_m": 0.0007660020682049765
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 355,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 24.40784740447998,
+      "pose_age_s": 0.2108473777770996,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797785.251008,
+      "runtime_status_age_s": 0.4866480827331543,
+      "tf_age_s": 0.2108473777770996
+    },
+    {
+      "camera_info_age_s": 0.08583569526672363,
+      "checked_at": 1783797785.2618358,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 79.65230941772461,
+        "slam_rss_mb": 437.2421875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3272.73828125,
+        "tf_rotation_jump_deg": 0.027896630231757674,
+        "tf_translation_jump_m": 0.0007660020682049765
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 355,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 24.419835805892944,
+      "pose_age_s": 0.08583569526672363,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797785.2626255,
+      "runtime_status_age_s": 0.49863648414611816,
+      "tf_age_s": 0.22283577919006348
+    },
+    {
+      "camera_info_age_s": 0.10579061508178711,
+      "checked_at": 1783797785.2817907,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 79.65230941772461,
+        "slam_rss_mb": 437.2421875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3272.73828125,
+        "tf_rotation_jump_deg": 0.027896630231757674,
+        "tf_translation_jump_m": 0.0007660020682049765
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 355,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 24.439790725708008,
+      "pose_age_s": 0.10579061508178711,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797785.2826612,
+      "runtime_status_age_s": 0.5185914039611816,
+      "tf_age_s": 0.24279069900512695
+    },
+    {
+      "camera_info_age_s": 0.22058510780334473,
+      "checked_at": 1783797785.3965852,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 79.65230941772461,
+        "slam_rss_mb": 437.2421875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3272.73828125,
+        "tf_rotation_jump_deg": 0.027896630231757674,
+        "tf_translation_jump_m": 0.0007660020682049765
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 355,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 24.554585218429565,
+      "pose_age_s": 0.08558511734008789,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797785.397269,
+      "runtime_status_age_s": 0.6333858966827393,
+      "tf_age_s": 0.35758519172668457
+    },
+    {
+      "camera_info_age_s": 0.07044243812561035,
+      "checked_at": 1783797785.4494424,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 83.10365676879883,
+        "slam_rss_mb": 437.2421875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3272.73828125,
+        "tf_rotation_jump_deg": 0.01214478100490313,
+        "tf_translation_jump_m": 0.0005637809743681295
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 269,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 24.607442378997803,
+      "pose_age_s": 0.1384422779083252,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797785.450331,
+      "runtime_status_age_s": 0.6862430572509766,
+      "tf_age_s": 0.1384422779083252
+    },
+    {
+      "camera_info_age_s": 0.10500550270080566,
+      "checked_at": 1783797785.4840055,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 83.10365676879883,
+        "slam_rss_mb": 437.2421875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3272.73828125,
+        "tf_rotation_jump_deg": 0.01214478100490313,
+        "tf_translation_jump_m": 0.0005637809743681295
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 269,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 24.642005443572998,
+      "pose_age_s": 0.1730053424835205,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797785.484919,
+      "runtime_status_age_s": 0.7208061218261719,
+      "tf_age_s": 0.1730053424835205
+    },
+    {
+      "camera_info_age_s": 0.06636261940002441,
+      "checked_at": 1783797785.6503627,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 83.10365676879883,
+        "slam_rss_mb": 437.2421875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3272.73828125,
+        "tf_rotation_jump_deg": 0.0,
+        "tf_translation_jump_m": 0.0
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 269,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 24.80836272239685,
+      "pose_age_s": 0.33936262130737305,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797785.6511385,
+      "runtime_status_age_s": 0.8871634006500244,
+      "tf_age_s": 0.33936262130737305
+    },
+    {
+      "camera_info_age_s": 0.10121560096740723,
+      "checked_at": 1783797785.6852157,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 83.10365676879883,
+        "slam_rss_mb": 437.2421875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3272.73828125,
+        "tf_rotation_jump_deg": 0.0,
+        "tf_translation_jump_m": 0.0
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 269,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 24.843215703964233,
+      "pose_age_s": 0.37421560287475586,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797785.6860235,
+      "runtime_status_age_s": 0.9220163822174072,
+      "tf_age_s": 0.37421560287475586
+    },
+    {
+      "camera_info_age_s": 0.13884282112121582,
+      "checked_at": 1783797785.722843,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 83.10365676879883,
+        "slam_rss_mb": 437.2421875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3272.73828125,
+        "tf_rotation_jump_deg": 0.0,
+        "tf_translation_jump_m": 0.0
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 269,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 24.880842924118042,
+      "pose_age_s": 0.08084297180175781,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797785.7237144,
+      "runtime_status_age_s": 0.9596436023712158,
+      "tf_age_s": 0.41184282302856445
+    },
+    {
+      "camera_info_age_s": 0.22384381294250488,
+      "checked_at": 1783797785.807844,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 83.10365676879883,
+        "slam_rss_mb": 437.2421875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3272.73828125,
+        "tf_rotation_jump_deg": 0.0,
+        "tf_translation_jump_m": 0.0
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 269,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 24.96584391593933,
+      "pose_age_s": 0.08284401893615723,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797785.8093565,
+      "runtime_status_age_s": 1.0446445941925049,
+      "tf_age_s": 0.4968438148498535
+    },
+    {
+      "camera_info_age_s": 0.26075315475463867,
+      "checked_at": 1783797785.8447533,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 83.10365676879883,
+        "slam_rss_mb": 426.390625,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3278.6171875,
+        "tf_rotation_jump_deg": 0.0,
+        "tf_translation_jump_m": 0.0
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 269,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 25.002753257751465,
+      "pose_age_s": 0.11975336074829102,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797785.8456063,
+      "runtime_status_age_s": 0.029495954513549805,
+      "tf_age_s": 0.5337531566619873
+    },
+    {
+      "camera_info_age_s": 0.05936741828918457,
+      "checked_at": 1783797785.8493674,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 80.95955848693848,
+        "slam_rss_mb": 426.390625,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3278.6171875,
+        "tf_rotation_jump_deg": 0.029562711076019998,
+        "tf_translation_jump_m": 0.0006667139508834566
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 477,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 25.007367372512817,
+      "pose_age_s": 0.12436747550964355,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797785.8501465,
+      "runtime_status_age_s": 0.034110069274902344,
+      "tf_age_s": 0.12436747550964355
+    },
+    {
+      "camera_info_age_s": 0.09874773025512695,
+      "checked_at": 1783797785.8887477,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 80.95955848693848,
+        "slam_rss_mb": 426.390625,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3278.6171875,
+        "tf_rotation_jump_deg": 0.029562711076019998,
+        "tf_translation_jump_m": 0.0006667139508834566
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 477,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 25.04674768447876,
+      "pose_age_s": 0.16374778747558594,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797785.8898122,
+      "runtime_status_age_s": 0.07349038124084473,
+      "tf_age_s": 0.16374778747558594
+    },
+    {
+      "camera_info_age_s": 0.1391913890838623,
+      "checked_at": 1783797785.9291914,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 80.95955848693848,
+        "slam_rss_mb": 426.390625,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3278.6171875,
+        "tf_rotation_jump_deg": 0.029562711076019998,
+        "tf_translation_jump_m": 0.0006667139508834566
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 477,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 25.087191343307495,
+      "pose_age_s": 0.08519124984741211,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797785.9305573,
+      "runtime_status_age_s": 0.11393404006958008,
+      "tf_age_s": 0.2041914463043213
+    },
+    {
+      "camera_info_age_s": 0.05983877182006836,
+      "checked_at": 1783797786.0488389,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 83.07266235351562,
+        "slam_rss_mb": 426.390625,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3278.6171875,
+        "tf_rotation_jump_deg": 0.012696999609878802,
+        "tf_translation_jump_m": 0.00020394404893527476
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 392,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 25.206838846206665,
+      "pose_age_s": 0.20483875274658203,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797786.0496798,
+      "runtime_status_age_s": 0.23358154296875,
+      "tf_age_s": 0.20483875274658203
+    },
+    {
+      "camera_info_age_s": 0.0816195011138916,
+      "checked_at": 1783797786.0706196,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 83.07266235351562,
+        "slam_rss_mb": 426.390625,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3278.6171875,
+        "tf_rotation_jump_deg": 0.012696999609878802,
+        "tf_translation_jump_m": 0.00020394404893527476
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 392,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 25.22861957550049,
+      "pose_age_s": 0.0816195011138916,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797786.071969,
+      "runtime_status_age_s": 0.25536227226257324,
+      "tf_age_s": 0.22661948204040527
+    },
+    {
+      "camera_info_age_s": 0.10154533386230469,
+      "checked_at": 1783797786.0905454,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 83.07266235351562,
+        "slam_rss_mb": 426.390625,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3278.6171875,
+        "tf_rotation_jump_deg": 0.012696999609878802,
+        "tf_translation_jump_m": 0.00020394404893527476
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 392,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 25.2485454082489,
+      "pose_age_s": 0.10154533386230469,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797786.0917811,
+      "runtime_status_age_s": 0.27528810501098633,
+      "tf_age_s": 0.24654531478881836
+    },
+    {
+      "camera_info_age_s": 0.06087207794189453,
+      "checked_at": 1783797786.249872,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 78.40180397033691,
+        "slam_rss_mb": 426.390625,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3278.6171875,
+        "tf_rotation_jump_deg": 0.028506979420415118,
+        "tf_translation_jump_m": 0.00019495993558112874
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 335,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 25.407871961593628,
+      "pose_age_s": 0.26087188720703125,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797786.2504632,
+      "runtime_status_age_s": 0.4346146583557129,
+      "tf_age_s": 0.26087188720703125
+    },
+    {
+      "camera_info_age_s": 0.08688092231750488,
+      "checked_at": 1783797786.2758808,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 78.40180397033691,
+        "slam_rss_mb": 426.390625,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3278.6171875,
+        "tf_rotation_jump_deg": 0.028506979420415118,
+        "tf_translation_jump_m": 0.00019495993558112874
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 335,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 25.43388080596924,
+      "pose_age_s": 0.08688092231750488,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797786.2768438,
+      "runtime_status_age_s": 0.46062350273132324,
+      "tf_age_s": 0.2868807315826416
+    },
+    {
+      "camera_info_age_s": 0.10278463363647461,
+      "checked_at": 1783797786.2917845,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 78.40180397033691,
+        "slam_rss_mb": 426.390625,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3278.6171875,
+        "tf_rotation_jump_deg": 0.028506979420415118,
+        "tf_translation_jump_m": 0.00019495993558112874
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 335,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 25.449784517288208,
+      "pose_age_s": 0.10278463363647461,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797786.2926722,
+      "runtime_status_age_s": 0.47652721405029297,
+      "tf_age_s": 0.30278444290161133
+    },
+    {
+      "camera_info_age_s": 0.22702598571777344,
+      "checked_at": 1783797786.4160259,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 78.40180397033691,
+        "slam_rss_mb": 426.390625,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3278.6171875,
+        "tf_rotation_jump_deg": 0.028506979420415118,
+        "tf_translation_jump_m": 0.00019495993558112874
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 335,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 25.574025869369507,
+      "pose_age_s": 0.0920259952545166,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797786.4170523,
+      "runtime_status_age_s": 0.6007685661315918,
+      "tf_age_s": 0.42702579498291016
+    },
+    {
+      "camera_info_age_s": 0.06577086448669434,
+      "checked_at": 1783797786.4487708,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 89.96152877807617,
+        "slam_rss_mb": 426.390625,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3278.6171875,
+        "tf_rotation_jump_deg": 0.031473346384530594,
+        "tf_translation_jump_m": 0.0005223836622818596
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 220,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 25.606770753860474,
+      "pose_age_s": 0.1247708797454834,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797786.4495795,
+      "runtime_status_age_s": 0.6335134506225586,
+      "tf_age_s": 0.1247708797454834
+    },
+    {
+      "camera_info_age_s": 0.11054277420043945,
+      "checked_at": 1783797786.4935427,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 89.96152877807617,
+        "slam_rss_mb": 426.390625,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3278.6171875,
+        "tf_rotation_jump_deg": 0.031473346384530594,
+        "tf_translation_jump_m": 0.0005223836622818596
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 220,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 25.65154266357422,
+      "pose_age_s": 0.16954278945922852,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797786.494469,
+      "runtime_status_age_s": 0.6782853603363037,
+      "tf_age_s": 0.16954278945922852
+    },
+    {
+      "camera_info_age_s": 0.24303507804870605,
+      "checked_at": 1783797786.626035,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 89.96152877807617,
+        "slam_rss_mb": 426.390625,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3278.6171875,
+        "tf_rotation_jump_deg": 0.031473346384530594,
+        "tf_translation_jump_m": 0.0005223836622818596
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 220,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 25.784034967422485,
+      "pose_age_s": 0.09203505516052246,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797786.626941,
+      "runtime_status_age_s": 0.8107776641845703,
+      "tf_age_s": 0.3020350933074951
+    },
+    {
+      "camera_info_age_s": 0.07486820220947266,
+      "checked_at": 1783797786.6668682,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 88.4101390838623,
+        "slam_rss_mb": 426.390625,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3278.6171875,
+        "tf_rotation_jump_deg": 0.011874922164681416,
+        "tf_translation_jump_m": 0.00012005508650233514
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 414,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 25.824868202209473,
+      "pose_age_s": 0.13286828994750977,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797786.667441,
+      "runtime_status_age_s": 0.8516108989715576,
+      "tf_age_s": 0.13286828994750977
+    },
+    {
+      "camera_info_age_s": 0.10253596305847168,
+      "checked_at": 1783797786.694536,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 88.4101390838623,
+        "slam_rss_mb": 426.390625,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3278.6171875,
+        "tf_rotation_jump_deg": 0.011874922164681416,
+        "tf_translation_jump_m": 0.00012005508650233514
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 414,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 25.85253596305847,
+      "pose_age_s": 0.1605360507965088,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797786.6955037,
+      "runtime_status_age_s": 0.8792786598205566,
+      "tf_age_s": 0.1605360507965088
+    },
+    {
+      "camera_info_age_s": 0.163193941116333,
+      "checked_at": 1783797786.755194,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 88.4101390838623,
+        "slam_rss_mb": 426.390625,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3278.6171875,
+        "tf_rotation_jump_deg": 0.011874922164681416,
+        "tf_translation_jump_m": 0.00012005508650233514
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 414,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 25.913193941116333,
+      "pose_age_s": 0.0921938419342041,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797786.756347,
+      "runtime_status_age_s": 0.939936637878418,
+      "tf_age_s": 0.22119402885437012
+    },
+    {
+      "camera_info_age_s": 0.04231619834899902,
+      "checked_at": 1783797786.8493161,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 89.49494361877441,
+        "slam_rss_mb": 426.390625,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3278.6171875,
+        "tf_rotation_jump_deg": 0.025122315516374016,
+        "tf_translation_jump_m": 0.0006981644318200815
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 327,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 26.00731611251831,
+      "pose_age_s": 0.18631601333618164,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797786.8500142,
+      "runtime_status_age_s": 1.0340588092803955,
+      "tf_age_s": 0.18631601333618164
+    },
+    {
+      "camera_info_age_s": 0.06848430633544922,
+      "checked_at": 1783797786.8754842,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 89.49494361877441,
+        "slam_rss_mb": 426.921875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3280.3359375,
+        "tf_rotation_jump_deg": 0.025122315516374016,
+        "tf_translation_jump_m": 0.0006981644318200815
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 327,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 26.03348422050476,
+      "pose_age_s": 0.21248412132263184,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797786.876366,
+      "runtime_status_age_s": 0.029834747314453125,
+      "tf_age_s": 0.21248412132263184
+    },
+    {
+      "camera_info_age_s": 0.08690953254699707,
+      "checked_at": 1783797786.8939095,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 89.49494361877441,
+        "slam_rss_mb": 426.921875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3280.3359375,
+        "tf_rotation_jump_deg": 0.025122315516374016,
+        "tf_translation_jump_m": 0.0006981644318200815
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 327,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 26.05190944671631,
+      "pose_age_s": 0.08690953254699707,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797786.8950999,
+      "runtime_status_age_s": 0.04825997352600098,
+      "tf_age_s": 0.2309093475341797
+    },
+    {
+      "camera_info_age_s": 0.08854079246520996,
+      "checked_at": 1783797786.8955407,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 89.49494361877441,
+        "slam_rss_mb": 426.921875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3280.3359375,
+        "tf_rotation_jump_deg": 0.025122315516374016,
+        "tf_translation_jump_m": 0.0006981644318200815
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 327,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 26.05354070663452,
+      "pose_age_s": 0.08854079246520996,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797786.8970594,
+      "runtime_status_age_s": 0.04989123344421387,
+      "tf_age_s": 0.23254060745239258
+    },
+    {
+      "camera_info_age_s": 0.1383821964263916,
+      "checked_at": 1783797786.945382,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 89.49494361877441,
+        "slam_rss_mb": 426.921875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3280.3359375,
+        "tf_rotation_jump_deg": 0.025122315516374016,
+        "tf_translation_jump_m": 0.0006981644318200815
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 327,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 26.103382110595703,
+      "pose_age_s": 0.07838201522827148,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797786.9463856,
+      "runtime_status_age_s": 0.09973263740539551,
+      "tf_age_s": 0.2823820114135742
+    },
+    {
+      "camera_info_age_s": 0.21057653427124023,
+      "checked_at": 1783797787.0175765,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 89.49494361877441,
+        "slam_rss_mb": 426.921875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3280.3359375,
+        "tf_rotation_jump_deg": 0.025122315516374016,
+        "tf_translation_jump_m": 0.0006981644318200815
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 327,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 26.17557644844055,
+      "pose_age_s": 0.07857656478881836,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797787.021918,
+      "runtime_status_age_s": 0.17192697525024414,
+      "tf_age_s": 0.35457634925842285
+    },
+    {
+      "camera_info_age_s": 0.038312673568725586,
+      "checked_at": 1783797787.0483127,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 76.17378234863281,
+        "slam_rss_mb": 426.921875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3280.3359375,
+        "tf_rotation_jump_deg": 0.03259244686784759,
+        "tf_translation_jump_m": 0.0007157156250942211
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 259,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 26.206312656402588,
+      "pose_age_s": 0.10931277275085449,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797787.0491793,
+      "runtime_status_age_s": 0.20266318321228027,
+      "tf_age_s": 0.10931277275085449
+    },
+    {
+      "camera_info_age_s": 0.07489848136901855,
+      "checked_at": 1783797787.0848985,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 76.17378234863281,
+        "slam_rss_mb": 426.921875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3280.3359375,
+        "tf_rotation_jump_deg": 0.03259244686784759,
+        "tf_translation_jump_m": 0.0007157156250942211
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 259,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 26.24289846420288,
+      "pose_age_s": 0.07489848136901855,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797787.0868983,
+      "runtime_status_age_s": 0.23924899101257324,
+      "tf_age_s": 0.14589858055114746
+    },
+    {
+      "camera_info_age_s": 0.08718323707580566,
+      "checked_at": 1783797787.0971832,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 76.17378234863281,
+        "slam_rss_mb": 426.921875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3280.3359375,
+        "tf_rotation_jump_deg": 0.03259244686784759,
+        "tf_translation_jump_m": 0.0007157156250942211
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 259,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 26.255183219909668,
+      "pose_age_s": 0.08718323707580566,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797787.098617,
+      "runtime_status_age_s": 0.25153374671936035,
+      "tf_age_s": 0.15818333625793457
+    },
+    {
+      "camera_info_age_s": 0.15572118759155273,
+      "checked_at": 1783797787.1657212,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 76.17378234863281,
+        "slam_rss_mb": 426.921875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3280.3359375,
+        "tf_rotation_jump_deg": 0.03259244686784759,
+        "tf_translation_jump_m": 0.0007157156250942211
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 259,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 26.323721170425415,
+      "pose_age_s": 0.08572125434875488,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797787.1667488,
+      "runtime_status_age_s": 0.3200716972351074,
+      "tf_age_s": 0.22672128677368164
+    },
+    {
+      "camera_info_age_s": 0.22396612167358398,
+      "checked_at": 1783797787.233966,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 76.17378234863281,
+        "slam_rss_mb": 426.921875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3280.3359375,
+        "tf_rotation_jump_deg": 0.03259244686784759,
+        "tf_translation_jump_m": 0.0007157156250942211
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 259,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 26.391966104507446,
+      "pose_age_s": 0.08696603775024414,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797787.235051,
+      "runtime_status_age_s": 0.38831663131713867,
+      "tf_age_s": 0.2949662208557129
+    },
+    {
+      "camera_info_age_s": 0.05246782302856445,
+      "checked_at": 1783797787.255468,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 84.76090431213379,
+        "slam_rss_mb": 426.921875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3280.3359375,
+        "tf_rotation_jump_deg": 0.013511753327761025,
+        "tf_translation_jump_m": 0.0007417740451720997
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 424,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 26.41346788406372,
+      "pose_age_s": 0.10846781730651855,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797787.2567341,
+      "runtime_status_age_s": 0.4098184108734131,
+      "tf_age_s": 0.10846781730651855
+    },
+    {
+      "camera_info_age_s": 0.09545111656188965,
+      "checked_at": 1783797787.2984512,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 84.76090431213379,
+        "slam_rss_mb": 426.921875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3280.3359375,
+        "tf_rotation_jump_deg": 0.013511753327761025,
+        "tf_translation_jump_m": 0.0007417740451720997
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 424,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 26.456451177597046,
+      "pose_age_s": 0.15145111083984375,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797787.2994676,
+      "runtime_status_age_s": 0.4528017044067383,
+      "tf_age_s": 0.15145111083984375
+    },
+    {
+      "camera_info_age_s": 0.1471414566040039,
+      "checked_at": 1783797787.3501415,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 84.76090431213379,
+        "slam_rss_mb": 426.921875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3280.3359375,
+        "tf_rotation_jump_deg": 0.013511753327761025,
+        "tf_translation_jump_m": 0.0007417740451720997
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 424,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 26.50814151763916,
+      "pose_age_s": 0.08314156532287598,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797787.3512778,
+      "runtime_status_age_s": 0.5044920444488525,
+      "tf_age_s": 0.203141450881958
+    },
+    {
+      "camera_info_age_s": 0.034641265869140625,
+      "checked_at": 1783797787.4486413,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 80.0020694732666,
+        "slam_rss_mb": 426.921875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3280.3359375,
+        "tf_rotation_jump_deg": 0.020683041296334644,
+        "tf_translation_jump_m": 0.0006067365881965018
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 374,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 26.60664129257202,
+      "pose_age_s": 0.1816413402557373,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797787.449547,
+      "runtime_status_age_s": 0.6029918193817139,
+      "tf_age_s": 0.1816413402557373
+    },
+    {
+      "camera_info_age_s": 0.07598495483398438,
+      "checked_at": 1783797787.489985,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 80.0020694732666,
+        "slam_rss_mb": 426.921875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3280.3359375,
+        "tf_rotation_jump_deg": 0.020683041296334644,
+        "tf_translation_jump_m": 0.0006067365881965018
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 374,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 26.647984981536865,
+      "pose_age_s": 0.07598495483398438,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797787.4907331,
+      "runtime_status_age_s": 0.6443355083465576,
+      "tf_age_s": 0.22298502922058105
+    },
+    {
+      "camera_info_age_s": 0.08681249618530273,
+      "checked_at": 1783797787.5008125,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 80.0020694732666,
+        "slam_rss_mb": 426.921875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3280.3359375,
+        "tf_rotation_jump_deg": 0.020683041296334644,
+        "tf_translation_jump_m": 0.0006067365881965018
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 374,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 26.658812522888184,
+      "pose_age_s": 0.08681249618530273,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797787.502375,
+      "runtime_status_age_s": 0.655163049697876,
+      "tf_age_s": 0.23381257057189941
+    },
+    {
+      "camera_info_age_s": 0.2152717113494873,
+      "checked_at": 1783797787.6292717,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 80.0020694732666,
+        "slam_rss_mb": 426.921875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3280.3359375,
+        "tf_rotation_jump_deg": 0.020683041296334644,
+        "tf_translation_jump_m": 0.0006067365881965018
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 374,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 26.787271738052368,
+      "pose_age_s": 0.08027172088623047,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797787.6306353,
+      "runtime_status_age_s": 0.7836222648620605,
+      "tf_age_s": 0.362271785736084
+    },
+    {
+      "camera_info_age_s": 0.1053926944732666,
+      "checked_at": 1783797787.6543927,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 73.42791557312012,
+        "slam_rss_mb": 426.921875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3280.3359375,
+        "tf_rotation_jump_deg": 0.03342369146568888,
+        "tf_translation_jump_m": 0.0005459847500094345
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 253,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 26.812392711639404,
+      "pose_age_s": 0.1053926944732666,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797787.6551657,
+      "runtime_status_age_s": 0.8087432384490967,
+      "tf_age_s": 0.1053926944732666
+    },
+    {
+      "camera_info_age_s": 0.15343666076660156,
+      "checked_at": 1783797787.7024367,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 73.42791557312012,
+        "slam_rss_mb": 426.921875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3280.3359375,
+        "tf_rotation_jump_deg": 0.03342369146568888,
+        "tf_translation_jump_m": 0.0005459847500094345
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 253,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 26.86043667793274,
+      "pose_age_s": 0.15343666076660156,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797787.7038057,
+      "runtime_status_age_s": 0.8567872047424316,
+      "tf_age_s": 0.15343666076660156
+    },
+    {
+      "camera_info_age_s": 0.273435115814209,
+      "checked_at": 1783797787.8224351,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 73.42791557312012,
+        "slam_rss_mb": 426.921875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3280.3359375,
+        "tf_rotation_jump_deg": 0.03342369146568888,
+        "tf_translation_jump_m": 0.0005459847500094345
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 253,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 26.980435132980347,
+      "pose_age_s": 0.07843518257141113,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797787.824713,
+      "runtime_status_age_s": 0.9767856597900391,
+      "tf_age_s": 0.273435115814209
+    },
+    {
+      "camera_info_age_s": 0.10697817802429199,
+      "checked_at": 1783797787.8509781,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 76.0650634765625,
+        "slam_rss_mb": 426.921875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3280.3359375,
+        "tf_rotation_jump_deg": 0.03677030273946553,
+        "tf_translation_jump_m": 0.0008441338868785582
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 178,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 27.008978128433228,
+      "pose_age_s": 0.10697817802429199,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797787.8516552,
+      "runtime_status_age_s": 1.00532865524292,
+      "tf_age_s": 0.10697817802429199
+    },
+    {
+      "camera_info_age_s": 0.16099095344543457,
+      "checked_at": 1783797787.904991,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 76.0650634765625,
+        "slam_rss_mb": 426.921875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3280.3359375,
+        "tf_rotation_jump_deg": 0.03677030273946553,
+        "tf_translation_jump_m": 0.0008441338868785582
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 178,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 27.06299090385437,
+      "pose_age_s": 0.16099095344543457,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797787.905883,
+      "runtime_status_age_s": 1.0593414306640625,
+      "tf_age_s": 0.16099095344543457
+    },
+    {
+      "camera_info_age_s": 0.1665337085723877,
+      "checked_at": 1783797787.9105337,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 76.0650634765625,
+        "slam_rss_mb": 426.921875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3280.3359375,
+        "tf_rotation_jump_deg": 0.03677030273946553,
+        "tf_translation_jump_m": 0.0008441338868785582
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 178,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 27.068533658981323,
+      "pose_age_s": 0.08453369140625,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797787.915426,
+      "runtime_status_age_s": 1.0648841857910156,
+      "tf_age_s": 0.1665337085723877
+    },
+    {
+      "camera_info_age_s": 0.18459057807922363,
+      "checked_at": 1783797787.9285905,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 76.0650634765625,
+        "slam_rss_mb": 419.62109375,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3282.4765625,
+        "tf_rotation_jump_deg": 0.03677030273946553,
+        "tf_translation_jump_m": 0.0008441338868785582
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 178,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 27.08659052848816,
+      "pose_age_s": 0.10259056091308594,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797787.9292831,
+      "runtime_status_age_s": 0.05153322219848633,
+      "tf_age_s": 0.18459057807922363
+    },
+    {
+      "camera_info_age_s": 0.02737116813659668,
+      "checked_at": 1783797788.0503712,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 77.65364646911621,
+        "slam_rss_mb": 419.62109375,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3282.4765625,
+        "tf_rotation_jump_deg": 0.009007946572841088,
+        "tf_translation_jump_m": 0.0003934094545888275
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 457,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 27.20837116241455,
+      "pose_age_s": 0.22437119483947754,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797788.0512714,
+      "runtime_status_age_s": 0.17331385612487793,
+      "tf_age_s": 0.22437119483947754
+    },
+    {
+      "camera_info_age_s": 0.08339643478393555,
+      "checked_at": 1783797788.1063964,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 77.65364646911621,
+        "slam_rss_mb": 419.62109375,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3282.4765625,
+        "tf_rotation_jump_deg": 0.009007946572841088,
+        "tf_translation_jump_m": 0.0003934094545888275
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 457,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 27.26439642906189,
+      "pose_age_s": 0.2803964614868164,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797788.1074026,
+      "runtime_status_age_s": 0.2293391227722168,
+      "tf_age_s": 0.2803964614868164
+    },
+    {
+      "camera_info_age_s": 0.1551957130432129,
+      "checked_at": 1783797788.1781957,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 77.65364646911621,
+        "slam_rss_mb": 419.62109375,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3282.4765625,
+        "tf_rotation_jump_deg": 0.009007946572841088,
+        "tf_translation_jump_m": 0.0003934094545888275
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 457,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 27.336195707321167,
+      "pose_age_s": 0.09519577026367188,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797788.1790497,
+      "runtime_status_age_s": 0.30113840103149414,
+      "tf_age_s": 0.35219573974609375
+    },
+    {
+      "camera_info_age_s": 0.030985355377197266,
+      "checked_at": 1783797788.2499855,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 93.04475784301758,
+        "slam_rss_mb": 419.62109375,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3282.4765625,
+        "tf_rotation_jump_deg": 0.007151765398886264,
+        "tf_translation_jump_m": 0.0006200083845819106
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 282,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 27.40798544883728,
+      "pose_age_s": 0.16698551177978516,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797788.2505894,
+      "runtime_status_age_s": 0.3729281425476074,
+      "tf_age_s": 0.16698551177978516
+    },
+    {
+      "camera_info_age_s": 0.07979893684387207,
+      "checked_at": 1783797788.298799,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 93.04475784301758,
+        "slam_rss_mb": 419.62109375,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3282.4765625,
+        "tf_rotation_jump_deg": 0.007151765398886264,
+        "tf_translation_jump_m": 0.0006200083845819106
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 282,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 27.456799030303955,
+      "pose_age_s": 0.07979893684387207,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797788.2995076,
+      "runtime_status_age_s": 0.4217417240142822,
+      "tf_age_s": 0.21579909324645996
+    },
+    {
+      "camera_info_age_s": 0.08876228332519531,
+      "checked_at": 1783797788.3077624,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 93.04475784301758,
+        "slam_rss_mb": 419.62109375,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3282.4765625,
+        "tf_rotation_jump_deg": 0.007151765398886264,
+        "tf_translation_jump_m": 0.0006200083845819106
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 282,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 27.46576237678528,
+      "pose_age_s": 0.08876228332519531,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797788.3114827,
+      "runtime_status_age_s": 0.43070507049560547,
+      "tf_age_s": 0.2247624397277832
+    },
+    {
+      "camera_info_age_s": 0.0783836841583252,
+      "checked_at": 1783797788.4493837,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 76.52974128723145,
+        "slam_rss_mb": 419.62109375,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3282.4765625,
+        "tf_rotation_jump_deg": 0.05076385557583577,
+        "tf_translation_jump_m": 0.0007073550832134278
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 234,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 27.607383728027344,
+      "pose_age_s": 0.23038363456726074,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797788.4499922,
+      "runtime_status_age_s": 0.5723264217376709,
+      "tf_age_s": 0.23038363456726074
+    },
+    {
+      "camera_info_age_s": 0.09361624717712402,
+      "checked_at": 1783797788.4646163,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 76.52974128723145,
+        "slam_rss_mb": 419.62109375,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3282.4765625,
+        "tf_rotation_jump_deg": 0.05076385557583577,
+        "tf_translation_jump_m": 0.0007073550832134278
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 234,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 27.622616291046143,
+      "pose_age_s": 0.09361624717712402,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797788.4654791,
+      "runtime_status_age_s": 0.5875589847564697,
+      "tf_age_s": 0.24561619758605957
+    },
+    {
+      "camera_info_age_s": 0.13842535018920898,
+      "checked_at": 1783797788.5094254,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 76.52974128723145,
+        "slam_rss_mb": 419.62109375,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3282.4765625,
+        "tf_rotation_jump_deg": 0.05076385557583577,
+        "tf_translation_jump_m": 0.0007073550832134278
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 234,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 27.667425394058228,
+      "pose_age_s": 0.13842535018920898,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797788.510414,
+      "runtime_status_age_s": 0.6323680877685547,
+      "tf_age_s": 0.29042530059814453
+    },
+    {
+      "camera_info_age_s": 0.15639185905456543,
+      "checked_at": 1783797788.527392,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 76.52974128723145,
+        "slam_rss_mb": 419.62109375,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3282.4765625,
+        "tf_rotation_jump_deg": 0.05076385557583577,
+        "tf_translation_jump_m": 0.0007073550832134278
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 234,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 27.685391902923584,
+      "pose_age_s": 0.08939194679260254,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797788.5287333,
+      "runtime_status_age_s": 0.6503345966339111,
+      "tf_age_s": 0.308391809463501
+    },
+    {
+      "camera_info_age_s": 0.07673096656799316,
+      "checked_at": 1783797788.6507308,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 87.40520477294922,
+        "slam_rss_mb": 419.62109375,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3282.4765625,
+        "tf_rotation_jump_deg": 0.007397137245632554,
+        "tf_translation_jump_m": 0.0001715434397166168
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 417,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 27.808730840682983,
+      "pose_age_s": 0.21273088455200195,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797788.6516821,
+      "runtime_status_age_s": 0.7736735343933105,
+      "tf_age_s": 0.21273088455200195
+    },
+    {
+      "camera_info_age_s": 0.0817558765411377,
+      "checked_at": 1783797788.6557558,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 87.40520477294922,
+        "slam_rss_mb": 419.62109375,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3282.4765625,
+        "tf_rotation_jump_deg": 0.007397137245632554,
+        "tf_translation_jump_m": 0.0001715434397166168
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 417,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 27.813755750656128,
+      "pose_age_s": 0.0817558765411377,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797788.656317,
+      "runtime_status_age_s": 0.7786984443664551,
+      "tf_age_s": 0.21775579452514648
+    },
+    {
+      "camera_info_age_s": 0.13636350631713867,
+      "checked_at": 1783797788.7103634,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 87.40520477294922,
+        "slam_rss_mb": 419.62109375,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3282.4765625,
+        "tf_rotation_jump_deg": 0.007397137245632554,
+        "tf_translation_jump_m": 0.0001715434397166168
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 417,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 27.86836338043213,
+      "pose_age_s": 0.13636350631713867,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797788.711094,
+      "runtime_status_age_s": 0.833306074142456,
+      "tf_age_s": 0.27236342430114746
+    },
+    {
+      "camera_info_age_s": 0.1473865509033203,
+      "checked_at": 1783797788.7213864,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 87.40520477294922,
+        "slam_rss_mb": 419.62109375,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3282.4765625,
+        "tf_rotation_jump_deg": 0.007397137245632554,
+        "tf_translation_jump_m": 0.0001715434397166168
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 417,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 27.87938642501831,
+      "pose_age_s": 0.08838653564453125,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797788.7219248,
+      "runtime_status_age_s": 0.8443291187286377,
+      "tf_age_s": 0.2833864688873291
+    },
+    {
+      "camera_info_age_s": 0.08179426193237305,
+      "checked_at": 1783797788.8497941,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 86.38238906860352,
+        "slam_rss_mb": 419.62109375,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3282.4765625,
+        "tf_rotation_jump_deg": 0.016423195465754336,
+        "tf_translation_jump_m": 0.00020710114971518768
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 285,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 28.00779414176941,
+      "pose_age_s": 0.21679425239562988,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797788.8505075,
+      "runtime_status_age_s": 0.9727368354797363,
+      "tf_age_s": 0.21679425239562988
+    },
+    {
+      "camera_info_age_s": 0.09999799728393555,
+      "checked_at": 1783797788.867998,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 86.38238906860352,
+        "slam_rss_mb": 419.62109375,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3282.4765625,
+        "tf_rotation_jump_deg": 0.016423195465754336,
+        "tf_translation_jump_m": 0.00020710114971518768
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 285,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 28.02599787712097,
+      "pose_age_s": 0.09999799728393555,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797788.868784,
+      "runtime_status_age_s": 0.9909405708312988,
+      "tf_age_s": 0.23499798774719238
+    },
+    {
+      "camera_info_age_s": 0.14374899864196777,
+      "checked_at": 1783797788.911749,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 86.38238906860352,
+        "slam_rss_mb": 419.62109375,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3282.4765625,
+        "tf_rotation_jump_deg": 0.016423195465754336,
+        "tf_translation_jump_m": 0.00020710114971518768
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 285,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 28.069748878479004,
+      "pose_age_s": 0.14374899864196777,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797788.9126048,
+      "runtime_status_age_s": 1.034691572189331,
+      "tf_age_s": 0.2787489891052246
+    },
+    {
+      "camera_info_age_s": 0.20883727073669434,
+      "checked_at": 1783797788.9768372,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 86.38238906860352,
+        "slam_rss_mb": 427.390625,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3279.57421875,
+        "tf_rotation_jump_deg": 0.016423195465754336,
+        "tf_translation_jump_m": 0.00020710114971518768
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 285,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 28.13483715057373,
+      "pose_age_s": 0.20883727073669434,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797788.9778147,
+      "runtime_status_age_s": 0.04661154747009277,
+      "tf_age_s": 0.34383726119995117
+    },
+    {
+      "camera_info_age_s": 0.24445700645446777,
+      "checked_at": 1783797789.012457,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 86.38238906860352,
+        "slam_rss_mb": 427.390625,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3279.57421875,
+        "tf_rotation_jump_deg": 0.016423195465754336,
+        "tf_translation_jump_m": 0.00020710114971518768
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 285,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 28.170456886291504,
+      "pose_age_s": 0.099456787109375,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797789.0133483,
+      "runtime_status_age_s": 0.08223128318786621,
+      "tf_age_s": 0.3794569969177246
+    },
+    {
+      "camera_info_age_s": 0.07271552085876465,
+      "checked_at": 1783797789.0497155,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 96.95625305175781,
+        "slam_rss_mb": 427.390625,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3279.57421875,
+        "tf_rotation_jump_deg": 0.029064884086491515,
+        "tf_translation_jump_m": 0.0004630545134171697
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 447,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 28.20771551132202,
+      "pose_age_s": 0.13671541213989258,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797789.0504978,
+      "runtime_status_age_s": 0.11948990821838379,
+      "tf_age_s": 0.13671541213989258
+    },
+    {
+      "camera_info_age_s": 0.10166287422180176,
+      "checked_at": 1783797789.0786629,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 96.95625305175781,
+        "slam_rss_mb": 427.390625,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3279.57421875,
+        "tf_rotation_jump_deg": 0.029064884086491515,
+        "tf_translation_jump_m": 0.0004630545134171697
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 447,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 28.23666286468506,
+      "pose_age_s": 0.10166287422180176,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797789.079279,
+      "runtime_status_age_s": 0.1484372615814209,
+      "tf_age_s": 0.1656627655029297
+    },
+    {
+      "camera_info_age_s": 0.13568353652954102,
+      "checked_at": 1783797789.1126835,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 96.95625305175781,
+        "slam_rss_mb": 427.390625,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3279.57421875,
+        "tf_rotation_jump_deg": 0.029064884086491515,
+        "tf_translation_jump_m": 0.0004630545134171697
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 447,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 28.270683526992798,
+      "pose_age_s": 0.13568353652954102,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797789.113655,
+      "runtime_status_age_s": 0.18245792388916016,
+      "tf_age_s": 0.19968342781066895
+    },
+    {
+      "camera_info_age_s": 0.22535419464111328,
+      "checked_at": 1783797789.2023542,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 96.95625305175781,
+        "slam_rss_mb": 427.390625,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3279.57421875,
+        "tf_rotation_jump_deg": 0.029064884086491515,
+        "tf_translation_jump_m": 0.0004630545134171697
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 447,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 28.36035418510437,
+      "pose_age_s": 0.10135412216186523,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797789.2031395,
+      "runtime_status_age_s": 0.2721285820007324,
+      "tf_age_s": 0.2893540859222412
+    },
+    {
+      "camera_info_age_s": 0.06391477584838867,
+      "checked_at": 1783797789.2489147,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 97.10907936096191,
+        "slam_rss_mb": 427.390625,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3279.57421875,
+        "tf_rotation_jump_deg": 0.018789937713571604,
+        "tf_translation_jump_m": 0.00020299883953340587
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 335,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 28.406914710998535,
+      "pose_age_s": 0.14791464805603027,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797789.249652,
+      "runtime_status_age_s": 0.31868910789489746,
+      "tf_age_s": 0.14791464805603027
+    },
+    {
+      "camera_info_age_s": 0.08564639091491699,
+      "checked_at": 1783797789.2706463,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 97.10907936096191,
+        "slam_rss_mb": 427.390625,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3279.57421875,
+        "tf_rotation_jump_deg": 0.018789937713571604,
+        "tf_translation_jump_m": 0.00020299883953340587
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 335,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 28.428646326065063,
+      "pose_age_s": 0.08564639091491699,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797789.2713563,
+      "runtime_status_age_s": 0.3404207229614258,
+      "tf_age_s": 0.1696462631225586
+    },
+    {
+      "camera_info_age_s": 0.1293957233428955,
+      "checked_at": 1783797789.3143957,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 97.10907936096191,
+        "slam_rss_mb": 427.390625,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3279.57421875,
+        "tf_rotation_jump_deg": 0.018789937713571604,
+        "tf_translation_jump_m": 0.00020299883953340587
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 335,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 28.472395658493042,
+      "pose_age_s": 0.1293957233428955,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797789.3160272,
+      "runtime_status_age_s": 0.3841700553894043,
+      "tf_age_s": 0.2133955955505371
+    },
+    {
+      "camera_info_age_s": 0.1513051986694336,
+      "checked_at": 1783797789.3363051,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 97.10907936096191,
+        "slam_rss_mb": 427.390625,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3279.57421875,
+        "tf_rotation_jump_deg": 0.018789937713571604,
+        "tf_translation_jump_m": 0.00020299883953340587
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 335,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 28.49430513381958,
+      "pose_age_s": 0.0823051929473877,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797789.3386056,
+      "runtime_status_age_s": 0.4060795307159424,
+      "tf_age_s": 0.2353050708770752
+    },
+    {
+      "camera_info_age_s": 0.2148294448852539,
+      "checked_at": 1783797789.3998294,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 97.10907936096191,
+        "slam_rss_mb": 427.390625,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3279.57421875,
+        "tf_rotation_jump_deg": 0.018789937713571604,
+        "tf_translation_jump_m": 0.00020299883953340587
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 335,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 28.5578293800354,
+      "pose_age_s": 0.08382940292358398,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797789.4017167,
+      "runtime_status_age_s": 0.4696037769317627,
+      "tf_age_s": 0.2988293170928955
+    },
+    {
+      "camera_info_age_s": 0.07266807556152344,
+      "checked_at": 1783797789.4496682,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 80.29866218566895,
+        "slam_rss_mb": 427.390625,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3279.57421875,
+        "tf_rotation_jump_deg": 0.015370915173720285,
+        "tf_translation_jump_m": 0.0002617645171026962
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 264,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 28.607668161392212,
+      "pose_age_s": 0.1336681842803955,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797789.4505806,
+      "runtime_status_age_s": 0.5194425582885742,
+      "tf_age_s": 0.1336681842803955
+    },
+    {
+      "camera_info_age_s": 0.13965845108032227,
+      "checked_at": 1783797789.5166585,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 80.29866218566895,
+        "slam_rss_mb": 427.390625,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3279.57421875,
+        "tf_rotation_jump_deg": 0.015370915173720285,
+        "tf_translation_jump_m": 0.0002617645171026962
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 264,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 28.67465853691101,
+      "pose_age_s": 0.20065855979919434,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797789.5177288,
+      "runtime_status_age_s": 0.586432933807373,
+      "tf_age_s": 0.20065855979919434
+    },
+    {
+      "camera_info_age_s": 0.15816593170166016,
+      "checked_at": 1783797789.535166,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 80.29866218566895,
+        "slam_rss_mb": 427.390625,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3279.57421875,
+        "tf_rotation_jump_deg": 0.015370915173720285,
+        "tf_translation_jump_m": 0.0002617645171026962
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 264,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 28.69316601753235,
+      "pose_age_s": 0.08516597747802734,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797789.5376976,
+      "runtime_status_age_s": 0.6049404144287109,
+      "tf_age_s": 0.21916604042053223
+    },
+    {
+      "camera_info_age_s": 0.05663490295410156,
+      "checked_at": 1783797789.6496348,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 82.77106285095215,
+        "slam_rss_mb": 427.390625,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3279.57421875,
+        "tf_rotation_jump_deg": 0.014157753441243657,
+        "tf_translation_jump_m": 0.0008913482393521987
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 220,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 28.807634830474854,
+      "pose_age_s": 0.19963479042053223,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797789.6504662,
+      "runtime_status_age_s": 0.7194092273712158,
+      "tf_age_s": 0.19963479042053223
+    },
+    {
+      "camera_info_age_s": 0.08308720588684082,
+      "checked_at": 1783797789.6760871,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 82.77106285095215,
+        "slam_rss_mb": 427.390625,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3279.57421875,
+        "tf_rotation_jump_deg": 0.014157753441243657,
+        "tf_translation_jump_m": 0.0008913482393521987
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 220,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 28.834087133407593,
+      "pose_age_s": 0.08308720588684082,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797789.6767514,
+      "runtime_status_age_s": 0.7458615303039551,
+      "tf_age_s": 0.22608709335327148
+    },
+    {
+      "camera_info_age_s": 0.12482571601867676,
+      "checked_at": 1783797789.7178257,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 82.77106285095215,
+        "slam_rss_mb": 427.390625,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3279.57421875,
+        "tf_rotation_jump_deg": 0.014157753441243657,
+        "tf_translation_jump_m": 0.0008913482393521987
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 220,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 28.87582564353943,
+      "pose_age_s": 0.12482571601867676,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797789.7188752,
+      "runtime_status_age_s": 0.787600040435791,
+      "tf_age_s": 0.2678256034851074
+    },
+    {
+      "camera_info_age_s": 0.13755178451538086,
+      "checked_at": 1783797789.7305517,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 82.77106285095215,
+        "slam_rss_mb": 427.390625,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3279.57421875,
+        "tf_rotation_jump_deg": 0.014157753441243657,
+        "tf_translation_jump_m": 0.0008913482393521987
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 220,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 28.888551712036133,
+      "pose_age_s": 0.08355164527893066,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797789.7314775,
+      "runtime_status_age_s": 0.8003261089324951,
+      "tf_age_s": 0.2805516719818115
+    },
+    {
+      "camera_info_age_s": 0.05263519287109375,
+      "checked_at": 1783797789.8496351,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 81.44164085388184,
+        "slam_rss_mb": 427.390625,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3279.57421875,
+        "tf_rotation_jump_deg": 0.02401928721748837,
+        "tf_translation_jump_m": 0.0008888753986585295
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 325,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 29.00763511657715,
+      "pose_age_s": 0.2026350498199463,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797789.8514805,
+      "runtime_status_age_s": 0.9194095134735107,
+      "tf_age_s": 0.2026350498199463
+    },
+    {
+      "camera_info_age_s": 0.0777273178100586,
+      "checked_at": 1783797789.8747272,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 81.44164085388184,
+        "slam_rss_mb": 427.390625,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3279.57421875,
+        "tf_rotation_jump_deg": 0.02401928721748837,
+        "tf_translation_jump_m": 0.0008888753986585295
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 325,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 29.032727241516113,
+      "pose_age_s": 0.0777273178100586,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797789.8757267,
+      "runtime_status_age_s": 0.9445016384124756,
+      "tf_age_s": 0.22772717475891113
+    },
+    {
+      "camera_info_age_s": 0.12269067764282227,
+      "checked_at": 1783797789.9196906,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 81.44164085388184,
+        "slam_rss_mb": 427.390625,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3279.57421875,
+        "tf_rotation_jump_deg": 0.02401928721748837,
+        "tf_translation_jump_m": 0.0008888753986585295
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 325,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 29.077690601348877,
+      "pose_age_s": 0.12269067764282227,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797789.9206398,
+      "runtime_status_age_s": 0.9894649982452393,
+      "tf_age_s": 0.2726905345916748
+    },
+    {
+      "camera_info_age_s": 0.2108464241027832,
+      "checked_at": 1783797790.0078464,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 81.44164085388184,
+        "slam_rss_mb": 427.390625,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3279.57421875,
+        "tf_rotation_jump_deg": 0.02401928721748837,
+        "tf_translation_jump_m": 0.0008888753986585295
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 325,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 29.165846347808838,
+      "pose_age_s": 0.07384634017944336,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797790.009084,
+      "runtime_status_age_s": 1.0776207447052002,
+      "tf_age_s": 0.36084628105163574
+    },
+    {
+      "camera_info_age_s": 0.22385859489440918,
+      "checked_at": 1783797790.0208585,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 81.44164085388184,
+        "slam_rss_mb": 429.375,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3277.78125,
+        "tf_rotation_jump_deg": 0.02401928721748837,
+        "tf_translation_jump_m": 0.0008888753986585295
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 325,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 29.178858518600464,
+      "pose_age_s": 0.08685851097106934,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797790.0218732,
+      "runtime_status_age_s": 0.04301905632019043,
+      "tf_age_s": 0.3738584518432617
+    },
+    {
+      "camera_info_age_s": 0.04884529113769531,
+      "checked_at": 1783797790.0488453,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 71.40660285949707,
+        "slam_rss_mb": 429.375,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3277.78125,
+        "tf_rotation_jump_deg": 0.03752822159152261,
+        "tf_translation_jump_m": 0.0012731634382159808
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 165,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 29.2068452835083,
+      "pose_age_s": 0.11484527587890625,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797790.0494976,
+      "runtime_status_age_s": 0.07100582122802734,
+      "tf_age_s": 0.11484527587890625
+    },
+    {
+      "camera_info_age_s": 0.0941934585571289,
+      "checked_at": 1783797790.0941935,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 71.40660285949707,
+        "slam_rss_mb": 429.375,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3277.78125,
+        "tf_rotation_jump_deg": 0.03752822159152261,
+        "tf_translation_jump_m": 0.0012731634382159808
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 165,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 29.252193450927734,
+      "pose_age_s": 0.0941934585571289,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797790.0950878,
+      "runtime_status_age_s": 0.11635398864746094,
+      "tf_age_s": 0.16019344329833984
+    },
+    {
+      "camera_info_age_s": 0.12214279174804688,
+      "checked_at": 1783797790.1221428,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 71.40660285949707,
+        "slam_rss_mb": 429.375,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3277.78125,
+        "tf_rotation_jump_deg": 0.03752822159152261,
+        "tf_translation_jump_m": 0.0012731634382159808
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 165,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 29.280142784118652,
+      "pose_age_s": 0.12214279174804688,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797790.1231964,
+      "runtime_status_age_s": 0.1443033218383789,
+      "tf_age_s": 0.1881427764892578
+    },
+    {
+      "camera_info_age_s": 0.19986653327941895,
+      "checked_at": 1783797790.1998665,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 71.40660285949707,
+        "slam_rss_mb": 429.375,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3277.78125,
+        "tf_rotation_jump_deg": 0.03752822159152261,
+        "tf_translation_jump_m": 0.0012731634382159808
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 165,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 29.357866525650024,
+      "pose_age_s": 0.07686662673950195,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797790.200535,
+      "runtime_status_age_s": 0.22202706336975098,
+      "tf_age_s": 0.2658665180206299
+    },
+    {
+      "camera_info_age_s": 0.04706120491027832,
+      "checked_at": 1783797790.2500613,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 74.53584671020508,
+        "slam_rss_mb": 429.375,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3277.78125,
+        "tf_rotation_jump_deg": 0.0149612190363333,
+        "tf_translation_jump_m": 0.00044845411791403735
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 377,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 29.408061265945435,
+      "pose_age_s": 0.1270613670349121,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797790.2507339,
+      "runtime_status_age_s": 0.27222180366516113,
+      "tf_age_s": 0.1270613670349121
+    },
+    {
+      "camera_info_age_s": 0.07938694953918457,
+      "checked_at": 1783797790.282387,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 74.53584671020508,
+        "slam_rss_mb": 429.375,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3277.78125,
+        "tf_rotation_jump_deg": 0.0149612190363333,
+        "tf_translation_jump_m": 0.00044845411791403735
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 377,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 29.44038701057434,
+      "pose_age_s": 0.07938694953918457,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797790.28338,
+      "runtime_status_age_s": 0.3045475482940674,
+      "tf_age_s": 0.15938711166381836
+    },
+    {
+      "camera_info_age_s": 0.12018036842346191,
+      "checked_at": 1783797790.3231804,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 74.53584671020508,
+        "slam_rss_mb": 429.375,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3277.78125,
+        "tf_rotation_jump_deg": 0.0149612190363333,
+        "tf_translation_jump_m": 0.00044845411791403735
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 377,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 29.481180429458618,
+      "pose_age_s": 0.12018036842346191,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797790.3240063,
+      "runtime_status_age_s": 0.3453409671783447,
+      "tf_age_s": 0.2001805305480957
+    },
+    {
+      "camera_info_age_s": 0.15489602088928223,
+      "checked_at": 1783797790.357896,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 74.53584671020508,
+        "slam_rss_mb": 429.375,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3277.78125,
+        "tf_rotation_jump_deg": 0.0149612190363333,
+        "tf_translation_jump_m": 0.00044845411791403735
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 377,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 29.51589608192444,
+      "pose_age_s": 0.08289599418640137,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797790.359853,
+      "runtime_status_age_s": 0.38005661964416504,
+      "tf_age_s": 0.23489618301391602
+    },
+    {
+      "camera_info_age_s": 0.2233600616455078,
+      "checked_at": 1783797790.4263601,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 74.53584671020508,
+        "slam_rss_mb": 429.375,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3277.78125,
+        "tf_rotation_jump_deg": 0.0149612190363333,
+        "tf_translation_jump_m": 0.00044845411791403735
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 377,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 29.584360122680664,
+      "pose_age_s": 0.08436012268066406,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797790.4268758,
+      "runtime_status_age_s": 0.4485206604003906,
+      "tf_age_s": 0.3033602237701416
+    },
+    {
+      "camera_info_age_s": 0.11785507202148438,
+      "checked_at": 1783797790.459855,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 82.17096328735352,
+        "slam_rss_mb": 429.375,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3277.78125,
+        "tf_rotation_jump_deg": 0.06204085432225907,
+        "tf_translation_jump_m": 0.0015334696103847618
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 248,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 29.617855072021484,
+      "pose_age_s": 0.11785507202148438,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797790.460673,
+      "runtime_status_age_s": 0.48201560974121094,
+      "tf_age_s": 0.11785507202148438
+    },
+    {
+      "camera_info_age_s": 0.18328142166137695,
+      "checked_at": 1783797790.5252814,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 82.17096328735352,
+        "slam_rss_mb": 429.375,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3277.78125,
+        "tf_rotation_jump_deg": 0.06204085432225907,
+        "tf_translation_jump_m": 0.0015334696103847618
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 248,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 29.683281421661377,
+      "pose_age_s": 0.18328142166137695,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797790.5261276,
+      "runtime_status_age_s": 0.5474419593811035,
+      "tf_age_s": 0.18328142166137695
+    },
+    {
+      "camera_info_age_s": 0.20846962928771973,
+      "checked_at": 1783797790.5504696,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 82.17096328735352,
+        "slam_rss_mb": 429.375,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3277.78125,
+        "tf_rotation_jump_deg": 0.06204085432225907,
+        "tf_translation_jump_m": 0.0015334696103847618
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 248,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 29.70846962928772,
+      "pose_age_s": 0.07946968078613281,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797790.551021,
+      "runtime_status_age_s": 0.5726301670074463,
+      "tf_age_s": 0.20846962928771973
+    },
+    {
+      "camera_info_age_s": 0.04568839073181152,
+      "checked_at": 1783797790.6486883,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 76.43651962280273,
+        "slam_rss_mb": 429.375,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3277.78125,
+        "tf_rotation_jump_deg": 0.05127272042175813,
+        "tf_translation_jump_m": 0.000801652093776054
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 217,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 29.80668830871582,
+      "pose_age_s": 0.1776883602142334,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797790.6492994,
+      "runtime_status_age_s": 0.6708488464355469,
+      "tf_age_s": 0.1776883602142334
+    },
+    {
+      "camera_info_age_s": 0.0832509994506836,
+      "checked_at": 1783797790.686251,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 76.43651962280273,
+        "slam_rss_mb": 429.375,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3277.78125,
+        "tf_rotation_jump_deg": 0.05127272042175813,
+        "tf_translation_jump_m": 0.000801652093776054
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 217,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 29.844250917434692,
+      "pose_age_s": 0.0832509994506836,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797790.686941,
+      "runtime_status_age_s": 0.708411455154419,
+      "tf_age_s": 0.21525096893310547
+    },
+    {
+      "camera_info_age_s": 0.12402677536010742,
+      "checked_at": 1783797790.7270267,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 76.43651962280273,
+        "slam_rss_mb": 429.375,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3277.78125,
+        "tf_rotation_jump_deg": 0.05127272042175813,
+        "tf_translation_jump_m": 0.000801652093776054
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 217,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 29.885026693344116,
+      "pose_age_s": 0.12402677536010742,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797790.7281022,
+      "runtime_status_age_s": 0.7491872310638428,
+      "tf_age_s": 0.2560267448425293
+    },
+    {
+      "camera_info_age_s": 0.21697592735290527,
+      "checked_at": 1783797790.8199759,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 76.43651962280273,
+        "slam_rss_mb": 429.375,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3277.78125,
+        "tf_rotation_jump_deg": 0.05127272042175813,
+        "tf_translation_jump_m": 0.000801652093776054
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 217,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 29.977975845336914,
+      "pose_age_s": 0.08397579193115234,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797790.820705,
+      "runtime_status_age_s": 0.8421363830566406,
+      "tf_age_s": 0.34897589683532715
+    },
+    {
+      "camera_info_age_s": 0.03476834297180176,
+      "checked_at": 1783797790.8487682,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 81.92777633666992,
+        "slam_rss_mb": 429.375,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3277.78125,
+        "tf_rotation_jump_deg": 0.028771642255033588,
+        "tf_translation_jump_m": 0.0006806723749963127
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 334,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 30.006768226623535,
+      "pose_age_s": 0.11276817321777344,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797790.8498297,
+      "runtime_status_age_s": 0.8709287643432617,
+      "tf_age_s": 0.11276817321777344
+    },
+    {
+      "camera_info_age_s": 0.11466670036315918,
+      "checked_at": 1783797790.9286666,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 81.92777633666992,
+        "slam_rss_mb": 429.375,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3277.78125,
+        "tf_rotation_jump_deg": 0.028771642255033588,
+        "tf_translation_jump_m": 0.0006806723749963127
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 334,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 30.086666584014893,
+      "pose_age_s": 0.19266653060913086,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797790.9301116,
+      "runtime_status_age_s": 0.9508271217346191,
+      "tf_age_s": 0.19266653060913086
+    },
+    {
+      "camera_info_age_s": 0.1533501148223877,
+      "checked_at": 1783797790.96735,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 81.92777633666992,
+        "slam_rss_mb": 429.375,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3277.78125,
+        "tf_rotation_jump_deg": 0.028771642255033588,
+        "tf_translation_jump_m": 0.0006806723749963127
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 334,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 30.12534999847412,
+      "pose_age_s": 0.0843501091003418,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797790.968772,
+      "runtime_status_age_s": 0.9895105361938477,
+      "tf_age_s": 0.23134994506835938
+    },
+    {
+      "camera_info_age_s": 0.029361248016357422,
+      "checked_at": 1783797791.0493612,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 80.87873458862305,
+        "slam_rss_mb": 429.375,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3277.78125,
+        "tf_rotation_jump_deg": 0.0197093576765432,
+        "tf_translation_jump_m": 0.0008324355642560992
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 291,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 30.207361221313477,
+      "pose_age_s": 0.16636133193969727,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797791.0505788,
+      "runtime_status_age_s": 1.0715217590332031,
+      "tf_age_s": 0.16636133193969727
+    },
+    {
+      "camera_info_age_s": 0.05475640296936035,
+      "checked_at": 1783797791.0747564,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 80.87873458862305,
+        "slam_rss_mb": 425.9296875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3277.8125,
+        "tf_rotation_jump_deg": 0.0197093576765432,
+        "tf_translation_jump_m": 0.0008324355642560992
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 291,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 30.23275637626648,
+      "pose_age_s": 0.1917564868927002,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797791.0755572,
+      "runtime_status_age_s": 0.053133487701416016,
+      "tf_age_s": 0.1917564868927002
+    },
+    {
+      "camera_info_age_s": 0.10955977439880371,
+      "checked_at": 1783797791.1295598,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 80.87873458862305,
+        "slam_rss_mb": 425.9296875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3277.8125,
+        "tf_rotation_jump_deg": 0.0197093576765432,
+        "tf_translation_jump_m": 0.0008324355642560992
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 291,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 30.287559747695923,
+      "pose_age_s": 0.24655985832214355,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797791.1302536,
+      "runtime_status_age_s": 0.10793685913085938,
+      "tf_age_s": 0.24655985832214355
+    },
+    {
+      "camera_info_age_s": 0.15191197395324707,
+      "checked_at": 1783797791.171912,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 80.87873458862305,
+        "slam_rss_mb": 425.9296875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3277.8125,
+        "tf_rotation_jump_deg": 0.0197093576765432,
+        "tf_translation_jump_m": 0.0008324355642560992
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 291,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 30.329911947250366,
+      "pose_age_s": 0.08391189575195312,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797791.1726167,
+      "runtime_status_age_s": 0.15028905868530273,
+      "tf_age_s": 0.2889120578765869
+    },
+    {
+      "camera_info_age_s": 0.22626042366027832,
+      "checked_at": 1783797791.2462604,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 80.87873458862305,
+        "slam_rss_mb": 425.9296875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3277.8125,
+        "tf_rotation_jump_deg": 0.0197093576765432,
+        "tf_translation_jump_m": 0.0008324355642560992
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 291,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 30.404260396957397,
+      "pose_age_s": 0.08426046371459961,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797791.2470644,
+      "runtime_status_age_s": 0.22463750839233398,
+      "tf_age_s": 0.36326050758361816
+    },
+    {
+      "camera_info_age_s": 0.05705595016479492,
+      "checked_at": 1783797791.267056,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 81.6335678100586,
+        "slam_rss_mb": 425.9296875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3277.8125,
+        "tf_rotation_jump_deg": 0.029040012600718715,
+        "tf_translation_jump_m": 0.0006718297236339322
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 503,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 30.425055980682373,
+      "pose_age_s": 0.1050560474395752,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797791.2676702,
+      "runtime_status_age_s": 0.24543309211730957,
+      "tf_age_s": 0.1050560474395752
+    },
+    {
+      "camera_info_age_s": 0.12076783180236816,
+      "checked_at": 1783797791.3307679,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 81.6335678100586,
+        "slam_rss_mb": 425.9296875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3277.8125,
+        "tf_rotation_jump_deg": 0.029040012600718715,
+        "tf_translation_jump_m": 0.0006718297236339322
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 503,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 30.488767862319946,
+      "pose_age_s": 0.16876792907714844,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797791.331511,
+      "runtime_status_age_s": 0.3091449737548828,
+      "tf_age_s": 0.16876792907714844
+    },
+    {
+      "camera_info_age_s": 0.16863369941711426,
+      "checked_at": 1783797791.3786337,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 81.6335678100586,
+        "slam_rss_mb": 425.9296875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3277.8125,
+        "tf_rotation_jump_deg": 0.029040012600718715,
+        "tf_translation_jump_m": 0.0006718297236339322
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 503,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 30.536633729934692,
+      "pose_age_s": 0.08563375473022461,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797791.379681,
+      "runtime_status_age_s": 0.3570108413696289,
+      "tf_age_s": 0.21663379669189453
+    },
+    {
+      "camera_info_age_s": 0.08916425704956055,
+      "checked_at": 1783797791.4501643,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 82.95226097106934,
+        "slam_rss_mb": 425.9296875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3277.8125,
+        "tf_rotation_jump_deg": 0.03116829255112482,
+        "tf_translation_jump_m": 0.0011503382026586805
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 402,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 30.608164310455322,
+      "pose_age_s": 0.1571643352508545,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797791.4513874,
+      "runtime_status_age_s": 0.4285414218902588,
+      "tf_age_s": 0.1571643352508545
+    },
+    {
+      "camera_info_age_s": 0.1511976718902588,
+      "checked_at": 1783797791.5121977,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 82.95226097106934,
+        "slam_rss_mb": 425.9296875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3277.8125,
+        "tf_rotation_jump_deg": 0.03116829255112482,
+        "tf_translation_jump_m": 0.0011503382026586805
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 402,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 30.67019772529602,
+      "pose_age_s": 0.08319783210754395,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797791.5128229,
+      "runtime_status_age_s": 0.49057483673095703,
+      "tf_age_s": 0.21919775009155273
+    },
+    {
+      "camera_info_age_s": 0.17090487480163574,
+      "checked_at": 1783797791.531905,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 82.95226097106934,
+        "slam_rss_mb": 425.9296875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3277.8125,
+        "tf_rotation_jump_deg": 0.03116829255112482,
+        "tf_translation_jump_m": 0.0011503382026586805
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 402,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 30.689904928207397,
+      "pose_age_s": 0.1029050350189209,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797791.5328512,
+      "runtime_status_age_s": 0.510282039642334,
+      "tf_age_s": 0.2389049530029297
+    },
+    {
+      "camera_info_age_s": 0.2143867015838623,
+      "checked_at": 1783797791.5753868,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 82.95226097106934,
+        "slam_rss_mb": 425.9296875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3277.8125,
+        "tf_rotation_jump_deg": 0.03116829255112482,
+        "tf_translation_jump_m": 0.0011503382026586805
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 402,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 30.733386754989624,
+      "pose_age_s": 0.07938671112060547,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797791.5762112,
+      "runtime_status_age_s": 0.5537638664245605,
+      "tf_age_s": 0.28238677978515625
+    },
+    {
+      "camera_info_age_s": 0.01758718490600586,
+      "checked_at": 1783797791.6485872,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 76.8580436706543,
+        "slam_rss_mb": 425.9296875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3277.8125,
+        "tf_rotation_jump_deg": 0.03097924780218205,
+        "tf_translation_jump_m": 0.0005763772577700172
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 320,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 30.80658721923828,
+      "pose_age_s": 0.1525871753692627,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797791.6492448,
+      "runtime_status_age_s": 0.6269643306732178,
+      "tf_age_s": 0.1525871753692627
+    },
+    {
+      "camera_info_age_s": 0.0749053955078125,
+      "checked_at": 1783797791.7059054,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 76.8580436706543,
+        "slam_rss_mb": 425.9296875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3277.8125,
+        "tf_rotation_jump_deg": 0.03097924780218205,
+        "tf_translation_jump_m": 0.0005763772577700172
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 320,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 30.863905429840088,
+      "pose_age_s": 0.0749053955078125,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797791.7066865,
+      "runtime_status_age_s": 0.6842825412750244,
+      "tf_age_s": 0.20990538597106934
+    },
+    {
+      "camera_info_age_s": 0.10272455215454102,
+      "checked_at": 1783797791.7337246,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 76.8580436706543,
+        "slam_rss_mb": 425.9296875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3277.8125,
+        "tf_rotation_jump_deg": 0.03097924780218205,
+        "tf_translation_jump_m": 0.0005763772577700172
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 320,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 30.891724586486816,
+      "pose_age_s": 0.10272455215454102,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797791.7344112,
+      "runtime_status_age_s": 0.7121016979217529,
+      "tf_age_s": 0.23772454261779785
+    },
+    {
+      "camera_info_age_s": 0.21277689933776855,
+      "checked_at": 1783797791.843777,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 76.8580436706543,
+        "slam_rss_mb": 425.9296875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3277.8125,
+        "tf_rotation_jump_deg": 0.03097924780218205,
+        "tf_translation_jump_m": 0.0005763772577700172
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 320,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 31.001776933670044,
+      "pose_age_s": 0.07677698135375977,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797791.8446298,
+      "runtime_status_age_s": 0.8221540451049805,
+      "tf_age_s": 0.3477768898010254
+    },
+    {
+      "camera_info_age_s": 0.11420130729675293,
+      "checked_at": 1783797791.8812013,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 73.7905502319336,
+        "slam_rss_mb": 425.9296875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3277.8125,
+        "tf_rotation_jump_deg": 0.06126783571524062,
+        "tf_translation_jump_m": 0.0016291835088707342
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 254,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 31.039201259613037,
+      "pose_age_s": 0.11420130729675293,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797791.882023,
+      "runtime_status_age_s": 0.8595783710479736,
+      "tf_age_s": 0.11420130729675293
+    },
+    {
+      "camera_info_age_s": 0.1522376537322998,
+      "checked_at": 1783797791.9192376,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 73.7905502319336,
+        "slam_rss_mb": 425.9296875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3277.8125,
+        "tf_rotation_jump_deg": 0.06126783571524062,
+        "tf_translation_jump_m": 0.0016291835088707342
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 254,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 31.077237606048584,
+      "pose_age_s": 0.08523750305175781,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797791.9198816,
+      "runtime_status_age_s": 0.8976147174835205,
+      "tf_age_s": 0.1522376537322998
+    },
+    {
+      "camera_info_age_s": 0.16793251037597656,
+      "checked_at": 1783797791.9349325,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 73.7905502319336,
+        "slam_rss_mb": 425.9296875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3277.8125,
+        "tf_rotation_jump_deg": 0.06126783571524062,
+        "tf_translation_jump_m": 0.0016291835088707342
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 254,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 31.09293246269226,
+      "pose_age_s": 0.10093235969543457,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797791.9356766,
+      "runtime_status_age_s": 0.9133095741271973,
+      "tf_age_s": 0.16793251037597656
+    },
+    {
+      "camera_info_age_s": 0.0794224739074707,
+      "checked_at": 1783797792.0504224,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 83.04190635681152,
+        "slam_rss_mb": 425.9296875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3277.8125,
+        "tf_rotation_jump_deg": 0.03703889883567925,
+        "tf_translation_jump_m": 0.0009952912195229872
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 237,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 31.208422422409058,
+      "pose_age_s": 0.21642231941223145,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797792.0523775,
+      "runtime_status_age_s": 1.0287995338439941,
+      "tf_age_s": 0.21642231941223145
+    },
+    {
+      "camera_info_age_s": 0.08733844757080078,
+      "checked_at": 1783797792.0583384,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 83.04190635681152,
+        "slam_rss_mb": 425.9296875,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3277.8125,
+        "tf_rotation_jump_deg": 0.03703889883567925,
+        "tf_translation_jump_m": 0.0009952912195229872
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 237,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 31.216338396072388,
+      "pose_age_s": 0.08733844757080078,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797792.0593917,
+      "runtime_status_age_s": 1.0367155075073242,
+      "tf_age_s": 0.22433829307556152
+    },
+    {
+      "camera_info_age_s": 0.1319870948791504,
+      "checked_at": 1783797792.102987,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 83.04190635681152,
+        "slam_rss_mb": 431.5859375,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3270.37890625,
+        "tf_rotation_jump_deg": 0.03703889883567925,
+        "tf_translation_jump_m": 0.0009952912195229872
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 237,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 31.260987043380737,
+      "pose_age_s": 0.1319870948791504,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797792.1038032,
+      "runtime_status_age_s": 0.026427268981933594,
+      "tf_age_s": 0.26898694038391113
+    },
+    {
+      "camera_info_age_s": 0.14819765090942383,
+      "checked_at": 1783797792.1191976,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 83.04190635681152,
+        "slam_rss_mb": 431.5859375,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3270.37890625,
+        "tf_rotation_jump_deg": 0.03703889883567925,
+        "tf_translation_jump_m": 0.0009952912195229872
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 237,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 31.27719759941101,
+      "pose_age_s": 0.07919764518737793,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797792.119951,
+      "runtime_status_age_s": 0.04263782501220703,
+      "tf_age_s": 0.28519749641418457
+    },
+    {
+      "camera_info_age_s": 0.16491293907165527,
+      "checked_at": 1783797792.135913,
+      "details": {
+        "camera_info_error": null,
+        "odom_latency_ms": 83.04190635681152,
+        "slam_rss_mb": 431.5859375,
+        "swap_growth_mb": 0.0,
+        "swap_used_mb": 548.5234375,
+        "system_available_mb": 3270.37890625,
+        "tf_rotation_jump_deg": 0.03703889883567925,
+        "tf_translation_jump_m": 0.0009952912195229872
+      },
+      "free_ratio_of_known": 0.125,
+      "healthy": false,
+      "inliers": 237,
+      "known_ratio": 0.03180581711655158,
+      "map_age_s": 31.293912887573242,
+      "pose_age_s": 0.09591293334960938,
+      "reasons": [
+        "map_known_ratio_low"
+      ],
+      "received_at": 1783797792.1366386,
+      "runtime_status_age_s": 0.05935311317443848,
+      "tf_age_s": 0.301912784576416
+    }
+  ],
+  "summary": {
+    "first_received_at": 1783797782.1972685,
+    "healthy_samples": 0,
+    "last_received_at": 1783797792.1366386,
+    "max_camera_info_age_s": 0.3397252559661865,
+    "max_map_age_s": 31.293912887573242,
+    "max_pose_age_s": 0.37421560287475586,
+    "max_runtime_status_age_s": 1.0776207447052002,
+    "max_tf_age_s": 0.5337531566619873,
+    "reason_counts": {
+      "map_known_ratio_low": 187
+    },
+    "samples": 187,
+    "transitions": [
+      {
+        "checked_at": 1783797782.194829,
+        "healthy": false,
+        "reasons": [
+          "map_known_ratio_low"
+        ],
+        "received_at": 1783797782.1972685,
+        "sample_index": 0
+      }
+    ],
+    "unhealthy_samples": 187
+  },
+  "topic": "/localization_health"
+}

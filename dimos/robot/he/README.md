@@ -178,6 +178,12 @@ fail-closed input. The default resource gates require status no older than
 available memory, and no more than 64MB swap growth since the shadow runner
 started. Missing or invalid resource fields are unhealthy rather than zero.
 
+The current Coordinator RPC is host-global. A complete Sense coordinator and a
+complete shadow coordinator cannot run concurrently on one host; static shadow
+qualification therefore stops Sense under an EXIT restore trap and restores it
+after a normal shadow stop. Simultaneous sampled-sensor Rerun and full-rate SLAM
+remains an architecture gate, not a verified current capability.
+
 See [Chassis characterization](docs/chassis-characterization-2026-07-11.md) for
 the measured command-chain limits, latency, precision, and feedback gaps.
 
