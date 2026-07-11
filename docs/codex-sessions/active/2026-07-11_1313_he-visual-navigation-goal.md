@@ -598,6 +598,11 @@ health while keeping real motion disconnected.
 - One combined diagnostic command triggered a read-only false positive because
   its own later pgrep arguments contained forbidden process names. Re-running
   the gate alone passed and confirmed no localization/navigation process.
+- Preserved the candidate snapshot, extended Aurora diagnostic and A/B report
+  in `a2cd5879`, pushed the evidence commit and fast-forwarded Orin without a
+  service restart because that commit changed documentation only. The final
+  closeout audit retains the running 128MB process, zero restarts, remote port
+  availability and closed motion gate.
 - Pushed the probe, failed-getter fix, bounded DDS convergence and final
   evidence as `1655079a`, `b7b56853`, `a4af65e6` and `64cfeb4c`; Orin
   fast-forwarded cleanly and the macOS deployment mirror was synchronized.
