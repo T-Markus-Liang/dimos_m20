@@ -82,6 +82,10 @@ health while keeping real motion disconnected.
 - Added a version-controlled RTAB-Map parameter YAML and native-PID shadow
   runner. It constrains RGB/depth pairing to 20ms, mapping detection to 2Hz,
   disables TF publication and refuses to run if navigation publishers exist.
+- First mapping run produced occupancy, MapData, SLAM Info and a 4.3MiB
+  database, but disabling TF caused repeated missing `he_visual_odom ->
+  base_link` warnings. Enable the isolated HE-prefixed map/odom TF chain for
+  the next run; it does not collide with the current platform tree.
 
 ## Decisions
 

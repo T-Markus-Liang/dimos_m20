@@ -2,7 +2,7 @@ rgbd_odometry:
   ros__parameters:
     frame_id: base_link
     odom_frame_id: he_visual_odom
-    publish_tf: false
+    publish_tf: true
     approx_sync: true
     approx_sync_max_interval: 0.02
     queue_size: 30
@@ -15,7 +15,7 @@ rtabmap:
   ros__parameters:
     frame_id: base_link
     map_frame_id: he_map
-    publish_tf: false
+    publish_tf: true
     subscribe_rgb: true
     subscribe_depth: true
     subscribe_odom_info: true

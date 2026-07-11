@@ -86,9 +86,10 @@ bash dimos/robot/he/deployment/run-he-rtabmap-shadow.sh --check
 bash dimos/robot/he/deployment/run-he-rtabmap-shadow.sh
 ```
 
-It publishes only `/he/visual_*` pose/map/status topics, has `publish_tf=false`
-for both nodes, and refuses to start if `/he/nav_cmd_vel` has publishers. It is
-not yet the final `he-visual-slam-shadow` DimOS blueprint.
+It publishes only `/he/visual_*` pose/map/status topics plus the isolated
+`he_map -> he_visual_odom -> base_link` TF chain, and refuses to start if
+`/he/nav_cmd_vel` has publishers. It is not yet the final
+`he-visual-slam-shadow` DimOS blueprint.
 
 See [Chassis characterization](docs/chassis-characterization-2026-07-11.md) for
 the measured command-chain limits, latency, precision, and feedback gaps.
