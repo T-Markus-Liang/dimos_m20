@@ -637,6 +637,7 @@ class TestHERTABMapRuntimeBounds(unittest.TestCase):
         self.assertIn("Before=aurora930.service", storage_unit)
         self.assertIn("RemainAfterExit=yes", storage_unit)
         self.assertIn("Requires=he-storage-health.service", aurora_storage)
+        self.assertIn("Environment=PYTHONNOUSERSITE=1", aurora_storage)
         self.assertIn("he-storage-health.service", sense_gate)
         self.assertIn("he-storage-health.service", shadow_gate)
         self.assertNotIn("MovementManager", throttle_unit)

@@ -1894,3 +1894,19 @@ cat /run/he-storage-health.json
 夹具被拒绝为 `nvme_media_errors + kernel_storage_errors`，干净夹具通过；VM 73 项 HE
 unittest、Ruff、shell、systemd unit 图、蓝图注册和 diff 检查通过。该门尚未在替换盘
 实机部署，不能把恢复门标记为通过。
+
+## 36. NVMe 硬件与 Python 依赖 A/B（2026-07-12）
+
+二次受控启动进一步区分了两个问题。SMART 的 472 media errors 跨重启保留；直接读取
+报错的 sector 87084872 和 87057648 均失败，而邻近 sector 87084800 可读，物理介质
+故障因此得到块级确认，不能归因于 Python 环境。
+
+软件侧也存在独立缺陷：Aurora systemd 使用系统 ROS 2，却会加载
+`/home/ubuntu/.local`。默认环境稳定复现 `python_xlib` metadata EIO；设置
+`PYTHONNOUSERSITE=1` 后 ROS 2 CLI 成功，15 秒隔离 Aurora 启动成功打开设备并收帧。
+瞬时 systemd A/B 中，首次旧环境启动失败一次，随后稳定 active，RGB/depth 均约
+14.72Hz 且无后续重启。
+
+正式 `aurora930-storage-health.conf` 现同时设置 `PYTHONNOUSERSITE=1`。这修复服务依赖
+污染，但 storage gate 仍必须因 media errors 拒绝当前盘。测试结束后 Aurora 已停止并
+runtime mask，无残留相机进程；不得把短时传感成功解释为硬件已修复。

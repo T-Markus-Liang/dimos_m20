@@ -57,6 +57,29 @@ shadow admission gates before restarting the two-hour soak. Filesystem repair
 of the old device must be offline and preferably performed after a recovery
 image; never run fsck against the mounted root filesystem.
 
-Adding `PYTHONNOUSERSITE=1`, deleting the currently unreadable directory or
-resetting service restart counters would only hide symptoms and is not an
-accepted recovery.
+`PYTHONNOUSERSITE=1` may isolate an unrelated user-package defect, but deleting
+the unreadable directory, resetting restart counters or bypassing this storage
+gate is not an accepted hardware recovery.
+
+## Hardware Versus Dependency A/B
+
+A second controlled boot separated the two failure layers:
+
+- SMART still reported 472 media errors after reboot.
+- Direct 512-byte reads of sectors 87084872 and 87057648 failed, while nearby
+  sector 87084800 read successfully. The unreadable LBAs independently prove a
+  physical media defect.
+- ROS 2 with the default user site failed on the unreadable `python_xlib`
+  metadata.
+- ROS 2 with `PYTHONNOUSERSITE=1` returned successfully.
+- A 15-second isolated Aurora launch with user site disabled opened the camera
+  and began receiving frames.
+- A transient systemd A/B then held Aurora active with RGB/depth at about
+  14.72Hz. After one initial old-environment failure, no further restart
+  occurred during the observation window.
+
+Therefore both facts are true: user-site dependency leakage is a repairable
+service configuration defect, and the NVMe has an independent physical media
+failure. The Aurora drop-in now sets `PYTHONNOUSERSITE=1`, but the storage gate
+still rejects this disk. Software isolation is not authorization to continue
+deployment on damaged hardware.

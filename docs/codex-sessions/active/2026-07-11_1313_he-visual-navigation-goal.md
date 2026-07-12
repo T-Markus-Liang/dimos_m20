@@ -874,6 +874,14 @@ health while keeping real motion disconnected.
   The captured failed-disk fixture is rejected for media and kernel errors,
   while a clean fixture passes. VM tests and systemd graph validation pass;
   replacement-hardware qualification remains pending.
+- Performed a controlled hardware/dependency A/B after a second boot. Two
+  kernel-reported LBAs failed direct reads while a nearby LBA succeeded and
+  SMART retained 472 media errors, proving physical media failure. Separately,
+  default ROS 2 reproduced the unreadable user-site metadata failure, while
+  `PYTHONNOUSERSITE=1` made the CLI and an isolated Aurora launch work. A
+  transient systemd run produced RGB/depth at about 14.72Hz with no continuing
+  restart. The canonical Aurora drop-in now isolates user packages, but the
+  disk remains rejected; the test service was stopped and runtime-masked.
 
 ## Decisions
 
@@ -981,6 +989,9 @@ health while keeping real motion disconnected.
 - Storage-health boot interlocks are implemented in the VM candidate but cannot
   be deployed or live-qualified until the NVMe is replaced. Preserve the
   deliberate VM/GitHub versus powered-off Orin commit difference.
+- The root cause is dual-layer but unambiguous: Python user-site leakage is
+  fixed in configuration; direct unreadable LBAs require NVMe replacement.
+  Do not resume DimOS runtime based on the successful short Aurora A/B.
 
 ## Resume Instructions
 
