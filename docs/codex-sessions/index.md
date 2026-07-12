@@ -1,6 +1,6 @@
 # Codex Sessions
 
-Last updated: 2026-07-12 09:53 CST
+Last updated: 2026-07-12 09:56 CST
 
 ## Active
 
@@ -9,6 +9,7 @@ Last updated: 2026-07-12 09:53 CST
 
 ## Completed
 
+- [2026-07-12_0956_he-nvme-hardware-determination.md](/home/markus/work/dimos_wd_m20/docs/codex-sessions/completed/2026-07-12_0956_he-nvme-hardware-determination.md)
 - [2026-07-12_0943_he-orin-environment-audit.md](/home/markus/work/dimos_wd_m20/docs/codex-sessions/completed/2026-07-12_0943_he-orin-environment-audit.md)
 - [2026-07-11_1253_aurora-sensor-rate-reference.md](/home/markus/work/dimos_wd_m20/docs/codex-sessions/completed/2026-07-11_1253_aurora-sensor-rate-reference.md)
 - [2026-07-11_1135_he-aurora-git-baseline.md](/home/markus/work/dimos_wd_m20/docs/codex-sessions/completed/2026-07-11_1135_he-aurora-git-baseline.md)

@@ -1957,3 +1957,20 @@ odom，且对当前 boot 增加 runtime mask。换盘后必须先安装当前 Gi
 Aurora 当前位于共享 USB 2.0 480Mbps hub，底盘控制器为 `1a86:55d4` 的
 `/dev/ttyACM0`，CAN0 未配置。旧 udev 规则存在 0666/0777 过宽权限和疑似尾部多余字符，
 只可作为恢复参考，不得无审查原样部署。Wi-Fi 密钥、MAC、磁盘/硬件序列号未写入 Git。
+
+## 39. NVMe 硬件故障正式判定（2026-07-12）
+
+正式判定文档见
+`docs/he/evidence/2026-07-12_nvme-hardware-failure-determination.md`。结论为：
+根 NVMe 存在跨重启持续的设备级介质/读取完整性硬件故障，必须更换，不允许继续承担
+HE 研发、验证或部署运行。
+
+判定不是只看 EXT4 或 Python 报错，而是由六层闭环证据组成：SMART 的 472 个
+`media_errors` 跨重启保持；内核反复报告 NVMe `critical medium error`；裸设备
+sector 87084872 和 87057648 直接读取失败；邻近 sector 87084800 可读；普通文件操作
+返回 EIO；`PYTHONNOUSERSITE=1` 可修复 ROS/Aurora 软件启动但无法改变 SMART 或裸
+sector 结果。由此排除 DimOS、Aurora、Python 和 EXT4-only 作为根因。
+
+`critical_warning=0`、99% spare 和 0% wear 不能推翻非零 media error、内核 medium
+error 和固定 LBA 不可读的直接证据。当前证据能确定 SSD 设备/介质硬件故障，但不能在
+没有厂商分析的情况下进一步声称具体是哪颗 NAND、主控或焊点损坏。
