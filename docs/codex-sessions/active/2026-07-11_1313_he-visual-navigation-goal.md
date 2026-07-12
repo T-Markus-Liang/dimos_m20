@@ -882,6 +882,8 @@ health while keeping real motion disconnected.
   transient systemd run produced RGB/depth at about 14.72Hz with no continuing
   restart. The canonical Aurora drop-in now isolates user packages, but the
   disk remains rejected; the test service was stopped and runtime-masked.
+  Aurora, Sense and point-cloud throttle were then persistently disabled on the
+  failed installation and the Orin was shut down cleanly again.
 
 ## Decisions
 
@@ -992,6 +994,8 @@ health while keeping real motion disconnected.
 - The root cause is dual-layer but unambiguous: Python user-site leakage is
   fixed in configuration; direct unreadable LBAs require NVMe replacement.
   Do not resume DimOS runtime based on the successful short Aurora A/B.
+- Failed-disk sensor services are disabled and the Orin is powered off. After
+  storage replacement, re-enable them only after the new storage gate passes.
 
 ## Resume Instructions
 

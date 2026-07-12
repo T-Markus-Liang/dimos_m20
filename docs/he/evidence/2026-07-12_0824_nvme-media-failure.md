@@ -83,3 +83,7 @@ service configuration defect, and the NVMe has an independent physical media
 failure. The Aurora drop-in now sets `PYTHONNOUSERSITE=1`, but the storage gate
 still rejects this disk. Software isolation is not authorization to continue
 deployment on damaged hardware.
+
+After the A/B, Aurora, HE Sense and point-cloud throttle were persistently
+disabled on the failed installation and the Orin was shut down cleanly. They
+must remain disabled until replacement storage passes the documented gate.

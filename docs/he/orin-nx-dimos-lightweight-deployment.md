@@ -1909,4 +1909,5 @@ unittest、Ruff、shell、systemd unit 图、蓝图注册和 diff 检查通过�
 
 正式 `aurora930-storage-health.conf` 现同时设置 `PYTHONNOUSERSITE=1`。这修复服务依赖
 污染，但 storage gate 仍必须因 media errors 拒绝当前盘。测试结束后 Aurora 已停止并
-runtime mask，无残留相机进程；不得把短时传感成功解释为硬件已修复。
+runtime mask，无残留相机进程。Aurora、Sense 和点云节流随后在故障安装上持久 disable，
+设备再次受控关机；不得把短时传感成功解释为硬件已修复。
