@@ -845,6 +845,12 @@ health while keeping real motion disconnected.
   samples and zero global costmaps. Both shadow gates passed; cgroup memory was
   1389MiB, swap stayed 580MiB, services had zero restarts and motion publishers
   stayed zero. Sense was restored with no RTAB-Map residue.
+- Added a bounded payload-free shadow soak collector for the open multi-hour
+  resource gate. It atomically records service/cgroup memory, CPU, tasks,
+  memory events, system available/swap, compact tegrastats and nav publisher
+  count at a bounded interval, then fails closed on safety/resource violations.
+  Pure parser and positive/negative summary tests bring the HE suite to 68
+  passing tests; Orin smoke and one-hour evidence remain pending.
 
 ## Decisions
 
@@ -941,6 +947,9 @@ health while keeping real motion disconnected.
   `docs/he/evidence/2026-07-12_0800_planner-map-withholding.md`. Map quality,
   moving localization and navigation remain failed or unproven, so keep
   `/global_costmap` absent and navigation disabled.
+- A one-hour static shadow soak collector is VM-qualified but not yet deployed
+  or run. Multi-hour resource behavior remains open until its Orin report,
+  start/end gates and normal Sense restoration are preserved.
 
 ## Resume Instructions
 

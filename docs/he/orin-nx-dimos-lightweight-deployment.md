@@ -1820,3 +1820,17 @@ gate 均通过，独立检查时 cgroup 1389MiB，swap 保持 580MiB，服务零
 为零。恢复后 Sense active、shadow inactive，无 RTAB-Map 残留。完整证据见
 `docs/he/evidence/2026-07-12_0800_planner-map-withholding.md`。这只证明静态 live
 withholding，不代表地图质量、定位或导航已经通过。
+
+## 33. 多小时 shadow 资源采集器（2026-07-12）
+
+现有 systemd 与双路径资源证据最长为 10 分钟，尚不足以关闭 multi-hour 静态稳定性
+缺口。新增 `qualify-he-shadow-soak.py`，默认运行 3600 秒、每 60 秒采样一次，允许范围
+限制为 60-14400 秒和 5-300 秒。工具不订阅或保存图像、点云、地图等 payload，只读取
+shadow systemd/cgroup、`/proc/meminfo`、一行 `tegrastats` 和
+`/he/nav_cmd_vel` publisher count。
+
+每个样本都通过临时文件原子更新 JSON，意外中断仍能保留已采数据。汇总会对服务非
+连续 active、重启、速度发布者、MemoryMax、available memory 低于 1GiB、swap 增长
+超过 64MiB、memory high/max/OOM 事件、遥测读取错误和 CPU 计数异常 fail closed。
+VM 68 项 HE unittest、聚焦 Ruff、blueprint registry 和 diff 检查通过；Orin 60 秒
+冒烟和 1 小时正式 soak 尚未执行，因此不得把 multi-hour 资源门标记为通过。
