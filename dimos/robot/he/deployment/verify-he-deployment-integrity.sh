@@ -15,6 +15,10 @@ compare() {
 
 compare "$deployment/he-dimos-sense.service" /etc/systemd/system/he-dimos-sense.service
 compare "$deployment/he-dimos-shadow.service" /etc/systemd/system/he-dimos-shadow.service
+compare "$deployment/he-storage-health.service" /etc/systemd/system/he-storage-health.service
+compare \
+  "$deployment/aurora930-storage-health.conf" \
+  /etc/systemd/system/aurora930.service.d/he-storage-health.conf
 compare \
   "$deployment/he-pointcloud-throttle.service" \
   /etc/systemd/system/he-pointcloud-throttle.service
@@ -25,6 +29,7 @@ compare \
   /etc/systemd/system/odom-publisher.service.d/he-command-mux.conf
 test ! -e /etc/systemd/system/he-ld19.service
 test "$(systemctl is-enabled he-dimos-shadow.service || true)" = static
+test "$(systemctl is-enabled he-storage-health.service || true)" = static
 test "$(systemctl is-enabled he-pointcloud-throttle.service)" = enabled
 dpkg-query -W -f='${Status}\n' ros-humble-topic-tools | grep -qx 'install ok installed'
 

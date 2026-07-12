@@ -1,6 +1,7 @@
 [Unit]
 Description=HE serialized Aurora point-cloud throttle
-After=aurora930.service
+After=he-storage-health.service aurora930.service
+Requires=he-storage-health.service
 Wants=aurora930.service
 Before=he-dimos-sense.service he-dimos-shadow.service
 

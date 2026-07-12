@@ -59,11 +59,13 @@ case "$mode" in
     bash -n "$deployment/switch-he-dimos-mode.sh"
     bash -n "$deployment/verify-he-shadow-readonly.sh"
     systemd-analyze verify \
+      "$deployment/he-storage-health.service" \
       "$deployment/he-dimos-sense.service" \
       "$deployment/he-dimos-shadow.service"
     printf 'HE DimOS service-mode artifacts: PASS\n'
     ;;
   shadow)
+    systemctl restart he-storage-health.service
     bash "$deployment/verify-he-readonly.sh"
     trap restore_sense_on_error ERR
     systemctl start he-dimos-shadow.service

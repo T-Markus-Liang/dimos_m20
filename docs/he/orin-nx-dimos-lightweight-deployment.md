@@ -1856,3 +1856,41 @@ HE rosbag、运行日志、Aurora/ROS 源码、systemd/udev 配置及磁盘诊�
 磁盘健康、部署完整性、Aurora、Sense 只读门和 shadow admission，才能重跑 2 小时
 soak。不得用 `PYTHONNOUSERSITE`、删除坏目录或清零重启计数掩盖物理故障。完整证据见
 `docs/he/evidence/2026-07-12_0824_nvme-media-failure.md`。
+
+## 35. 存储健康启动准入（2026-07-12）
+
+为避免坏盘重启后 Aurora/Sense 自动进入重启或高 I/O，新增 root oneshot
+`he-storage-health.service`。它在当前启动中读取 `nvme smart-log /dev/nvme0` 和 dmesg，
+以下任一条件直接拒绝：`critical_warning != 0`、`media_errors != 0`、available spare
+低于阈值，或本次启动出现 critical medium、EXT4、NVMe I/O、blk update error。
+unsafe shutdown 数只记录，不单独作为拒绝条件。
+
+`aurora930.service` 通过 drop-in `Requires/After` 该门；Sense、shadow 和点云节流也
+显式 `Requires`。两个只读门要求 storage gate 为 active/static/success。切换 shadow
+前会重新运行 gate，避免只依赖开机时的一次检查。报告只保留 SMART 数值和最多 50 条
+匹配错误，不包含盘序列号或用户文件。
+
+替换 NVMe 后、首次启动感知前安装：
+
+```bash
+cd /home/ubuntu/he/dimos_wd_m20
+sudo systemctl disable --now aurora930.service he-dimos-sense.service \
+  he-pointcloud-throttle.service
+sudo install -m 0644 dimos/robot/he/deployment/he-storage-health.service \
+  /etc/systemd/system/he-storage-health.service
+sudo install -d -m 0755 /etc/systemd/system/aurora930.service.d
+sudo install -m 0644 dimos/robot/he/deployment/aurora930-storage-health.conf \
+  /etc/systemd/system/aurora930.service.d/he-storage-health.conf
+sudo install -m 0644 dimos/robot/he/deployment/he-dimos-sense.service \
+  dimos/robot/he/deployment/he-dimos-shadow.service \
+  dimos/robot/he/deployment/he-pointcloud-throttle.service \
+  /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl start he-storage-health.service
+cat /run/he-storage-health.json
+```
+
+只有 JSON `healthy=true` 才能重新 enable/start Aurora、throttle 和 Sense。真实故障盘
+夹具被拒绝为 `nvme_media_errors + kernel_storage_errors`，干净夹具通过；VM 73 项 HE
+unittest、Ruff、shell、systemd unit 图、蓝图注册和 diff 检查通过。该门尚未在替换盘
+实机部署，不能把恢复门标记为通过。

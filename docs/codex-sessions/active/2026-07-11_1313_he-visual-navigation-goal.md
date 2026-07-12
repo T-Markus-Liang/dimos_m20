@@ -866,6 +866,14 @@ health while keeping real motion disconnected.
   explicitly excluded.
 - Hardened the soak collector to reject `/tmp`, `/run` and `/dev/shm`; the
   reboot-lost partial report is not accepted as evidence.
+- Added a fail-closed storage startup gate for replacement deployment. A root
+  oneshot checks cumulative NVMe SMART and current-boot kernel errors before
+  Aurora; Aurora's drop-in plus Sense/shadow/throttle dependencies prevent
+  their startup when it fails. Both read-only gates require active/static/
+  successful storage admission, and shadow mode re-runs it before switching.
+  The captured failed-disk fixture is rejected for media and kernel errors,
+  while a clean fixture passes. VM tests and systemd graph validation pass;
+  replacement-hardware qualification remains pending.
 
 ## Decisions
 
@@ -970,6 +978,9 @@ health while keeping real motion disconnected.
 - The affected Orin is powered off. VM/GitHub remain canonical at and beyond
   the last synchronized runtime commit `329c9c68`; do not write or deploy to the
   failed NVMe.
+- Storage-health boot interlocks are implemented in the VM candidate but cannot
+  be deployed or live-qualified until the NVMe is replaced. Preserve the
+  deliberate VM/GitHub versus powered-off Orin commit difference.
 
 ## Resume Instructions
 

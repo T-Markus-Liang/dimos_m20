@@ -14,6 +14,10 @@ required_services=(
   aurora930.service
 )
 
+test "$(systemctl is-active he-storage-health.service)" = "active"
+test "$(systemctl is-enabled he-storage-health.service || true)" = "static"
+test "$(systemctl show he-storage-health.service -p Result --value)" = "success"
+
 for service in "${required_services[@]}"; do
   test "$(systemctl is-active "$service")" = "active"
   test "$(systemctl is-enabled "$service")" = "enabled"

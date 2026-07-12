@@ -1,0 +1,11 @@
+[Unit]
+Description=HE NVMe storage health admission gate
+After=local-fs.target
+Before=aurora930.service he-pointcloud-throttle.service he-dimos-sense.service he-dimos-shadow.service
+
+[Service]
+Type=oneshot
+User=root
+WorkingDirectory=/home/ubuntu/he/dimos_wd_m20
+ExecStart=/bin/bash -lc 'exec .venv/bin/python dimos/robot/he/deployment/verify-he-storage-health.py'
+RemainAfterExit=yes
