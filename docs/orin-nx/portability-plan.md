@@ -101,26 +101,35 @@ small design decisions and reusable threshold rationale should be summarized in
 
 ## 4. Proposed Architecture
 
-Use three layers with explicit ownership.
+Use four orthogonal layers with explicit ownership. The branch name identifies
+the current productization target; it does not make Orin NX a robot type.
 
-### 4.1 Orin NX common runtime
+### 4.1 DimOS algorithm and transport layer
 
-Proposed package:
+Planning, mapping, localization, control and visualization consume only DimOS
+native streams. They do not import ROS, Aurora, HE or Orin-specific code. LCM
+and Zenoh remain interchangeable transport backends selected by global config;
+hardware adapters publish streams and do not select a transport themselves.
+
+### 4.2 Hardware adaptation layer
+
+Place reusable standard-protocol adapters under the existing hardware
+ownership boundary:
 
 ```text
-dimos/robot/orin_nx/
-  __init__.py
-  blueprints.py
+dimos/hardware/sensors/
+  ros2_bridge.py
+  test_ros2_bridge.py
+dimos/hardware/drive_trains/
+  ros2_twist.py
+  test_ros2_twist.py
+dimos/hardware/platforms/
   profile.py
-  ros2_sensors.py
-  ros2_command.py
-  storage_health.py
-  resource_health.py
-  visual_slam.py
-  profiles/
-    example.json
-    he.json
-  deployment/
+  test_profile.py
+  orin_nx/
+    storage_health.py
+    resource_health.py
+    deployment/
     dimos-orin-storage-health.service
     dimos-orin-sense.service
     dimos-orin-shadow.service
@@ -131,13 +140,17 @@ dimos/robot/orin_nx/
     verify-readonly.py
     verify-static.py
     qualify-resource-soak.py
-  tests/
 ```
 
-This layer owns only Orin/runtime behavior, standard ROS message conversion,
-resource limits and fail-closed safety.
+The ROS sensor adapter converts standard ROS messages to DimOS streams. The ROS
+Twist adapter applies the common finite/clamp/watchdog/zero-stop contract. CAN,
+serial, UDP and vendor SDK implementations are sibling robot-owned adapters;
+they are not forced through ROS.
 
-### 4.2 Platform profile
+The Orin NX package owns only compute-target behavior: storage admission,
+resource limits, headless services, process lifecycle and deployment gates.
+
+### 4.3 Robot profile and composition
 
 Use one validated JSON file per robot. JSON is selected because Python 3.10 can
 parse it with the standard library and shell tooling can treat the path as an
@@ -187,7 +200,25 @@ nonpositive rates, unsafe control defaults and duplicate output topics.
 Profiles contain no passwords, Wi-Fi credentials, device serials or private
 keys.
 
-### 4.3 Platform-specific adapters
+Profiles and robot-specific blueprints live with the robot:
+
+```text
+dimos/robot/he/
+  profile.json
+  blueprints.py
+  deployment/
+dimos/robot/<next_platform>/
+  profile.json
+  blueprints.py
+  adapters/
+  deployment/
+```
+
+HE is the first reference composition, not a superclass or a source of common
+defaults. A second robot must be addable by supplying a profile and only the
+adapters that its nonstandard protocols require.
+
+### 4.4 Platform-specific adapters
 
 A profile configures existing standard adapters. It does not pretend every
 hardware protocol is ROS Twist.
@@ -200,8 +231,10 @@ hardware protocol is ROS Twist.
 - Vendor driver services and udev rules live under the platform profile or a
   separate robot package, not in the Orin common layer.
 
-No abstract base class is added initially. DimOS stream types already define the
-interface; tests define the safety contract.
+No abstract base class is added initially. DimOS stream types already define
+the data interface, and shared contract tests define the safety behavior. An
+abstraction is promoted only after HE and a second platform demonstrate the
+same requirement.
 
 ## 5. Common Module Contracts
 
@@ -365,7 +398,7 @@ Gate:
 
 Deliverables:
 
-- strict `OrinNxProfile` parser;
+- strict robot `PlatformProfile` parser;
 - example and HE reference profiles;
 - generic optional ROS 2 sensor bridge;
 - bounded headless sense blueprint;
@@ -376,7 +409,7 @@ Gate:
 - unit tests cover BGR/RGB, mono8, mono16, row padding, endianness,
   CameraInfo, PointCloud2, IMU and odometry;
 - disabled channels create no subscriptions;
-- no hardcoded `/aurora`, `/he` or `/home/ubuntu` in common code;
+- no hardcoded `/aurora`, `/he` or `/home/ubuntu` in hardware/common code;
 - Rerun memory and latest-only surface are profile-derived and bounded.
 
 ### Phase 3: Command template and motion gate
@@ -483,11 +516,11 @@ Gate:
 | HE source | Planned destination | Treatment |
 | --- | --- | --- |
 | core shutdown commits | `dimos/core` | minimal port with tests |
-| `HESensorBridge` | `orin_nx/ros2_sensors.py` | rename and parameterize |
-| `HEConnection` | `orin_nx/ros2_command.py` | rename, add optional lateral limit |
-| storage health | `orin_nx/storage_health.py` | direct generic extraction |
-| memory/soak helpers | `orin_nx/resource_health.py` | generic extraction |
-| visual SLAM classes | `orin_nx/visual_slam.py` | rename and remove HE topics |
+| `HESensorBridge` | `hardware/sensors/ros2_bridge.py` | rename and parameterize |
+| `HEConnection` | `hardware/drive_trains/ros2_twist.py` | rename, add optional lateral limit |
+| storage health | `hardware/platforms/orin_nx/storage_health.py` | direct compute-platform extraction |
+| memory/soak helpers | `hardware/platforms/orin_nx/resource_health.py` | compute-platform extraction |
+| visual SLAM classes | navigation/mapping ownership after interface review | remove HE topics; do not place under Orin |
 | HE blueprints | generic factories + HE profile | split |
 | HE systemd units | generic templates + HE driver examples | rewrite |
 | Aurora tools | HE reference profile only | do not make common |
@@ -543,7 +576,8 @@ Static Orin success never substitutes for physical robot qualification.
 
 `wd/orin_nx` is ready for another robot only when:
 
-- common code contains no HE/Aurora topic or absolute home path;
+- algorithm, hardware-common and Orin runtime code contain no HE/Aurora topic
+  or absolute home path;
 - one profile selects all standard sensors and resource limits;
 - a non-ROS chassis can be added without changing common modules;
 - storage and motion gates fail closed;
@@ -572,10 +606,13 @@ Static Orin success never substitutes for physical robot qualification.
 
 The following defaults are recommended:
 
-1. Use strict JSON profiles.
-2. Keep ROS 2 standard messages as the common sensor/control integration path.
+1. Use strict JSON robot profiles plus a small systemd environment file for
+   deployment paths.
+2. Keep ROS 2 standard messages as one reusable sensor/control adapter, not as
+   a requirement for all hardware.
 3. Keep direct CAN/serial/UDP drivers in robot-specific adapters.
-4. Include HE as a reference profile without copying large HE evidence.
+4. Include HE under `dimos/robot/he` as a reference composition without
+   copying large HE evidence.
 5. Keep RTAB-Map optional and shadow-only by default.
 6. Target L4T R36.4.x / ROS Humble first.
 7. Merge generic core lifecycle fixes before platform modules.

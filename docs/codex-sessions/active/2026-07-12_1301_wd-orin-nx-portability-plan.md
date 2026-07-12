@@ -33,15 +33,21 @@ communication into reusable templates for other Orin NX robot platforms.
   completion criteria in `docs/orin-nx/portability-plan.md`.
 - Verified the planning branch still contains no runtime/code changes and that
   documentation formatting and branch provenance are clean.
+- On 2026-07-13, corrected the architecture boundary after user review: Orin NX
+  is a compute target, reusable ROS adapters belong under `dimos/hardware`, and
+  HE remains a robot profile/composition rather than the common package.
 
 ## Decisions
 
 - Base the branch on upstream WD M20, not HE.
 - Do not cherry-pick the complete HE history.
 - Keep motion disabled and visual SLAM optional.
-- Treat HE as the first reference profile, not as the common implementation.
+- Treat HE as the first reference profile, not as the common implementation or
+  parent class.
 - Use standard ROS messages for common adapters and leave direct hardware
   protocols in robot packages.
+- Keep transport selection orthogonal to hardware adapters; LCM and Zenoh are
+  DimOS runtime backends, not sensor-driver contracts.
 
 ## Current State
 
