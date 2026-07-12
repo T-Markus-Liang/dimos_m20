@@ -1,5 +1,6 @@
 """Tests for HE Linux memory evidence parsers."""
 
+from pathlib import Path
 import unittest
 
 from dimos.robot.he.memory_data import (
@@ -7,7 +8,11 @@ from dimos.robot.he.memory_data import (
     parse_kb_fields,
     parse_memory_stat,
 )
-from dimos.robot.he.shadow_soak import parse_tegrastats, summarize_shadow_soak
+from dimos.robot.he.shadow_soak import (
+    is_volatile_output,
+    parse_tegrastats,
+    summarize_shadow_soak,
+)
 
 
 class TestHEMemoryData(unittest.TestCase):
@@ -96,6 +101,11 @@ Anonymous:           100 kB
             },
         )
         self.assertIsNone(parse_tegrastats("no telemetry"))
+
+    def test_rejects_volatile_soak_output(self) -> None:
+        self.assertTrue(is_volatile_output(Path("/tmp/soak.json")))
+        self.assertTrue(is_volatile_output(Path("/run/he/soak.json")))
+        self.assertFalse(is_volatile_output(Path("/home/ubuntu/he/logs/soak.json")))
 
 
 if __name__ == "__main__":

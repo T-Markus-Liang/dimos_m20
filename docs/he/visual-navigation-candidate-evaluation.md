@@ -1,11 +1,12 @@
 # HE Visual Navigation Candidate Evaluation
 
-Updated: 2026-07-12 02:12 CST
+Updated: 2026-07-12 08:30 CST
 
 ## Decision Status
 
-This is the evidence ledger and test plan, not the final ADR. No candidate is
-approved for navigation yet. The first deployable pilot is RTAB-Map 0.23.7
+This is the evidence ledger and test plan supporting ADR-001. No candidate is
+approved for navigation. ADR-001 accepts RTAB-Map 0.23.7 only as the current
+shadow baseline. The first deployable pilot is RTAB-Map 0.23.7
 RGB-D because an official ROS 2 Humble/Jammy arm64 package exists for the HE
 baseline. Isaac ROS remains a future platform-upgrade candidate: the RGB-D
 mode only appears in release 4.4+, whose apt repository is Noble/Jazzy, while

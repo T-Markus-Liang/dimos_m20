@@ -1832,5 +1832,27 @@ shadow systemd/cgroup、`/proc/meminfo`、一行 `tegrastats` 和
 每个样本都通过临时文件原子更新 JSON，意外中断仍能保留已采数据。汇总会对服务非
 连续 active、重启、速度发布者、MemoryMax、available memory 低于 1GiB、swap 增长
 超过 64MiB、memory high/max/OOM 事件、遥测读取错误和 CPU 计数异常 fail closed。
-VM 68 项 HE unittest、聚焦 Ruff、blueprint registry 和 diff 检查通过；Orin 60 秒
-冒烟和 1 小时正式 soak 尚未执行，因此不得把 multi-hour 资源门标记为通过。
+初版 VM 68 项 HE unittest、聚焦 Ruff、blueprint registry 和 diff 检查通过；持久化
+路径加固后为 69 项。multi-hour 资源门仍以完整正式 soak 为准。
+
+60 秒 Orin 冒烟实际通过 7 个样本：零速度发布者、零重启、零 memory events，cgroup
+约 1372-1403MiB，available 最低 2.82GiB，平均 1.69 CPU cores，GPU 峰值 22%，温度
+峰值 66.25C。随后正式窗口提升为 2 小时，但约一分钟后设备网络中断并被现场断电
+重启；写在 `/tmp` 的不完整报告随重启丢失，不能作为 soak 证据。采集器现直接拒绝
+`/tmp`、`/run` 和 `/dev/shm`，正式报告必须放在持久化目录。
+
+## 34. NVMe 物理介质故障与恢复门（2026-07-12）
+
+断电后根 NVMe 出现 472 个 SMART media errors，内核持续报告 critical medium error
+和 EXT4 目录读取错误。Aurora 因 ROS 2 无法读取用户 Python metadata 而累计 22 次失败
+重启；这不是相机或 DimOS 配置问题。相关高负载服务已停止，设备已受控关机。
+
+HE rosbag、运行日志、Aurora/ROS 源码、systemd/udev 配置及磁盘诊断已备份到 macOS
+`/Users/markus/Downloads/he-orin-recovery-2026-07-12`。恢复集 1.2GB、1719 个文件，
+总 SHA-256 清单和两份 rosbag 原始清单均通过。坏块涉及的旧语音 grammar 临时目录已
+明确列为未备份。
+
+该 NVMe 不允许继续 shadow、传感或导航测试。必须更换磁盘、重新部署，并依次通过
+磁盘健康、部署完整性、Aurora、Sense 只读门和 shadow admission，才能重跑 2 小时
+soak。不得用 `PYTHONNOUSERSITE`、删除坏目录或清零重启计数掩盖物理故障。完整证据见
+`docs/he/evidence/2026-07-12_0824_nvme-media-failure.md`。

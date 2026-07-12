@@ -12,7 +12,11 @@ import time
 from typing import Any
 
 from dimos.robot.he.memory_data import parse_kb_fields, parse_memory_stat
-from dimos.robot.he.shadow_soak import parse_tegrastats, summarize_shadow_soak
+from dimos.robot.he.shadow_soak import (
+    is_volatile_output,
+    parse_tegrastats,
+    summarize_shadow_soak,
+)
 
 
 def command(*args: str, timeout: float = 10.0) -> str:
@@ -147,6 +151,8 @@ def main() -> None:
         parser.error("--duration must be between 60 and 14400 seconds")
     if not 5.0 <= args.interval <= 300.0:
         parser.error("--interval must be between 5 and 300 seconds")
+    if is_volatile_output(args.output):
+        parser.error("--output must use persistent storage, not /tmp, /run, or /dev/shm")
 
     samples: list[dict[str, Any]] = []
     started = time.monotonic()

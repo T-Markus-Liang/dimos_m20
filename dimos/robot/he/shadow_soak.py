@@ -5,6 +5,7 @@ from __future__ import annotations
 from collections import Counter
 from collections.abc import Sequence
 import math
+from pathlib import Path
 import re
 import statistics
 from typing import Any
@@ -12,6 +13,13 @@ from typing import Any
 _GPU = re.compile(r"\bGR3D_FREQ\s+(\d+)%")
 _TEMPERATURE = re.compile(r"\b[^\s@]+@([0-9]+(?:\.[0-9]+)?)C")
 _POWER = re.compile(r"\bVDD_IN\s+(\d+)mW/")
+_VOLATILE_ROOTS = (Path("/tmp"), Path("/run"), Path("/dev/shm"))
+
+
+def is_volatile_output(path: Path) -> bool:
+    """Reject soak evidence paths that are expected to disappear on reboot."""
+    resolved = path.expanduser().resolve(strict=False)
+    return any(resolved.is_relative_to(root) for root in _VOLATILE_ROOTS)
 
 
 def parse_tegrastats(text: str) -> dict[str, float] | None:

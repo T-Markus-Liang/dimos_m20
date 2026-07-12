@@ -7,8 +7,8 @@
 - Project: dimos-wd-m20
 - Workspace: VM `/home/markus/work/dimos_wd_m20`; Orin `/home/ubuntu/he/dimos_wd_m20`
 - Task: research, benchmark, select and integrate a visual SLAM navigation foundation for HE
-- Status: active - static dual-path shadow and resource gates qualified;
-  physical calibration, service isolation and moving gates pending
+- Status: active - runtime stopped after NVMe media failure; recovery backup
+  verified; replacement storage, service separation and moving gates pending
 - Branch if relevant: `codex/he-orin`; use `git rev-parse HEAD` for current identity
 
 ## User Request Summary
@@ -851,6 +851,21 @@ health while keeping real motion disconnected.
   count at a bounded interval, then fails closed on safety/resource violations.
   Pure parser and positive/negative summary tests bring the HE suite to 68
   passing tests; Orin smoke and one-hour evidence remain pending.
+- Deployed `329c9c68`; a 60-second Orin smoke passed seven samples with zero
+  publishers/restarts/events, about 1.69 CPU cores, 22% peak GPU and 66.25C
+  peak temperature. The formal window was raised to two hours.
+- The Orin then lost network and was power-cycled onsite. Post-boot evidence
+  showed 472 NVMe media errors, repeated critical-medium/EXT4 errors, unreadable
+  files and 22 Aurora restart failures. This invalidates the soak independently
+  of the network outage. Sensor/shadow services were stopped and the Orin was
+  shut down cleanly.
+- Backed up and verified 1.2GB/1719 files on macOS, including both HE rosbags,
+  HE logs, ROS/Aurora source, systemd/udev and disk diagnostics. Both original
+  rosbag manifests and the recovery-wide SHA-256 manifest pass. A generated
+  legacy speech grammar temporary directory contains unreadable files and is
+  explicitly excluded.
+- Hardened the soak collector to reject `/tmp`, `/run` and `/dev/shm`; the
+  reboot-lost partial report is not accepted as evidence.
 
 ## Decisions
 
@@ -947,9 +962,14 @@ health while keeping real motion disconnected.
   `docs/he/evidence/2026-07-12_0800_planner-map-withholding.md`. Map quality,
   moving localization and navigation remain failed or unproven, so keep
   `/global_costmap` absent and navigation disabled.
-- A one-hour static shadow soak collector is VM-qualified but not yet deployed
-  or run. Multi-hour resource behavior remains open until its Orin report,
-  start/end gates and normal Sense restoration are preserved.
+- The bounded static shadow soak collector is VM-qualified and deployed at the
+  last healthy runtime commit. Its 60-second Orin smoke passed, but the
+  two-hour run was invalidated by
+  physical NVMe failure. Multi-hour behavior remains open until replacement
+  storage passes recovery gates and a persistent report is preserved.
+- The affected Orin is powered off. VM/GitHub remain canonical at and beyond
+  the last synchronized runtime commit `329c9c68`; do not write or deploy to the
+  failed NVMe.
 
 ## Resume Instructions
 
