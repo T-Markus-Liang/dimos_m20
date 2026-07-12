@@ -1911,3 +1911,25 @@ unittest、Ruff、shell、systemd unit 图、蓝图注册和 diff 检查通过�
 污染，但 storage gate 仍必须因 media errors 拒绝当前盘。测试结束后 Aurora 已停止并
 runtime mask，无残留相机进程。Aurora、Sense 和点云节流随后在故障安装上持久 disable，
 设备再次受控关机；不得把短时传感成功解释为硬件已修复。
+
+## 37. 当前 Goal 状态与 Git 交付边界（2026-07-12）
+
+视觉导航 Goal 当前状态为 **BLOCKED**。阻塞原因是已经通过 SMART、内核错误和直接扇区
+读取确认的 NVMe 物理介质故障，不是尚未定位的软件依赖问题。软件侧的 Python user-site
+污染已通过正式 Aurora drop-in 中的 `PYTHONNOUSERSITE=1` 修复，但不能替代换盘。
+
+VM `/home/markus/work/dimos_wd_m20` 和 GitHub `codex/he-orin` 是当前唯一代码与文档
+基线。Git 已包含 HE 模块、部署配置、测试工具、静态/抬车测试结论、视觉 shadow 链路、
+资源与故障派生证据以及换盘后的存储启动准入。Orin 最后同步到 `329c9c68`，此后故意不再
+同步；故障机已关机，Aurora、Sense、点云节流已持久禁用，shadow 未运行。
+
+原始 rosbag 和完整日志不进入 Git，保存在已校验的 macOS 恢复包
+`/Users/markus/Downloads/he-orin-recovery-2026-07-12`。恢复包为 1.2GB、1719 个文件，
+总 SHA-256 清单及两份 rosbag 原始清单均通过。Git 中保留紧凑、可审阅的派生报告；这一
+边界避免将大体积或可能包含现场数据的原始材料推送到代码仓库。
+
+换盘后必须按顺序执行：重装兼容 Jetson 系统、clone `codex/he-orin`、审核后恢复必要
+硬件配置、通过 `he-storage-health.service`、部署完整性、Aurora/HE 只读门、shadow
+admission，再把正式两小时 soak 写入持久化路径重跑。完成这些静态恢复门后，才能继续
+相机物理标定、移动定位、闭环导航和自动探索。仓库内权威状态报告为
+`docs/he/he-visual-navigation-goal-status.md`。

@@ -7,7 +7,8 @@
 - Project: dimos-wd-m20
 - Workspace: WD M20 baseline on VM plus HE deployment target `ubuntu@192.168.1.106`
 - Task: finish the lightweight WD DimOS/HE deployment, characterize the lifted chassis and executable command boundaries, and document deferred physical feedback/visual SLAM
-- Status: active - lifted command and software-limit characterization complete; physical feedback remains deferred
+- Status: blocked - static/lifted deployment evidence is preserved, but the
+  target NVMe has confirmed physical media failure and must be replaced
 - Branch if relevant: `codex/he-orin` from `feat/wd/m20`
 
 ## User Request Summary
@@ -300,6 +301,10 @@ and LD19 lidar.
 - Reconfirmed that no `he-nav-headless` exists. RF2O remains only a documented
   candidate patch and is not installed as a navigation/localization service.
 
+- Superseded historical active-service checkpoints with the authoritative
+  failed-storage state and linked the canonical Goal status/recovery report.
+  The affected Orin remains powered off and intentionally behind VM/GitHub.
+
 ## Decisions
 
 - Use `feat/wd/m20` as the DimOS development baseline; do not reuse the M20
@@ -319,6 +324,13 @@ and LD19 lidar.
   mode, then integrate map/exploration with control disconnected.
 
 ## Current State
+
+> Authoritative update, 2026-07-12 09:30 CST: this section includes historical
+> checkpoints from before the storage incident. The affected Orin is now
+> powered off; Aurora, Sense and point-cloud throttle were persistently disabled
+> and shadow is inactive. Do not interpret earlier `active` service statements
+> as current state. The canonical status and recovery order are in
+> `docs/he/he-visual-navigation-goal-status.md`.
 
 - WD DimOS is installed and its staged HE adapters are present on both the VM
   baseline and Orin. Orin currently has about 23GB free; the virtual environment

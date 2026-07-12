@@ -7,8 +7,8 @@
 - Project: dimos-wd-m20
 - Workspace: VM `/home/markus/work/dimos_wd_m20`; Orin `/home/ubuntu/he/dimos_wd_m20`
 - Task: research, benchmark, select and integrate a visual SLAM navigation foundation for HE
-- Status: active - runtime stopped after NVMe media failure; recovery backup
-  verified; replacement storage, service separation and moving gates pending
+- Status: blocked - physical NVMe media failure confirmed; recovery backup is
+  verified and replacement storage must pass admission before Goal execution resumes
 - Branch if relevant: `codex/he-orin`; use `git rev-parse HEAD` for current identity
 
 ## User Request Summary
@@ -885,6 +885,17 @@ health while keeping real motion disconnected.
   Aurora, Sense and point-cloud throttle were then persistently disabled on the
   failed installation and the Orin was shut down cleanly again.
 
+- Audited the HE Git/evidence boundary after the storage shutdown. The VM and
+  GitHub branch were clean and synchronized at `8a5855b6` before this status
+  update; 93 compact evidence files are tracked, while raw rosbags and full
+  logs remain in the verified macOS recovery package.
+- Added `docs/he/he-visual-navigation-goal-status.md`, marked this Goal blocked,
+  and synchronized the deployment-session warning, session index, global
+  registry and macOS deployment-plan mirror.
+- Re-ran repository path and `git diff --check` validation. All 1719 recovery
+  manifest entries verify; five literal-backslash filenames that macOS
+  `sha256sum` warns about were independently decoded and hash-checked.
+
 ## Decisions
 
 - Preserve `HEConnection.enabled=False` and zero `/he/nav_cmd_vel` publishers
@@ -916,6 +927,14 @@ health while keeping real motion disconnected.
   bias/noise/axis and physical camera-IMU space/time calibration are available.
 
 ## Current State
+
+> Authoritative update, 2026-07-12 09:30 CST: the affected Orin is powered off.
+> Aurora, Sense and point-cloud throttle are persistently disabled, shadow is
+> inactive, and no workload should be restarted on the failed NVMe. Historical
+> bullets below describing active services record earlier test checkpoints and
+> do not describe the current runtime state. See
+> `docs/he/he-visual-navigation-goal-status.md` for the complete Git/backup
+> boundary, completed gates, invalidated work and replacement-storage sequence.
 
 - The database-boundedness code and runtime configuration are synchronized
   across VM, origin and Orin. Use `git rev-parse HEAD` for final commit identity
@@ -998,6 +1017,11 @@ health while keeping real motion disconnected.
   storage replacement, re-enable them only after the new storage gate passes.
 
 ## Resume Instructions
+
+0. Replace the physical NVMe, provision a clean compatible Jetson system and
+   pass `he-storage-health.service`. Do not deploy or run Aurora/DimOS on the
+   failed disk. Restore only reviewed artifacts from the verified macOS recovery
+   package, then follow `docs/he/he-visual-navigation-goal-status.md`.
 
 1. Read this log, ADR-001 and the final shadow soak evidence.
 - Preserve the CameraInfo evidence boundary: missing, structurally invalid and

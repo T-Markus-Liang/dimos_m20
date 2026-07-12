@@ -1,11 +1,11 @@
 # Codex Sessions
 
-Last updated: 2026-07-12 08:51 CST
+Last updated: 2026-07-12 09:30 CST
 
 ## Active
 
-- [2026-07-11_1313_he-visual-navigation-goal.md](/home/markus/work/dimos_wd_m20/docs/codex-sessions/active/2026-07-11_1313_he-visual-navigation-goal.md)
-- [2026-07-11_0010_he-orin-deployment-plan.md](/home/markus/work/dimos_wd_m20/docs/codex-sessions/active/2026-07-11_0010_he-orin-deployment-plan.md)
+- [2026-07-11_1313_he-visual-navigation-goal.md](/home/markus/work/dimos_wd_m20/docs/codex-sessions/active/2026-07-11_1313_he-visual-navigation-goal.md) - blocked by confirmed NVMe media failure
+- [2026-07-11_0010_he-orin-deployment-plan.md](/home/markus/work/dimos_wd_m20/docs/codex-sessions/active/2026-07-11_0010_he-orin-deployment-plan.md) - blocked pending replacement storage
 
 ## Completed
 
