@@ -1,0 +1,206 @@
+# HE Orin dependency snapshot
+# Captured: 2026-07-12 CST
+# Target: Ubuntu 22.04 arm64, L4T R36.4.7
+# Scope: rebuild-relevant packages only; no credentials or hardware serials
+
+[apt-relevant]
+containerd.io	1.7.29-1~ubuntu.22.04~jammy
+cuda-compiler-12-6	12.6.11-1
+cuda-cudart-12-6	12.6.68-1
+cuda-nvcc-12-6	12.6.68-1
+cuda-runtime-12-6	12.6.11-1
+cuda-toolkit-12-6	12.6.11-1
+cuda-toolkit-12-6-config-common	12.6.68-1
+docker-ce	5:28.5.2-1~ubuntu.22.04~jammy
+docker-ce-cli	5:28.5.2-1~ubuntu.22.04~jammy
+docker-ce-rootless-extras	5:28.5.2-1~ubuntu.22.04~jammy
+gstreamer1.0-tools	1.20.3-0ubuntu1.1
+libcudnn9-cuda-12	9.3.0.75-1
+libcudnn9-dev-cuda-12	9.3.0.75-1
+libcudnn9-samples	9.3.0.75-1
+libnvinfer-dev	10.7.0.23-1+cuda12.6
+libnvinfer-plugin-dev	10.7.0.23-1+cuda12.6
+libnvinfer-plugin10	10.7.0.23-1+cuda12.6
+libnvinfer10	10.7.0.23-1+cuda12.6
+libnvonnxparsers-dev	10.7.0.23-1+cuda12.6
+libnvonnxparsers10	10.7.0.23-1+cuda12.6
+libnvvpi3	3.2.4
+libopencv-dev	4.8.0-1-g6371ee1
+libopencv-python	4.8.0-1-g6371ee1
+nvidia-container	6.2.1+b38
+nvidia-container-toolkit	1.16.2-1
+nvidia-container-toolkit-base	1.16.2-1
+nvidia-l4t-3d-core	36.4.7-20250918154033
+nvidia-l4t-bootloader	36.4.7-20250918154033
+nvidia-l4t-camera	36.4.7-20250918154033
+nvidia-l4t-core	36.4.7-20250918154033
+nvidia-l4t-cuda	36.4.7-20250918154033
+nvidia-l4t-cuda-utils	36.4.7-20250918154033
+nvidia-l4t-cudadebuggingsupport	12.6-34622040.0
+nvidia-l4t-dla-compiler	36.4.7-20250918154033
+nvidia-l4t-gstreamer	36.4.7-20250918154033
+nvidia-l4t-kernel	5.15.148-tegra-36.4.7-20250918154033
+nvidia-l4t-kernel-dtbs	5.15.148-tegra-36.4.7-20250918154033
+nvidia-l4t-kernel-headers	5.15.148-tegra-36.4.7-20250918154033
+nvidia-l4t-kernel-oot-headers	5.15.148-tegra-36.4.7-20250918154033
+nvidia-l4t-kernel-oot-modules	5.15.148-tegra-36.4.7-20250918154033
+nvidia-l4t-multimedia	36.4.7-20250918154033
+nvidia-l4t-multimedia-utils	36.4.7-20250918154033
+nvidia-l4t-vulkan-sc	36.4.7-20250918154033
+nvidia-l4t-vulkan-sc-dev	36.4.7-20250918154033
+nvidia-l4t-vulkan-sc-samples	36.4.7-20250918154033
+nvidia-l4t-vulkan-sc-sdk	36.4.7-20250918154033
+nvidia-l4t-wayland	36.4.7-20250918154033
+nvidia-l4t-x11	36.4.7-20250918154033
+python3-colcon-core	0.20.1+upstream-1
+python3-rosdep	0.26.0-1
+python3-rosdep-modules	0.26.0-1
+ros-humble-cv-bridge	3.2.1-1jammy.20251010.053643
+ros-humble-cyclonedds	0.10.5-2jammy.20250701.042623
+ros-humble-image-transport	3.1.12-1jammy.20251017.212934
+ros-humble-image-transport-dbgsym	3.1.12-1jammy.20251017.212934
+ros-humble-image-transport-plugins	2.5.4-1jammy.20251018.000529
+ros-humble-rmw-fastrtps-cpp	6.2.9-1jammy.20251010.043943
+ros-humble-rmw-implementation	2.8.5-1jammy.20251010.073946
+ros-humble-rmw-implementation-cmake	6.1.2-1jammy.20250719.011039
+ros-humble-ros-base	0.10.0-1jammy.20251018.000543
+ros-humble-rosbag2	0.15.15-1jammy.20251013.214711
+ros-humble-rosbag2-compression	0.15.15-1jammy.20251013.202214
+ros-humble-rosbag2-compression-zstd	0.15.15-1jammy.20251013.202959
+ros-humble-rosbag2-cpp	0.15.15-1jammy.20251013.193327
+ros-humble-rosbag2-interfaces	0.15.15-1jammy.20251010.040111
+ros-humble-rosbag2-py	0.15.15-1jammy.20251013.212227
+ros-humble-rosbag2-storage	0.15.15-1jammy.20251013.190756
+ros-humble-rosbag2-storage-default-plugins	0.15.15-1jammy.20251013.192623
+ros-humble-rosbag2-transport	0.15.15-1jammy.20251013.203636
+ros-humble-rtabmap-odom	0.23.7-1jammy.20260622.101306
+ros-humble-rtabmap-slam	0.23.7-1jammy.20260622.101308
+ros-humble-rtabmap-sync	0.23.7-1jammy.20260622.092240
+ros-humble-rtabmap-util	0.23.7-1jammy.20260622.095211
+ros-humble-tf2-ros	0.25.16-1jammy.20251017.212835
+ros-humble-tf2-ros-py	0.25.16-1jammy.20251010.085751
+ros-humble-twist-mux	4.3.0-1jammy.20260605.154946
+ros-humble-twist-mux-msgs	3.0.1-1jammy.20260605.135237
+
+[dimos-venv-pip-list]
+# Command used PYTHONNOUSERSITE=1 and .venv/bin/python.
+ConfigArgParse==1.7.5
+Flask==3.1.3
+Jinja2==3.1.6
+MarkupSafe==3.0.3
+PyTurboJPEG==1.8.2
+Pygments==2.20.0
+Werkzeug==3.1.8
+aiohappyeyeballs==2.7.1
+aiohttp-jinja2==1.6
+aiohttp==3.14.1
+aiosignal==1.4.0
+annotated-doc==0.0.4
+annotated-types==0.7.0
+async-timeout==5.0.1
+attrs==26.1.0
+beartype==0.22.9
+bleak==3.0.2
+blinker==1.9.0
+certifi==2026.6.17
+cffi==2.1.0
+charset-normalizer==3.4.9
+click==8.4.2
+cmeel-assimp==6.0.5
+cmeel-boost==1.90.0
+cmeel-console-bridge==1.0.2.3
+cmeel-octomap==1.10.0
+cmeel-qhull==8.0.2.1
+cmeel-tinyxml2==11.0.0
+cmeel-urdfdom==6.0.0
+cmeel-zlib==1.3.2
+cmeel==0.60.1
+coal==3.0.3
+contourpy==1.3.2
+cryptography==49.0.0
+cycler==0.12.1
+dash==4.4.0
+dbus-fast==5.0.22
+dimos-viewer==0.32.0a1
+dimos==0.0.13.post1
+dimos_lcm==0.1.3
+eclipse-zenoh==1.9.0
+eigenpy==3.13.0
+fastjsonschema==2.21.2
+fonttools==4.63.0
+foxglove-websocket==0.1.4
+frozenlist==1.8.0
+idna==3.18
+importlib_metadata==9.0.0
+itsdangerous==2.2.0
+janus==2.0.0
+jsonschema-specifications==2025.9.1
+jsonschema==4.26.0
+jupyter_core==5.9.1
+kiwisolver==1.5.0
+lcm-dimos-fork==1.5.2.post1
+libcoal==3.0.3
+libpinocchio==4.1.0
+linkify-it-py==2.1.0
+llvmlite==0.48.0
+lz4==4.4.5
+markdown-it-py==4.2.0
+matplotlib==3.10.9
+mdit-py-plugins==0.6.1
+mdurl==0.1.2
+multidict==6.7.1
+narwhals==2.23.0
+nbformat==5.10.4
+nest-asyncio==1.6.0
+numba==0.66.0
+numpy==2.2.6
+open3d-unofficial-arm==0.19.0.post9
+opencv-contrib-python==4.13.0.92
+packaging==26.2
+pillow==12.3.0
+pin==4.1.0
+pip==22.0.2
+platformdirs==4.10.0
+plotext==5.3.2
+plotly==6.9.0
+plum-dispatch==2.5.7
+propcache==0.5.2
+protobuf==6.33.6
+psutil==7.2.2
+pyarrow==25.0.0
+pycparser==3.0
+pydantic-settings==2.14.2
+pydantic==2.13.4
+pydantic_core==2.46.4
+pyparsing==3.3.2
+python-dateutil==2.9.0.post0
+python-dotenv==1.2.2
+reactivex==4.1.0
+referencing==0.37.0
+requests==2.34.2
+rerun-sdk==0.32.0a1
+retrying==1.4.2
+rich==15.0.0
+rpds-py==0.30.0
+scipy==1.15.3
+setuptools==59.6.0
+shellingham==1.5.4
+six==1.17.0
+sortedcontainers==2.4.0
+sqlite-vec==0.1.9
+structlog==25.5.0
+terminaltexteffects==0.12.2
+textual-serve==1.1.3
+textual==3.7.1
+tomli==2.4.1
+toolz==1.1.0
+traitlets==5.15.1
+typer==0.26.8
+typing-inspection==0.4.2
+typing_extensions==4.16.0
+uc-micro-py==2.0.0
+urllib3==2.7.0
+websocket-client==1.9.0
+websockets==16.1
+yarl==1.24.2
+zipp==4.1.0

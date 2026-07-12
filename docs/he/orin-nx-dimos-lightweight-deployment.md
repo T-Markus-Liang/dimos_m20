@@ -1933,3 +1933,27 @@ VM `/home/markus/work/dimos_wd_m20` 和 GitHub `codex/he-orin` 是当前唯一�
 admission，再把正式两小时 soak 写入持久化路径重跑。完成这些静态恢复门后，才能继续
 相机物理标定、移动定位、闭环导航和自动探索。仓库内权威状态报告为
 `docs/he/he-visual-navigation-goal-status.md`。
+
+## 38. Orin NX 系统与依赖重建清单（2026-07-12）
+
+故障盘受控开机后完成了一次低负载、只读环境审计。完整清单见
+`docs/he/orin-nx-environment-inventory-2026-07-12.md`，相关 apt 组件和 DimOS venv
+的 120 项 Python 包精确版本见
+`docs/he/evidence/2026-07-12_orin-environment-packages.txt`。
+
+重建基线是 Ubuntu 22.04.5 / L4T R36.4.7 / kernel 5.15.148-tegra、CUDA 12.6、
+cuDNN 9.3.0、TensorRT 10.7.0、VPI 3.2.4、ROS 2 Humble、RTAB-Map 0.23.7、
+Aurora driver 0.2.11 + SDK 1.1.22。设备没有安装 `nvidia-jetpack` 元包，也没有
+Nix/Cargo/Rust/uv/git-lfs；当前 DimOS 依赖 aarch64 wheel 和已构建 native artifact，
+不能把它当成完整的板端源码构建环境。
+
+本次开机再次确认故障盘持续产生介质错误：当前 boot 至少出现 935 条匹配的 critical
+medium/EXT4 错误。旧 Orin commit 不含 storage gate，启用的 camera-TF 又通过 `Wants`
+拉起 disabled 的 Aurora，导致 Aurora 达到 84 次可见重启；joystick、mux 和 odom
+controller 也曾自动运行。审计已停止并持久禁用 camera TF、Aurora、joystick、mux 和
+odom，且对当前 boot 增加 runtime mask。换盘后必须先安装当前 Git 分支的 storage gate
+和依赖图，不能直接恢复旧 `/etc/systemd/system`。
+
+Aurora 当前位于共享 USB 2.0 480Mbps hub，底盘控制器为 `1a86:55d4` 的
+`/dev/ttyACM0`，CAN0 未配置。旧 udev 规则存在 0666/0777 过宽权限和疑似尾部多余字符，
+只可作为恢复参考，不得无审查原样部署。Wi-Fi 密钥、MAC、磁盘/硬件序列号未写入 Git。
