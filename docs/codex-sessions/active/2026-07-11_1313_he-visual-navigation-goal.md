@@ -837,8 +837,14 @@ health while keeping real motion disconnected.
   `/visual_map`, `/localization_health` and `/global_costmap` without retaining
   map payloads or publishing. A shared pure summary fails on missing sources,
   any healthy sample or any planner map. All 66 HE tests, focused Ruff,
-  blueprint registry and diff checks pass; 30-second Orin live evidence remains
-  pending.
+  blueprint registry and diff checks pass.
+- Deployed `fba24dd1` and qualified the live withholding path. A first
+  post-start 30-second collector correctly failed because non-latched LCM had
+  already emitted the stationary map. Starting the 90-second collector before
+  shadow captured one visual map, 1172 unhealthy health samples, zero healthy
+  samples and zero global costmaps. Both shadow gates passed; cgroup memory was
+  1389MiB, swap stayed 580MiB, services had zero restarts and motion publishers
+  stayed zero. Sense was restored with no RTAB-Map residue.
 
 ## Decisions
 
@@ -931,9 +937,10 @@ health while keeping real motion disconnected.
   bounded mode switching are also Orin-qualified. Physical calibration,
   multi-hour/moving resource behavior and every moving qualification gate
   remain open.
-- Planner-map withholding has a VM-qualified bounded diagnostic candidate, but
-  is not yet live-qualified on Orin. Keep `/global_costmap` absent and navigation
-  disabled until its real shadow capture is preserved as evidence.
+- Static planner-map withholding is now live-qualified on Orin and preserved in
+  `docs/he/evidence/2026-07-12_0800_planner-map-withholding.md`. Map quality,
+  moving localization and navigation remain failed or unproven, so keep
+  `/global_costmap` absent and navigation disabled.
 
 ## Resume Instructions
 

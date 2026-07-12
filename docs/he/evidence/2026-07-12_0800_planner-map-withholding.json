@@ -1,0 +1,27 @@
+{
+  "captured_at": "2026-07-12T07:59:40+0800",
+  "duration_seconds": 90.11149006900087,
+  "summary": {
+    "global_costmap_messages": 0,
+    "health_samples": 1172,
+    "healthy_samples": 0,
+    "reason_counts": {
+      "depth_bottom_coverage_low": 1167,
+      "depth_quality_missing": 5,
+      "inliers_low": 63,
+      "map_known_ratio_low": 1063,
+      "map_missing": 109,
+      "pose_missing": 55,
+      "pose_stale": 10,
+      "runtime_status_missing": 12,
+      "status_missing": 4,
+      "tf_stale": 3,
+      "tf_unavailable": 117,
+      "tracking_lost": 56
+    },
+    "unhealthy_samples": 1172,
+    "visual_map_first_received_at": 1783814328.8330274,
+    "visual_map_last_received_at": 1783814328.8330274,
+    "visual_map_messages": 1
+  }
+}

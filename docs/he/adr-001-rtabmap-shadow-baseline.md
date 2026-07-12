@@ -241,5 +241,11 @@ unhealthy `/localization_health` samples while proving that
 `/global_costmap` emits nothing. The collector retains timestamps and health
 reasons only, never map payloads, and cannot run outside a 5-120 second window.
 Any healthy sample, planner-facing map, or missing source fails the diagnostic.
-The implementation and pure negative cases pass VM qualification; Orin live
-qualification remains pending and this paragraph does not approve navigation.
+The implementation and pure negative cases pass VM qualification. A correctly
+ordered 90-second Orin run subscribed before shadow startup and observed one
+visual map, 1172 continuously unhealthy health samples and zero global-costmap
+messages. Dominant reasons were `depth_bottom_coverage_low` and
+`map_known_ratio_low`; both shadow gates passed and normal Sense mode was
+restored without native residue. See
+`evidence/2026-07-12_0800_planner-map-withholding.md`. This proves only static
+live withholding and does not approve navigation.

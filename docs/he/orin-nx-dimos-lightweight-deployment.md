@@ -1810,5 +1810,13 @@ inactive，最终部署完整性和只读门通过。结合此前真实停流产
 判定要求是采集期内 `/visual_map` 和 health 均持续到达、所有 health 样本均为
 unhealthy，同时 `/global_costmap` 必须为零。任一健康样本、任一 planner-facing map、
 缺少视觉地图或缺少 health 都会 fail closed。纯函数覆盖以上五种情况；VM 66 项 HE
-unittest、聚焦 Ruff、blueprint registry 和 diff 检查通过。Orin 30 秒实时结果尚未
-采集，因此当前只接受诊断实现，不把 planner map 阻断标记为 live-qualified。
+unittest、聚焦 Ruff、blueprint registry 和 diff 检查通过。
+
+首次在 shadow 稳定后启动的 30 秒采集因 LCM 不保留历史消息而正确失败：静止场景唯一
+一次 map 已在订阅前发布。修正验证时序为“先订阅、后启动 shadow”后，90 秒采集收到
+1 条 `/visual_map`、1172 条 health，healthy 为 0、`/global_costmap` 为 0；主要原因是
+`depth_bottom_coverage_low` 1167 次和 `map_known_ratio_low` 1063 次。标准和独立 shadow
+gate 均通过，独立检查时 cgroup 1389MiB，swap 保持 580MiB，服务零重启且速度发布者
+为零。恢复后 Sense active、shadow inactive，无 RTAB-Map 残留。完整证据见
+`docs/he/evidence/2026-07-12_0800_planner-map-withholding.md`。这只证明静态 live
+withholding，不代表地图质量、定位或导航已经通过。
