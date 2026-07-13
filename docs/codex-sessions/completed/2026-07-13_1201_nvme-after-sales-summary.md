@@ -6,7 +6,7 @@
 - Session id: current Codex desktop thread
 - Project: dimos-orin-nx
 - Workspace: VM `/home/markus/work/dimos_wd_m20`; deliverable in macOS Downloads
-- Task: simplify the Orin NX NVMe failure report for manufacturer after-sales support
+- Task: simplify and correct the Orin NX shutdown/NVMe investigation for manufacturer support
 - Status: completed
 - Branch if relevant: `wd/orin_nx`
 
@@ -27,6 +27,12 @@ manufacturer after-sales communication.
 - Changed the conclusion from an absolute component-level diagnosis to a high
   confidence hardware suspicion whose exact failure mechanism requires vendor
   inspection.
+- Follow-up: preserved the user's shortened document after it was renamed to
+  `/Users/markus/Downloads/莫名关机问题调查.md`.
+- Corrected the event description to distinguish sudden network loss followed
+  by manual power cycling from a confirmed spontaneous shutdown.
+- Split the conclusion into a confirmed persistent NVMe read abnormality and
+  an unresolved whole-device disconnect cause.
 
 ## Decisions
 
@@ -37,14 +43,15 @@ manufacturer after-sales communication.
 
 ## Current State
 
-- The simplified Markdown report is complete and verified readable.
-- SSD model and serial number remain a clearly marked field for the user to
-  fill from the physical label.
+- The corrected Markdown report is complete and verified readable at
+  `/Users/markus/Downloads/莫名关机问题调查.md`.
+- It does not claim that the SSD caused the disconnect or that the device
+  definitely powered itself off.
 
 ## Resume Instructions
 
-No implementation work remains. Add the SSD model and serial number before
-sending the report to the manufacturer.
+No implementation work remains. Use the current renamed report as the baseline
+for any further manufacturer feedback.
 
 ## Open Questions
 

@@ -1,6 +1,6 @@
 # Codex Sessions
 
-Last updated: 2026-07-13 12:01 CST
+Last updated: 2026-07-13 12:14 CST
 
 ## Active
 
@@ -8,7 +8,7 @@ Last updated: 2026-07-13 12:01 CST
 
 ## Completed
 
-- [2026-07-13_1201_nvme-after-sales-summary.md](/home/markus/work/dimos_wd_m20/docs/codex-sessions/completed/2026-07-13_1201_nvme-after-sales-summary.md) - concise NVMe failure summary prepared for manufacturer support
+- [2026-07-13_1201_nvme-after-sales-summary.md](/home/markus/work/dimos_wd_m20/docs/codex-sessions/completed/2026-07-13_1201_nvme-after-sales-summary.md) - manufacturer report corrected to distinguish sudden disconnect from confirmed shutdown
 - [2026-07-13_1131_upstream-jetson-branch-audit.md](/home/markus/work/dimos_wd_m20/docs/codex-sessions/completed/2026-07-13_1131_upstream-jetson-branch-audit.md) - upstream Jetson audit, compatibility preflight and integration guidance delivered
 - [2026-07-13_1051_readme-runtime-diagrams.md](/home/markus/work/dimos_wd_m20/docs/codex-sessions/completed/2026-07-13_1051_readme-runtime-diagrams.md) - README runtime and orchestration diagrams delivered
 - [2026-07-13_1034_repository-structure-docs.md](/home/markus/work/dimos_wd_m20/docs/codex-sessions/completed/2026-07-13_1034_repository-structure-docs.md) - repository responsibilities and WD baseline evolution documented
