@@ -1,0 +1,22 @@
+[Unit]
+Description=DimOS Orin NX visual shadow runtime
+After=dimos-orin-storage-health.service
+Requires=dimos-orin-storage-health.service
+Conflicts=dimos-orin-sense.service
+
+[Service]
+Type=simple
+User=@DIMOS_RUNTIME_USER@
+EnvironmentFile=/etc/dimos/orin-nx.env
+Environment=PYTHONNOUSERSITE=1
+WorkingDirectory=@DIMOS_REPO@
+ExecStartPre=@DIMOS_PYTHON@ -m dimos.hardware.platforms.orin_nx.deployment.verify_profile --profile ${DIMOS_PROFILE}
+ExecStart=/bin/bash @DIMOS_RUNNER@ shadow
+Restart=no
+KillSignal=SIGTERM
+TimeoutStopSec=30
+MemoryAccounting=yes
+MemoryHigh=@MEMORY_HIGH_MB@M
+MemoryMax=@MEMORY_MAX_MB@M
+OOMPolicy=stop
+TasksMax=512

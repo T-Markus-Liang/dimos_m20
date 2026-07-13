@@ -1,0 +1,12 @@
+[Unit]
+Description=DimOS Orin NX storage health admission gate
+After=local-fs.target
+Before=dimos-orin-sense.service dimos-orin-shadow.service
+
+[Service]
+Type=oneshot
+User=root
+EnvironmentFile=/etc/dimos/orin-nx.env
+WorkingDirectory=@DIMOS_REPO@
+ExecStart=@DIMOS_PYTHON@ -m dimos.hardware.platforms.orin_nx.storage_health --device ${DIMOS_NVME_DEVICE} --output ${DIMOS_STORAGE_REPORT}
+RemainAfterExit=yes

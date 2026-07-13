@@ -7,7 +7,7 @@
 - Project: dimos-orin-nx
 - Workspace: VM `/home/markus/work/dimos_wd_m20`
 - Task: create `wd/orin_nx` from WD M20 and plan portable integration of validated HE lightweight deployment work
-- Status: active - Phase 1 complete; Phase 2/3 common adapters implemented
+- Status: active - Phase 1-3 core pushed; Phase 4 runtime core implemented
 - Branch if relevant: `wd/orin_nx` from `feat/wd/m20` at `98713d97`
 
 ## User Request Summary
@@ -57,6 +57,22 @@ communication into reusable templates for other Orin NX robot platforms.
 - Verification: 19 focused profile/sensor/command tests pass, Ruff passes and
   `git diff --check` passes. The remaining pytest warning is the repository's
   pre-existing custom asyncio fixture deprecation warning.
+- Committed and pushed the common profile and ROS adapter stage as
+  `89099ccf feat(hardware): add portable ROS platform adapters`.
+- Extracted the HE-proven NVMe SMART and current-boot kernel error policy into
+  the generic Orin compute layer. The CLI writes a bounded JSON report and
+  exits nonzero for warning, media, spare or kernel failures.
+- Added deterministic systemd template rendering from the robot profile,
+  including runtime user, repo, Python/CLI paths and memory budgets. The
+  installer supports dry-run and offline roots and never enables or starts a
+  service.
+- Added storage-before-runtime ordering, ROS environment loading and separate
+  sense/shadow units. Both units validate the profile before startup and reject
+  motion-enabled profiles by default.
+- Verification: 11 focused storage/installer/profile-gate tests pass, shell
+  syntax passes, HE profile is accepted as motion-disabled, and rendered units
+  pass `systemd-analyze verify`. VM-wide netplan permission and snapd key
+  warnings are unrelated to the rendered units.
 
 ## Decisions
 
@@ -74,17 +90,17 @@ communication into reusable templates for other Orin NX robot platforms.
 
 - Branch exists locally and on origin.
 - Phase 1 is committed and pushed.
-- Phase 2/3 common profile, sensor and command adapters are implemented and
-  focused tests pass; they are ready for their stage commit and push.
-- Generic sense composition, live ROS integration, read-only graph validation,
-  portable Orin systemd/storage runtime and installer remain.
+- Phase 2/3 common profile, sensor and command adapters are pushed.
+- Phase 4 storage admission, service templates, installer and profile motion
+  gate are implemented and ready for their stage commit and push.
+- Generic sense composition, live ROS integration, graph-level publisher
+  validation, resource soak collection and visual shadow extraction remain.
 
 ## Resume Instructions
 
-Read `docs/orin-nx/portability-plan.md`, verify the Phase 2/3 stage commit is
-on origin, then implement Phase 4 portable Orin runtime. Start with storage
-health extraction and environment-file-based systemd templates; keep motion
-services disabled and validate installer dry-run behavior.
+Read `docs/orin-nx/portability-plan.md`, verify the Phase 4 stage commit is on
+origin, then add generic sense composition and live fake-ROS integration before
+starting optional visual shadow extraction. Keep all motion services absent.
 
 ## Open Questions
 

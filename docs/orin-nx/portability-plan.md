@@ -4,7 +4,7 @@ Date: 2026-07-12 CST
 Branch: `wd/orin_nx`
 Base: upstream `feat/wd/m20` at `98713d97341bc9392e5dd531b1c13aaf98782a23`
 Validated source: `codex/he-orin` at `f1b68218d9b32937f527c92ac2f9a14f5810a2e1`
-Status: implementation active; Phase 1 complete, Phase 2/3 core adapters implemented
+Status: implementation active; Phase 1 complete, Phase 2/3 core adapters and Phase 4 runtime core implemented
 
 ## 1. Objective
 
@@ -367,7 +367,10 @@ Implementation status as of 2026-07-13:
   sensor bridge; the sense blueprint and live ROS integration gate remain.
 - Phase 3 has the fail-closed ROS 2 Twist bridge and software safety tests;
   backend contract documentation and the read-only graph gate remain.
-- Phase 4 and later phases have not started.
+- Phase 4 has portable storage admission, rendered systemd units, a dry-run
+  installer and a read-only profile gate. Persistent resource soak collection
+  and broader static deployment checks remain.
+- Phase 5 and later phases have not started.
 
 ### Phase 0: Baseline and provenance
 
