@@ -33,6 +33,11 @@ manufacturer after-sales communication.
   by manual power cycling from a confirmed spontaneous shutdown.
 - Split the conclusion into a confirmed persistent NVMe read abnormality and
   an unresolved whole-device disconnect cause.
+- Follow-up: recorded that the NX and development laptop used the same indoor
+  WiFi LAN, the SSH session dropped and could not reconnect, and connectivity
+  returned only after a manual power cycle.
+- Renamed the document heading to describe an SSH disconnect and suspected
+  shutdown instead of asserting an unexplained shutdown as an observed fact.
 
 ## Decisions
 
@@ -47,6 +52,9 @@ manufacturer after-sales communication.
   `/Users/markus/Downloads/莫名关机问题调查.md`.
 - It does not claim that the SSD caused the disconnect or that the device
   definitely powered itself off.
+- WiFi, network, power, carrier board, thermal protection and system hang remain
+  open whole-device investigation paths because no serial or pre-failure log
+  captured the event.
 
 ## Resume Instructions
 
