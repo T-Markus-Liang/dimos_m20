@@ -7,7 +7,7 @@
 - Project: dimos-orin-nx
 - Workspace: VM `/home/markus/work/dimos_wd_m20`
 - Task: document top-level repository responsibilities and compare wd/orin_nx with its feat/wd/m20 baseline
-- Status: active
+- Status: completed
 - Branch if relevant: `wd/orin_nx`
 
 ## User Request Summary
@@ -34,6 +34,9 @@ directory-responsibility document. Compare only `wd/orin_nx` with its actual
 - Linked the existing Orin architecture document to the repository-wide guide.
 - Verified all documented WD M20 paths exist in the baseline and that the Orin
   delta contains no navigation, mapping, perception or simulation changes.
+- Committed and pushed the documentation as
+  `1ee123e3 docs(architecture): map repository responsibilities`. Local and
+  remote heads matched at `1ee123e385c2a3f6db4a6f8b5b59a3babecf92ce`.
 
 ## Decisions
 
@@ -45,7 +48,7 @@ directory-responsibility document. Compare only `wd/orin_nx` with its actual
 ## Current State
 
 - Investigation is complete.
-- Documentation is complete and ready for final diff verification and push.
+- Documentation is complete and pushed to `origin/wd/orin_nx`.
 
 ## Resume Instructions
 
