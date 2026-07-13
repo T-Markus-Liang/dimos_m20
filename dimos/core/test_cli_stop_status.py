@@ -18,6 +18,7 @@ from datetime import datetime, timedelta, timezone
 import subprocess
 import time
 from typing import TYPE_CHECKING
+from unittest.mock import Mock
 
 import pytest
 from typer.testing import CliRunner
@@ -70,6 +71,13 @@ def _entry(run_id: str, pid: int, blueprint: str = "test", **kwargs) -> RunEntry
     e = RunEntry(run_id=run_id, pid=pid, blueprint=blueprint, **defaults)
     e.save()
     return e
+
+
+def test_zombie_pid_is_not_alive(monkeypatch: pytest.MonkeyPatch) -> None:
+    process = Mock()
+    process.status.return_value = run_registry.psutil.STATUS_ZOMBIE
+    monkeypatch.setattr(run_registry.psutil, "Process", lambda _pid: process)
+    assert not run_registry.is_pid_alive(123)
 
 
 class TestStatusCLI:

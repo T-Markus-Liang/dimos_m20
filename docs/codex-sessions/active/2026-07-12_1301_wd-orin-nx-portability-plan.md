@@ -36,6 +36,11 @@ communication into reusable templates for other Orin NX robot platforms.
 - On 2026-07-13, corrected the architecture boundary after user review: Orin NX
   is a compute target, reusable ROS adapters belong under `dimos/hardware`, and
   HE remains a robot profile/composition rather than the common package.
+- Completed Phase 1 by porting the final HE core lifecycle fixes without HE
+  files: idempotent coordinator shutdown, fork-safe worker waits, zombie PID
+  detection, daemon shutdown ordering and asynchronous stop-RPC cleanup.
+- Improved stop-RPC settling to use one coordinator-wide 100ms budget instead
+  of per-module waits. All 49 focused lifecycle/coordinator tests and Ruff pass.
 
 ## Decisions
 
@@ -53,8 +58,9 @@ communication into reusable templates for other Orin NX robot platforms.
 
 - Branch exists locally and on origin.
 - No HE runtime implementation has been merged.
-- The only planned branch change is documentation/session state.
-- Implementation is pending user review of the plan.
+- Architecture documentation and Phase 1 core lifecycle code are committed or
+  ready for commit. Platform adapters have not yet been added.
+- Phase 2 profile and sensor-template implementation is next.
 
 ## Resume Instructions
 

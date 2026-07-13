@@ -21,7 +21,6 @@ import signal
 import sys
 from typing import TYPE_CHECKING
 
-from dimos.core.coordination.process_lifecycle import kill_run_processes
 from dimos.utils.logging_config import setup_logger
 
 if TYPE_CHECKING:
@@ -94,10 +93,6 @@ def install_signal_handlers(
             coordinator.stop()
         except Exception:
             logger.error("Error during coordinator stop", exc_info=True)
-        try:
-            kill_run_processes(entry.run_id)
-        except Exception:
-            logger.error("Error during run-process sweep", exc_info=True)
         entry.remove()
         sys.exit(0)
 

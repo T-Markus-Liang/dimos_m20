@@ -16,6 +16,8 @@ from __future__ import annotations
 
 import asyncio
 from collections.abc import Callable
+import threading
+import time
 from typing import TYPE_CHECKING, Any, Protocol
 
 from dimos.core.coordination.python_worker import Actor, MethodCallProxy
@@ -28,6 +30,46 @@ if TYPE_CHECKING:
     from dimos.core.module import ModuleBase
 
 logger = setup_logger()
+
+_stop_cleanup_lock = threading.Lock()
+_stop_cleanup_threads: set[threading.Thread] = set()
+
+
+def _start_stop_rpc_cleanup(name: str, stop_client: Callable[[], None]) -> None:
+    cleanup_thread: threading.Thread
+
+    def close_client() -> None:
+        try:
+            stop_client()
+        except Exception:
+            logger.warning("Failed to close stop RPC client", exc_info=True)
+        finally:
+            with _stop_cleanup_lock:
+                _stop_cleanup_threads.discard(cleanup_thread)
+
+    cleanup_thread = threading.Thread(
+        target=close_client,
+        name=f"{name}-stop-rpc-cleanup",
+        daemon=True,
+    )
+    with _stop_cleanup_lock:
+        _stop_cleanup_threads.add(cleanup_thread)
+    cleanup_thread.start()
+
+
+def wait_for_stop_rpc_cleanup(timeout: float) -> bool:
+    """Wait once for all asynchronous stop-client cleanup within a shared budget."""
+    deadline = time.monotonic() + timeout
+    while True:
+        with _stop_cleanup_lock:
+            threads = tuple(_stop_cleanup_threads)
+        if not threads:
+            return True
+        remaining = deadline - time.monotonic()
+        if remaining <= 0:
+            return False
+        for thread in threads:
+            thread.join(timeout=max(0.0, deadline - time.monotonic()))
 
 
 class RpcCall:
@@ -70,7 +112,7 @@ class RpcCall:
         if self._name == "stop":
             self._rpc.call_nowait(f"{self._remote_name}/{self._name}", (args, kwargs))  # type: ignore[arg-type]
             if self._stop_rpc_client:
-                self._stop_rpc_client()
+                _start_stop_rpc_cleanup(self._remote_name, self._stop_rpc_client)
             return None
 
         result, unsub_fn = self._rpc.call_sync(
