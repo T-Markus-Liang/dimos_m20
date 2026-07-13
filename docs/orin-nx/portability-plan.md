@@ -4,7 +4,7 @@ Date: 2026-07-12 CST
 Branch: `wd/orin_nx`
 Base: upstream `feat/wd/m20` at `98713d97341bc9392e5dd531b1c13aaf98782a23`
 Validated source: `codex/he-orin` at `f1b68218d9b32937f527c92ac2f9a14f5810a2e1`
-Status: planning complete; implementation not started
+Status: implementation active; Phase 1 complete, Phase 2/3 core adapters implemented
 
 ## 1. Objective
 
@@ -223,8 +223,8 @@ adapters that its nonstandard protocols require.
 A profile configures existing standard adapters. It does not pretend every
 hardware protocol is ROS Twist.
 
-- Standard ROS sensors use `OrinNxROS2SensorBridge`.
-- Standard ROS velocity output uses `OrinNxROS2TwistConnection`.
+- Standard ROS sensors use `ROS2SensorBridge`.
+- Standard ROS velocity output uses `ROS2TwistConnection`.
 - Direct CAN/serial/UDP/vendor SDK control remains a robot-owned DimOS module.
 - A direct backend must still consume native DimOS `Twist` and implement the
   same finite/clamp/watchdog/zero-stop contract.
@@ -359,6 +359,15 @@ because that is the validated HE ABI. Other JetPack/ROS combinations require a
 new compatibility profile and explicit qualification.
 
 ## 7. Migration Plan
+
+Implementation status as of 2026-07-13:
+
+- Phase 0 and Phase 1 are complete and pushed.
+- Phase 2 has the strict profile, HE reference profile and generic ROS 2
+  sensor bridge; the sense blueprint and live ROS integration gate remain.
+- Phase 3 has the fail-closed ROS 2 Twist bridge and software safety tests;
+  backend contract documentation and the read-only graph gate remain.
+- Phase 4 and later phases have not started.
 
 ### Phase 0: Baseline and provenance
 

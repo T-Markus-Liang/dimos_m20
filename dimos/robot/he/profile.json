@@ -1,0 +1,38 @@
+{
+  "platform": "he",
+  "ros": {
+    "distro_setup": "/opt/ros/humble/setup.bash",
+    "overlays": [
+      "/home/ubuntu/ros2_ws/install/setup.bash",
+      "/home/ubuntu/third_party/aurora_ws/install/setup.bash"
+    ]
+  },
+  "sensors": {
+    "odom": {"enabled": true, "topic": "/odom_raw", "max_hz": 20.0},
+    "imu": {"enabled": true, "topic": "/ros_robot_controller/imu_raw", "max_hz": 20.0},
+    "color": {"enabled": true, "topic": "/aurora/rgb/image_raw", "max_hz": 5.0},
+    "depth": {"enabled": true, "topic": "/aurora/depth/image_raw", "max_hz": 5.0},
+    "ir": {"enabled": true, "topic": "/aurora/ir/image_raw", "max_hz": 5.0},
+    "points": {"enabled": true, "topic": "/he/aurora/points2_sampled", "max_hz": 1.3},
+    "camera_info": {"enabled": true, "topic": "/aurora/rgb/camera_info", "max_hz": 1.0},
+    "depth_camera_info": {"enabled": true, "topic": "/aurora/ir/camera_info", "max_hz": 1.0},
+    "pointcloud_stride": 8
+  },
+  "control": {
+    "backend": "ros2_twist",
+    "enabled": false,
+    "topic": "/he/nav_cmd_vel",
+    "allow_lateral": false,
+    "max_linear_mps": 0.1,
+    "max_lateral_mps": 0.0,
+    "max_angular_radps": 0.3,
+    "rate_hz": 20.0,
+    "timeout_s": 0.2
+  },
+  "runtime": {
+    "rerun_memory": "128MB",
+    "workers": 2,
+    "memory_high_mb": 1024,
+    "memory_max_mb": 1280
+  }
+}
