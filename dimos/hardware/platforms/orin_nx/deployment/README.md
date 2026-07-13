@@ -3,6 +3,18 @@
 This directory owns compute-target deployment only. Robot sensor drivers,
 transforms, chassis protocols and blueprints remain under `dimos/robot/<name>`.
 
+Before installing optional GPU dependencies on a Jetson target, generate a
+compatibility report:
+
+```bash
+mkdir -p ~/dimos-evidence
+.venv/bin/python -m dimos.hardware.platforms.orin_nx.compatibility \
+  --output ~/dimos-evidence/jetson-compatibility.json
+```
+
+See [Jetson compatibility](../../../../../docs/orin-nx/jetson-compatibility.md)
+for the qualified matrix and upstream branch assessment.
+
 Validate a deployment without writing files:
 
 ```bash

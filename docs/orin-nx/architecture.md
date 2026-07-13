@@ -6,6 +6,8 @@ Base: upstream `feat/wd/m20` at `98713d97`
 
 Repository-wide directory ownership and the WD baseline comparison are
 documented in [Repository Structure](../development/repository-structure.md).
+Jetson/Orin ABI constraints and the upstream branch audit are documented in
+[Jetson Compatibility](jetson-compatibility.md).
 
 ## 1. Purpose
 
