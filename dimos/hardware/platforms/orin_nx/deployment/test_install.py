@@ -65,6 +65,27 @@ def test_dry_run_validates_but_writes_nothing(tmp_path) -> None:
     assert not root.exists()
 
 
+def test_installer_defaults_to_generic_sense_blueprint(tmp_path) -> None:
+    profile = tmp_path / "profile.json"
+    root = tmp_path / "root"
+    write_profile(profile)
+
+    main(
+        [
+            "--root",
+            str(root),
+            "--repo",
+            "/opt/dimos",
+            "--profile",
+            str(profile),
+            "--no-systemctl",
+        ]
+    )
+
+    environment = (root / "etc/dimos/orin-nx.env").read_text()
+    assert 'DIMOS_SENSE_BLUEPRINT="orin-sense-headless"' in environment
+
+
 def test_install_writes_units_without_enabling_services(tmp_path) -> None:
     profile = tmp_path / "profile.json"
     root = tmp_path / "root"

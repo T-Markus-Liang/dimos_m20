@@ -7,7 +7,7 @@
 - Project: dimos-orin-nx
 - Workspace: VM `/home/markus/work/dimos_wd_m20`
 - Task: create `wd/orin_nx` from WD M20 and plan portable integration of validated HE lightweight deployment work
-- Status: active - Phase 1-4 runtime core implemented and pushed
+- Status: active - requested runtime scope implemented; final push pending
 - Branch if relevant: `wd/orin_nx` from `feat/wd/m20` at `98713d97`
 
 ## User Request Summary
@@ -77,6 +77,21 @@ communication into reusable templates for other Orin NX robot platforms.
   `bfc2838b feat(orin-nx): add fail-closed deployment runtime`. Local HEAD and
   `origin/wd/orin_nx` both resolved to
   `bfc2838bf0f95448c69d34c2109c924536325500`.
+- Added the profile-driven `orin-sense-headless` blueprint. Its only modules
+  are `ROS2SensorBridge` and bounded `RerunBridgeModule`; it contains no
+  command, movement, planner, click-input, simulation or GUI module.
+- Added startup requirements that reject a missing `DIMOS_PROFILE`, a profile
+  with no enabled sensors, or any profile with motion enabled. The repository
+  default profile is deliberately inert and exists only for deterministic
+  registry imports.
+- Made the portable installer select `orin-sense-headless` by default and
+  regenerated the DimOS blueprint/module registry.
+- Added `docs/orin-nx/architecture.md` documenting layer ownership, native
+  message and LCM/Zenoh boundaries, sense composition, safety flow, differences
+  from WD M20 and HE, and the onboarding path for another robot.
+- Verification: 35 focused tests pass, Ruff passes, registry consistency passes
+  in CI mode, the HE profile produces only sensor and Rerun modules, and
+  rendered systemd units pass `systemd-analyze verify`.
 
 ## Decisions
 
@@ -97,14 +112,15 @@ communication into reusable templates for other Orin NX robot platforms.
 - Phase 2/3 common profile, sensor and command adapters are pushed.
 - Phase 4 storage admission, service templates, installer and profile motion
   gate are committed and pushed.
-- Generic sense composition, live ROS integration, graph-level publisher
-  validation, resource soak collection and visual shadow extraction remain.
+- The user-requested common sense and architecture scope is complete.
+- Live hardware ROS validation, graph-level publisher checks, resource soak and
+  visual shadow are deliberately outside this closeout scope.
 
 ## Resume Instructions
 
-Read `docs/orin-nx/portability-plan.md`, verify the Phase 4 stage commit is on
-origin, then add generic sense composition and live fake-ROS integration before
-starting optional visual shadow extraction. Keep all motion services absent.
+Read `docs/orin-nx/architecture.md` and this log. For a new robot, add its
+profile and only the nonstandard adapters it requires, then run the installer
+in dry-run mode. Do not add motion modules to `orin-sense-headless`.
 
 ## Open Questions
 

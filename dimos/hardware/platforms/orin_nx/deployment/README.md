@@ -10,7 +10,6 @@ Validate a deployment without writing files:
   --repo /opt/dimos \
   --profile /etc/dimos/profiles/robot.json \
   --runtime-user dimos \
-  --sense-blueprint robot-sense-headless \
   --dry-run
 ```
 
@@ -21,12 +20,16 @@ sudo /opt/dimos/.venv/bin/python -m \
   dimos.hardware.platforms.orin_nx.deployment.install \
   --repo /opt/dimos \
   --profile /etc/dimos/profiles/robot.json \
-  --runtime-user dimos \
-  --sense-blueprint robot-sense-headless
+  --runtime-user dimos
 ```
 
 The installer writes `/etc/dimos/orin-nx.env` and three systemd units, then
 runs `systemctl daemon-reload`. It never enables or starts a service.
+
+The default sense entry is `orin-sense-headless`. It reads `DIMOS_PROFILE`
+and composes only the generic ROS 2 sensor bridge and bounded headless Rerun
+bridge. Use `--sense-blueprint` only when a robot needs a platform-specific
+composition.
 
 Both runtime units require the NVMe health gate. They also reject profiles with
 motion output enabled. A future robot-specific motion service must have its own

@@ -1,0 +1,13 @@
+{
+  "platform": "orin_nx_unconfigured",
+  "control": {
+    "backend": "none",
+    "enabled": false
+  },
+  "runtime": {
+    "rerun_memory": "128MB",
+    "workers": 2,
+    "memory_high_mb": 1024,
+    "memory_max_mb": 1280
+  }
+}
