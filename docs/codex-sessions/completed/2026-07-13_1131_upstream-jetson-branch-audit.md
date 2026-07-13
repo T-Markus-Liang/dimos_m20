@@ -7,7 +7,7 @@
 - Project: dimos-orin-nx
 - Workspace: VM `/home/markus/work/dimos_wd_m20`
 - Task: evaluate upstream Jetson and Orin Nano deployment work and integrate suitable content into wd/orin_nx
-- Status: active
+- Status: completed
 - Branch if relevant: `wd/orin_nx`
 
 ## User Request Summary
@@ -59,14 +59,17 @@ the findings and integrate only content suitable for the portable
 
 ## Current State
 
-- Branch audit and selected integration are complete.
-- Final documentation/code review, commit and push remain.
+- Branch audit, selected integration and verification are complete.
+- Implementation commit `41476166377f5f39b117e78fb61b4cfe4884cf11`
+  is pushed to `origin/wd/orin_nx`.
+- Local `HEAD` and `origin/wd/orin_nx` were verified equal after the push.
 
 ## Resume Instructions
 
-Read `docs/orin-nx/jetson-compatibility.md` and
-`dimos/hardware/platforms/orin_nx/compatibility.py`. Re-run the focused tests,
-then commit and push if the final diff remains scoped.
+No remaining work for this audit. For future Jetson deployment, read
+`docs/orin-nx/jetson-compatibility.md`, run the compatibility preflight on the
+target device, and store its output under `~/dimos-evidence/` before enabling
+optional GPU dependencies.
 
 ## Open Questions
 
