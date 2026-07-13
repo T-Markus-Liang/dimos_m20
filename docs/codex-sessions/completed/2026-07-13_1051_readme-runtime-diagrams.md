@@ -7,7 +7,7 @@
 - Project: dimos-orin-nx
 - Workspace: VM `/home/markus/work/dimos_wd_m20`
 - Task: improve the README repository overview with clear DimOS runtime and control-plane diagrams
-- Status: active
+- Status: completed
 - Branch if relevant: `wd/orin_nx`
 
 ## User Request Summary
@@ -32,6 +32,9 @@ Improve the visualization and add whole-system runtime flow diagrams.
 - Rendered both Mermaid diagrams with Mermaid CLI 11.16.0 and Chrome. The first
   draft was simplified after visual review to remove crossing publish-back
   arrows; both final diagrams render successfully.
+- Committed and pushed as
+  `423c71e0 docs(readme): visualize DimOS runtime architecture`. Local and
+  remote heads matched at `423c71e027b71021d5050f63bf226f737bb25d48`.
 
 ## Decisions
 
@@ -43,7 +46,7 @@ Improve the visualization and add whole-system runtime flow diagrams.
 
 ## Current State
 
-- README editing and visual verification are complete; commit and push remain.
+- README diagrams are visually verified and pushed to `origin/wd/orin_nx`.
 
 ## Resume Instructions
 
