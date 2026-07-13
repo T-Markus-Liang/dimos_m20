@@ -21,6 +21,7 @@
 [Installation](#installation) •
 [Agent CLI & MCP](#agent-cli-and-mcp) •
 [Blueprints](#blueprints) •
+[How DimOS Works](#how-dimos-works) •
 [Repository Structure](#repository-structure) •
 [Development](#development)
 
@@ -305,7 +306,104 @@ if __name__ == "__main__":
 
 <img src="assets/readme/dimos_demo.gif" alt="DimOS Demo" width="100%">
 
+# How DimOS Works
+
+DimOS is a graph of typed Modules. Hardware, replay and simulation Modules
+publish native messages onto a stream fabric; capability Modules consume those
+streams and publish derived state or commands. The selected transport carries
+streams between local workers or networked computers.
+
+```mermaid
+flowchart TB
+    subgraph Inputs["Robot and data sources"]
+        Sensors["Sensors<br/>camera, lidar, IMU, odometry"]
+        Replay["Replay / simulation"]
+        Goals["Operator, API or agent goals"]
+    end
+
+    subgraph Runtime["DimOS runtime data plane"]
+        InputAdapters["Input adapters<br/>hardware / robot"]
+        Fabric["Typed stream fabric<br/>msgs + specs<br/>LCM / Zenoh / SHM / DDS"]
+        Perception["Perception"]
+        WorldModel["Mapping + localization<br/>spatial memory"]
+        Decisions["Planning + navigation<br/>agents + skills"]
+        Control["Control arbitration<br/>limits + watchdogs"]
+    end
+
+    subgraph Outputs["Outputs and observability"]
+        OutputAdapters["Drive train / manipulator adapters"]
+        Robot["Robot actuators"]
+        Observe["Rerun / Web / diagnostics"]
+    end
+
+    Sensors --> InputAdapters
+    Replay --> InputAdapters
+    InputAdapters --> Fabric
+    Fabric --> Perception
+    Perception --> WorldModel
+    WorldModel --> Decisions
+    Goals --> Decisions
+    Decisions --> Control
+    Control --> OutputAdapters
+    OutputAdapters --> Robot
+    Robot -. state feedback .-> InputAdapters
+    Fabric --> Observe
+```
+
+The diagram follows the main dependency path. In the actual graph, every
+capability can publish derived typed streams back to the fabric for other
+Modules, recording or visualization.
+
+The control plane builds and supervises that graph. It is not in the
+high-rate sensor data path.
+
+```mermaid
+flowchart TB
+    Command["dimos run<br/>CLI / daemon / systemd"]
+    Profile["Config + robot profile"]
+    Registry["Blueprint registry"]
+    Blueprint["Blueprint<br/>modules + remapping + transports"]
+    Coordinator["ModuleCoordinator"]
+    Checks["Requirements<br/>configuration validation"]
+    Workers["Worker processes"]
+    Wiring["Transport and stream wiring"]
+    Lifecycle["Start / status / stop<br/>cleanup + fault handling"]
+    Graph["Running Module graph"]
+
+    Command --> Registry
+    Registry --> Blueprint
+    Profile --> Blueprint
+    Blueprint --> Coordinator
+    Coordinator --> Checks
+    Checks --> Workers
+    Coordinator --> Wiring
+    Coordinator --> Lifecycle
+    Workers --> Graph
+    Wiring --> Graph
+    Lifecycle --> Graph
+```
+
+In practical terms:
+
+1. A Blueprint selects Modules and their configuration.
+2. The Coordinator validates requirements, allocates workers and wires streams.
+3. Modules exchange typed messages through the configured transport.
+4. Capability outputs feed navigation, agents, control and visualization.
+5. The final hardware adapter converts bounded DimOS commands into a
+   robot-specific protocol.
+
 # Repository Structure
+
+Read the source by architectural layer rather than by directory depth:
+
+| Layer | Primary directories | What to look for |
+| --- | --- | --- |
+| Runtime contracts | `dimos/core`, `protocol`, `msgs`, `spec` | Module lifecycle, typed messages, transports and RPC |
+| Hardware integration | `dimos/hardware`, `dimos/robot` | Reusable adapters versus robot-specific profiles and protocols |
+| Robot capabilities | `navigation`, `mapping`, `perception`, `memory2`, `manipulation` | Algorithms that consume and publish native streams |
+| Composition | robot and platform `blueprints.py` | Which Modules form one runnable system |
+| Operator and agent surfaces | `agents`, `skills`, `teleop`, `visualization`, `web` | Goals, skills, teleoperation and observability |
+| Deployment and acceleration | `simulation`, `native`, `docker`, `scripts` | Simulators, native implementations and system packaging |
 
 ```text
 dimos/

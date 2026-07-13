@@ -1,8 +1,10 @@
 # Codex Sessions
 
-Last updated: 2026-07-13 10:40 CST
+Last updated: 2026-07-13 10:51 CST
 
 ## Active
+
+- [2026-07-13_1051_readme-runtime-diagrams.md](/home/markus/work/dimos_wd_m20/docs/codex-sessions/active/2026-07-13_1051_readme-runtime-diagrams.md) - README runtime and orchestration diagrams verified, ready to push
 
 ## Completed
 
