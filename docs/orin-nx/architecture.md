@@ -4,6 +4,9 @@ Date: 2026-07-13
 Branch: `wd/orin_nx`
 Base: upstream `feat/wd/m20` at `98713d97`
 
+Repository-wide directory ownership and the WD baseline comparison are
+documented in [Repository Structure](../development/repository-structure.md).
+
 ## 1. Purpose
 
 `wd/orin_nx` turns the HE deployment work into a reusable DimOS edge-runtime

@@ -21,6 +21,7 @@
 [Installation](#installation) •
 [Agent CLI & MCP](#agent-cli-and-mcp) •
 [Blueprints](#blueprints) •
+[Repository Structure](#repository-structure) •
 [Development](#development)
 
 ⚠️ **Pre-Release Beta** ⚠️
@@ -303,6 +304,33 @@ if __name__ == "__main__":
 ## Demos
 
 <img src="assets/readme/dimos_demo.gif" alt="DimOS Demo" width="100%">
+
+# Repository Structure
+
+```text
+dimos/
+├── dimos/          Runtime, algorithms, adapters and robot compositions
+├── native/         Rust native components
+├── examples/       Integration and language-interoperability examples
+├── experimental/   Incubating work
+├── docs/           Usage, capability, platform and development guides
+├── data/           Runtime datasets and Git LFS pointers
+├── docker/         Container and system dependency layers
+└── scripts/        Install, maintenance and developer entry points
+```
+
+Inside the Python package, `core/`, `protocol/`, `msgs/` and `spec/`
+provide the runtime contracts. `hardware/` contains reusable device/protocol
+adapters, while `robot/` contains platform-specific profiles and Blueprint
+composition. Navigation, mapping, perception, manipulation and simulation stay
+in their domain packages.
+
+`wd/orin_nx` is additive to the `feat/wd/m20` baseline: it keeps the WD M20
+stack and adds portable lifecycle hardening, generic ROS adapters, strict robot
+profiles and a fail-closed Orin NX runtime.
+
+See [Repository Structure](docs/development/repository-structure.md) for the
+complete directory responsibilities and WD-to-Orin branch evolution.
 
 # Development
 
