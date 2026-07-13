@@ -58,6 +58,8 @@ def rerun_init(
 
         connect_url = grpc_config["connect_url"]
         server_memory_limit = grpc_config["server_memory_limit"]
+        cors_allow_origin = grpc_config.get("cors_allow_origin")
+        newest_first = bool(grpc_config.get("newest_first", False))
         parsed = urlparse(connect_url.replace("rerun+", "", 1))
         grpc_port = parsed.port or RERUN_GRPC_PORT
         grpc_host = parsed.hostname or "127.0.0.1"
@@ -74,6 +76,8 @@ def rerun_init(
             server_uri = rr.serve_grpc(
                 grpc_port=grpc_port,
                 server_memory_limit=server_memory_limit,
+                cors_allow_origin=cors_allow_origin,
+                newest_first=newest_first,
             )
             logger.info(f"Rerun gRPC server ready at {server_uri}")
 

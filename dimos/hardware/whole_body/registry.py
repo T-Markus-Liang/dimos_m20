@@ -71,14 +71,12 @@ class WholeBodyAdapterRegistry:
         return sorted(self._adapters.keys())
 
     def discover(self) -> None:
-        """Discover and register whole-body hardware adapters.
-
-        Walks the hardware whole-body package recursively looking for
-        ``adapter.py`` modules that provide a ``register(registry)`` function.
-        """
+        """Discover and register whole-body hardware and sim adapters."""
         import dimos.hardware.whole_body as hw_pkg
+        import dimos.simulation.adapters.whole_body as sim_pkg
 
         self._discover_in("dimos.hardware.whole_body", hw_pkg.__path__[0], max_depth=2)
+        self._discover_modules_in("dimos.simulation.adapters.whole_body", sim_pkg.__path__[0])
 
     def _discover_in(self, pkg_path: str, dir_path: str, *, max_depth: int) -> None:
         for entry in sorted(os.listdir(dir_path)):
@@ -95,6 +93,20 @@ class WholeBodyAdapterRegistry:
                     self._discover_in(sub_pkg_path, entry_path, max_depth=max_depth - 1)
                 else:
                     logger.warning(f"Skipping whole-body adapter {entry}: {e}")
+                continue
+            if hasattr(mod, "register"):
+                mod.register(self)
+
+    def _discover_modules_in(self, pkg_path: str, dir_path: str) -> None:
+        """Discover flat modules that expose ``register(registry)``."""
+        for entry in sorted(os.listdir(dir_path)):
+            if not entry.endswith(".py") or entry.startswith(("_", ".")):
+                continue
+            module_name = entry[:-3]
+            try:
+                mod = importlib.import_module(f"{pkg_path}.{module_name}")
+            except ImportError as e:
+                logger.warning(f"Skipping whole-body adapter {module_name}: {e}")
                 continue
             if hasattr(mod, "register"):
                 mod.register(self)

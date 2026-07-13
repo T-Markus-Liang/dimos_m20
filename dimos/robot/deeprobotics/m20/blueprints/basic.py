@@ -25,10 +25,13 @@ from typing import Any
 from dimos.core.coordination.blueprints import autoconnect
 from dimos.mapping.ray_tracing.module import RayTracingVoxelMap
 from dimos.navigation.basic_path_follower.module import BasicPathFollower
+from dimos.navigation.dannav.holonomic_tc.module import DanHolonomicTC
+from dimos.navigation.dannav.local_planner.module import DanLocalPlanner
 from dimos.navigation.movement_manager.movement_manager import MovementManager
 from dimos.navigation.nav_3d.mls_planner.goal_relay import GoalRelay
 from dimos.navigation.nav_3d.mls_planner.mls_planner_native import MLSPlannerNative
 from dimos.robot.deeprobotics.m20.connection import M20Connection
+from dimos.robot.deeprobotics.m20.mujoco_sim import M20MujocoSimConnection
 from dimos.robot.deeprobotics.m20.tf import M20TF
 from dimos.visualization.rerun.bridge import RerunBridgeModule
 from dimos.visualization.rerun.websocket_server import RerunWebSocketServer
@@ -69,9 +72,11 @@ def m20_rerun_blueprint() -> Any:
 rerun = autoconnect(
     RerunBridgeModule.blueprint(
         blueprint=m20_rerun_blueprint,
+        memory_limit="1GiB",
+        newest_first=True,
         max_hz={
-            "world/color_image": 0,
-            "world/color_image_rear": 0,
+            "world/color_image": 1.0,
+            "world/color_image_rear": 1.0,
             "world/global_map": 1.0,
             "world/local_map": 2.0,
         },
@@ -143,6 +148,50 @@ m20_nav_3d = autoconnect(
     ),
     MovementManager.blueprint(),
 ).global_config(n_workers=10)
+
+# m20_nav + the MLS planner stabilized by DanLocalPlanner and tracked by
+# DanHolonomicTC. GoalRelay's PoseStamped start_pose is reused as odom for the
+# Dan stack so the follower sees the same map-frame pose the planner uses.
+m20_simple_nav = autoconnect(
+    m20_nav,
+    GoalRelay.blueprint().remappings([(GoalRelay, "odometry", "slam_odom")]),
+    MLSPlannerNative.blueprint(
+        world_frame="map",
+        voxel_size=voxel_size,
+        robot_height=0.6,
+        wall_clearance_m=0.2,
+        wall_buffer_m=0.75,
+        wall_buffer_weight=100.0,
+        step_threshold_m=0.25,
+        step_penalty_weight=1.0,
+        viz_publish_hz=1.0,
+    ).remappings(
+        [
+            (MLSPlannerNative, "global_map", "global_map_unused"),
+            (MLSPlannerNative, "path", "planner_path"),
+        ]
+    ),
+    DanLocalPlanner.blueprint(resample_spacing_m=0.1).remappings(
+        [(DanLocalPlanner, "odom", "start_pose")]
+    ),
+    DanHolonomicTC.blueprint(run_profile="walk").remappings(
+        [(DanHolonomicTC, "odom", "start_pose")]
+    ),
+    MovementManager.blueprint(),
+).global_config(n_workers=10)
+
+# Alias used by the current team discussion and test report terminology.
+m20_dan_nav = m20_simple_nav
+
+m20_dan_nav_sim = autoconnect(
+    m20_simple_nav,
+    M20MujocoSimConnection.blueprint(),
+    M20TF.blueprint().remappings([(M20TF, "odometry", "slam_odom")]),
+).global_config(
+    n_workers=11,
+    robot_model="unitree_go2",
+    simulation="mujoco",
+)
 
 m20_api = autoconnect(
     m20_nav,

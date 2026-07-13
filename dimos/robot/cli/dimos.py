@@ -46,6 +46,7 @@ from dimos.mapping.utils.cli.replay_marker import main as _map_replay_marker_mai
 from dimos.mapping.utils.cli.summary import main as _map_summary_main
 from dimos.robot.unitree.go2.cli.go2tool import app as go2tool_app
 from dimos.utils.logging_config import setup_logger
+from dimos.utils.viewer_urls import format_viewer_access_hints
 from dimos.visualization.rerun.constants import RerunOpenOption
 
 if TYPE_CHECKING:
@@ -222,6 +223,19 @@ def load_config_args(config: type[BaseModel], args: Iterable[str], path: Path) -
     return kwargs  # type: ignore[no-any-return]
 
 
+def _viewer_access_hints(config: GlobalConfig) -> str:
+    return format_viewer_access_hints(
+        listen_host=config.listen_host,
+        rerun_ws_port=config.rerun_websocket_server_port,
+    )
+
+
+def _echo_viewer_access_hints(config: GlobalConfig) -> None:
+    if config.listen_host in {"127.0.0.1", "localhost", "::1"}:
+        return
+    typer.echo(_viewer_access_hints(config))
+
+
 @main.command()
 def run(
     ctx: typer.Context,
@@ -311,6 +325,7 @@ def run(
         typer.echo(f"  Log:       {log_dir}")
         typer.echo("  Stop:      dimos stop")
         typer.echo("  Status:    dimos status")
+        _echo_viewer_access_hints(global_config)
 
         coordinator.suppress_console()
 
@@ -349,6 +364,7 @@ def run(
         # default so Ctrl+C raises KeyboardInterrupt and the try/finally below
         # runs with a visible traceback.
         install_signal_handlers(entry, coordinator, sigint=False)
+        _echo_viewer_access_hints(global_config)
         try:
             coordinator.loop()
         finally:
@@ -377,6 +393,9 @@ def status() -> None:
     typer.echo(f"  Blueprint: {entry.blueprint}")
     typer.echo(f"  Uptime:    {uptime}")
     typer.echo(f"  Log:       {entry.log_dir}")
+    run_config = GlobalConfig()
+    run_config.update(**entry.config_overrides)
+    _echo_viewer_access_hints(run_config)
 
 
 @main.command()

@@ -29,7 +29,13 @@ import shutil
 
 from dimos.core.global_config import GlobalConfig
 from dimos.protocol.pubsub.impl.lcmpubsub import LCM
-from dimos.visualization.rerun.bridge import Config, _resolve_pubsubs
+from dimos.visualization.rerun.bridge import (
+    Config,
+    _effective_rerun_open,
+    _effective_rerun_web,
+    _cors_allow_origins_for_host,
+    _resolve_pubsubs,
+)
 
 
 class TestViewerBinaryInstallation:
@@ -125,6 +131,61 @@ class TestBridgeSpawnLogic:
 class ExplicitPubSubOverride:
     def subscribe_all(self, callback):
         return lambda: None
+
+
+class TestBridgeCorsOrigins:
+    def test_wildcard_host_allows_local_lan_origins(self, monkeypatch):
+        monkeypatch.setattr(
+            "dimos.visualization.rerun.bridge.get_local_ips",
+            lambda: [("192.168.64.3", "enp0s1")],
+        )
+
+        assert _cors_allow_origins_for_host("0.0.0.0") == [
+            "http://192.168.64.3:*",
+            "https://192.168.64.3:*",
+        ]
+
+    def test_explicit_host_allows_that_origin(self):
+        assert "http://10.0.0.5:*" in _cors_allow_origins_for_host("10.0.0.5")
+
+
+class TestBridgeGlobalViewerConfig:
+    def test_global_rerun_open_used_when_module_not_explicit(self):
+        config = Config(g=GlobalConfig(rerun_open="web", rerun_web=True))
+
+        assert _effective_rerun_open(config) == "web"
+        assert _effective_rerun_web(config) is True
+
+    def test_module_rerun_open_overrides_global_config(self):
+        config = Config(
+            rerun_open="none",
+            rerun_web=False,
+            g=GlobalConfig(rerun_open="web", rerun_web=True),
+        )
+
+        assert _effective_rerun_open(config) == "none"
+        assert _effective_rerun_web(config) is False
+
+
+
+class TestBridgeLiveRecordingConfig:
+    def test_bridge_passes_newest_first_to_rerun_init(self):
+        from dimos.visualization.rerun.bridge import RerunBridgeModule
+
+        src = inspect.getsource(RerunBridgeModule.start)
+
+        assert "\"newest_first\": self.config.newest_first" in src
+
+    def test_m20_rerun_defaults_to_live_friendly_cache(self):
+        from dimos.robot.deeprobotics.m20.blueprints.basic import rerun
+
+        bridge_atom = rerun.blueprints[0]
+
+        assert bridge_atom.kwargs["memory_limit"] == "1GiB"
+        assert bridge_atom.kwargs["newest_first"] is True
+        max_hz = bridge_atom.kwargs["max_hz"]
+        assert max_hz["world/color_image"] == 1.0
+        assert max_hz["world/color_image_rear"] == 1.0
 
 
 class TestBridgePubsubResolution:

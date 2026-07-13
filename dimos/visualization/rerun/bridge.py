@@ -212,6 +212,46 @@ def _resolve_pubsubs(config: Any) -> list[SubscribeAllCapable[Any, Any]]:
     return _default_pubsubs(getattr(config, "g", config))
 
 
+def _config_field_was_set(config: Any, field_name: str) -> bool:
+    fields_set = cast("set[str]", getattr(config, "model_fields_set", set()))
+    return field_name in fields_set
+
+
+def _effective_rerun_open(config: Any) -> RerunOpenOption:
+    if _config_field_was_set(config, "rerun_open"):
+        return cast("RerunOpenOption", config.rerun_open)
+    return cast(
+        "RerunOpenOption",
+        getattr(getattr(config, "g", config), "rerun_open", config.rerun_open),
+    )
+
+
+def _effective_rerun_web(config: Any) -> bool:
+    if _config_field_was_set(config, "rerun_web"):
+        return bool(config.rerun_web)
+    return bool(getattr(getattr(config, "g", config), "rerun_web", config.rerun_web))
+
+
+def _cors_allow_origins_for_host(host: str) -> list[str]:
+    """Allow browser viewers served over LAN to fetch the Rerun gRPC proxy."""
+    origins: set[str] = set()
+
+    def add_origin_host(origin_host: str) -> None:
+        if not origin_host or origin_host in {"0.0.0.0", "::"}:
+            return
+        origins.add(f"http://{origin_host}:*")
+        origins.add(f"https://{origin_host}:*")
+
+    if host in {"0.0.0.0", "::", ""}:
+        for ip, _iface in get_local_ips():
+            if not ip.startswith("127."):
+                add_origin_host(ip)
+    else:
+        add_origin_host(host)
+
+    return sorted(origins)
+
+
 class Config(ModuleConfig):
     """Configuration for RerunBridgeModule.
 
@@ -233,6 +273,7 @@ class Config(ModuleConfig):
     topic_to_entity: Callable[[Any], str] | None = None
     connect_url: str | None = None
     memory_limit: str = "25%"
+    newest_first: bool = False
     rerun_open: RerunOpenOption = RERUN_OPEN_DEFAULT
     rerun_web: bool = RERUN_ENABLE_WEB
     web_port: int = RERUN_WEB_VIEWER_PORT
@@ -394,11 +435,19 @@ class RerunBridgeModule(Module):
         if connect_url is None:
             connect_url = f"rerun+http://{self.host}:{RERUN_GRPC_PORT}/proxy"
 
+        logger.info(
+            "Rerun bridge serving recording",
+            memory_limit=self.config.memory_limit,
+            newest_first=self.config.newest_first,
+        )
+
         server_uri = rerun_init(
             start_grpc=True,
             grpc_config={
                 "connect_url": connect_url,
                 "server_memory_limit": self.config.memory_limit,
+                "cors_allow_origin": _cors_allow_origins_for_host(self.host),
+                "newest_first": self.config.newest_first,
             },
         )
         assert server_uri is not None  # start_grpc=True guarantees a URI
@@ -406,14 +455,26 @@ class RerunBridgeModule(Module):
         parsed = urlparse(connect_url.replace("rerun+", "", 1))
         grpc_port = parsed.port or RERUN_GRPC_PORT
 
-        if self.config.rerun_open not in get_args(RerunOpenOption):
+        rerun_open = _effective_rerun_open(self.config)
+        rerun_web = _effective_rerun_web(self.config)
+        if (
+            rerun_open != self.config.rerun_open
+            or rerun_web != self.config.rerun_web
+        ):
+            logger.info(
+                "Rerun bridge using global viewer config",
+                rerun_open=rerun_open,
+                rerun_web=rerun_web,
+            )
+
+        if rerun_open not in get_args(RerunOpenOption):
             logger.warning(
-                f"rerun_open was {self.config.rerun_open} which is not one of "
+                f"rerun_open was {rerun_open} which is not one of "
                 f"{get_args(RerunOpenOption)}"
             )
 
         spawned = False
-        if self.config.rerun_open in ("native", "both"):
+        if rerun_open in ("native", "both"):
             try:
                 import rerun_bindings
 
@@ -446,8 +507,8 @@ class RerunBridgeModule(Module):
                         exc_info=True,
                     )
 
-        open_web = self.config.rerun_open == "web" or self.config.rerun_open == "both"
-        if open_web or self.config.rerun_web:
+        open_web = rerun_open == "web" or rerun_open == "both"
+        if open_web or rerun_web:
             rr.serve_web_viewer(
                 connect_to=server_uri,
                 open_browser=open_web,
@@ -456,8 +517,8 @@ class RerunBridgeModule(Module):
 
         # TODO: `spawned` is supposed to be false when run on the G1 (because viewer doesn't have a display) somehow it returns true
         if (
-            self.config.rerun_open == "none"
-            or (self.config.rerun_open == "native" and not spawned)
+            rerun_open == "none"
+            or (rerun_open == "native" and not spawned)
             or self.host == "0.0.0.0"
         ):
             self._log_connect_hints(grpc_port)
@@ -496,7 +557,7 @@ class RerunBridgeModule(Module):
         lines = [
             "",
             "=" * columns,
-            "Rerun gRPC server running (no viewer opened)",
+            "Rerun gRPC server running",
             "",
             "Connect a viewer:",
             f"  dimos-viewer --connect {local_grpc} --ws-url {local_ws}",

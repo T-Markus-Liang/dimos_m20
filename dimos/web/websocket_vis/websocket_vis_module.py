@@ -28,6 +28,7 @@ import time
 from typing import Any
 import webbrowser
 
+import numpy as np
 from dimos_lcm.std_msgs import Bool
 from reactivex.disposable import Disposable
 import socketio  # type: ignore[import-untyped]
@@ -47,18 +48,20 @@ _COMMAND_CENTER_DIR = (
 
 from dimos.constants import DEFAULT_THREAD_JOIN_TIMEOUT
 from dimos.core.core import rpc
-from dimos.core.global_config import global_config
 from dimos.core.module import Module, ModuleConfig
 from dimos.core.stream import In, Out
 from dimos.mapping.models import LatLon
 from dimos.mapping.occupancy.gradient import gradient
 from dimos.mapping.occupancy.inflation import simple_inflate
+from dimos.msgs.geometry_msgs.PointStamped import PointStamped
 from dimos.msgs.geometry_msgs.PoseStamped import PoseStamped
 from dimos.msgs.geometry_msgs.Twist import Twist
 from dimos.msgs.geometry_msgs.TwistStamped import TwistStamped
 from dimos.msgs.geometry_msgs.Vector3 import Vector3
+from dimos.msgs.nav_msgs.Odometry import Odometry
 from dimos.msgs.nav_msgs.OccupancyGrid import OccupancyGrid
 from dimos.msgs.nav_msgs.Path import Path
+from dimos.msgs.sensor_msgs.PointCloud2 import PointCloud2
 from dimos.utils.logging_config import setup_logger
 
 from .optimized_costmap import OptimizedCostmapEncoder
@@ -71,6 +74,20 @@ _browser_opened = False
 
 class WebsocketConfig(ModuleConfig):
     port: int = 7779
+    fallback_costmap_enabled: bool = True
+    fallback_costmap_resolution: float = 0.2
+    fallback_costmap_min_size_m: float = 20.0
+    fallback_costmap_margin_m: float = 10.0
+    pointcloud_costmap_enabled: bool = True
+    pointcloud_costmap_resolution: float = 0.2
+    pointcloud_costmap_max_hz: float = 2.0
+    pointcloud_costmap_max_points: int = 50_000
+    pointcloud_costmap_min_size_m: float = 20.0
+    pointcloud_costmap_max_size_m: float = 40.0
+    pointcloud_costmap_padding_m: float = 1.0
+    pointcloud_costmap_min_z: float = -2.0
+    pointcloud_costmap_max_z: float = 3.0
+    pointcloud_costmap_radius_cells: int = 1
 
 
 class WebsocketVisModule(Module):
@@ -96,12 +113,15 @@ class WebsocketVisModule(Module):
 
     # LCM inputs
     odom: In[PoseStamped]
+    slam_odom: In[Odometry]
     gps_location: In[LatLon]
     path: In[Path]
     global_costmap: In[OccupancyGrid]
+    local_map: In[PointCloud2]
 
     # LCM outputs
     goal_request: Out[PoseStamped]
+    clicked_point: Out[PointStamped]
     gps_goal: Out[LatLon]
     explore_cmd: Out[Bool]
     stop_explore_cmd: Out[Bool]
@@ -126,6 +146,9 @@ class WebsocketVisModule(Module):
         self.vis_state = {}  # type: ignore[var-annotated]
         self.state_lock = threading.Lock()
         self.costmap_encoder = OptimizedCostmapEncoder(chunk_size=64)
+        self._has_real_costmap = False
+        self._last_pointcloud_costmap_time = 0.0
+        self._last_robot_xy: tuple[float, float] | None = None
 
         # Track GPS goal points for visualization
         self.gps_goal_points: list[dict[str, float]] = []
@@ -179,6 +202,12 @@ class WebsocketVisModule(Module):
             ...
 
         try:
+            unsub = self.slam_odom.subscribe(self._on_slam_odom)
+            self.register_disposable(Disposable(unsub))
+        except Exception:
+            ...
+
+        try:
             unsub = self.gps_location.subscribe(self._on_gps_location)
             self.register_disposable(Disposable(unsub))
         except Exception:
@@ -192,6 +221,12 @@ class WebsocketVisModule(Module):
 
         try:
             unsub = self.global_costmap.subscribe(self._on_global_costmap)
+            self.register_disposable(Disposable(unsub))
+        except Exception:
+            ...
+
+        try:
+            unsub = self.local_map.subscribe(self._on_local_map)
             self.register_disposable(Disposable(unsub))
         except Exception:
             ...
@@ -245,7 +280,12 @@ class WebsocketVisModule(Module):
             """Serve the command center 2D visualization (built React app)."""
             index_file = get_data("command_center.html")
             if index_file.exists():
-                return FileResponse(index_file, media_type="text/html")
+                html = index_file.read_text(encoding="utf-8")
+                html = html.replace(
+                    'Ql("ws://localhost:7779")',
+                    "Ql(window.location.origin)",
+                )
+                return Response(content=html, media_type="text/html")
             else:
                 return Response(
                     content="Command center not built. Run: cd dimos/web/command-center-extension && npm install && npm run build:standalone",
@@ -287,7 +327,14 @@ class WebsocketVisModule(Module):
                 orientation=(0, 0, 0, 1),  # Default orientation
                 frame_id="world",
             )
+            point = PointStamped(
+                x=float(position[0]),
+                y=float(position[1]),
+                z=0.0,
+                frame_id="map",
+            )
             self.goal_request.publish(goal)
+            self.clicked_point.publish(point)
             logger.info(
                 "Click goal published", x=round(goal.position.x, 3), y=round(goal.position.y, 3)
             )
@@ -355,7 +402,7 @@ class WebsocketVisModule(Module):
     def _run_uvicorn_server(self) -> None:
         config = uvicorn.Config(
             self.app,  # type: ignore[arg-type]
-            host=global_config.listen_host,
+            host=self.config.g.listen_host,
             port=self.config.port,
             log_level="error",  # Reduce verbosity
         )
@@ -364,8 +411,17 @@ class WebsocketVisModule(Module):
 
     def _on_robot_pose(self, msg: PoseStamped) -> None:
         pose_data = {"type": "vector", "c": [msg.position.x, msg.position.y, msg.position.z]}
+        self._last_robot_xy = (msg.position.x, msg.position.y)
         self.vis_state["robot_pose"] = pose_data
         self._emit("robot_pose", pose_data)
+        self._ensure_fallback_costmap(msg.position.x, msg.position.y)
+
+    def _on_slam_odom(self, msg: Odometry) -> None:
+        pose_data = {"type": "vector", "c": [msg.position.x, msg.position.y, msg.position.z]}
+        self._last_robot_xy = (msg.position.x, msg.position.y)
+        self.vis_state["robot_pose"] = pose_data
+        self._emit("robot_pose", pose_data)
+        self._ensure_fallback_costmap(msg.position.x, msg.position.y)
 
     def _on_gps_location(self, msg: LatLon) -> None:
         pose_data = {"lat": msg.lat, "lon": msg.lon}
@@ -379,7 +435,143 @@ class WebsocketVisModule(Module):
         self._emit("path", path_data)
 
     def _on_global_costmap(self, msg: OccupancyGrid) -> None:
+        self._has_real_costmap = True
         costmap_data = self._process_costmap(msg)
+        self.vis_state["costmap"] = costmap_data
+        self._emit("costmap", costmap_data)
+
+    def _on_local_map(self, msg: PointCloud2) -> None:
+        if not self.config.pointcloud_costmap_enabled or self._has_real_costmap:
+            return
+
+        max_hz = float(self.config.pointcloud_costmap_max_hz)
+        now = time.monotonic()
+        if max_hz > 0 and now - self._last_pointcloud_costmap_time < 1.0 / max_hz:
+            return
+        self._last_pointcloud_costmap_time = now
+
+        try:
+            points = msg.points_f32()
+        except Exception:
+            logger.debug("Failed to decode local_map point cloud for 2D web view", exc_info=True)
+            return
+
+        costmap_data = self._pointcloud_to_costmap(points)
+        if costmap_data is None:
+            return
+
+        self.vis_state["costmap"] = costmap_data
+        self._emit("costmap", costmap_data)
+
+    def _pointcloud_to_costmap(self, points: np.ndarray) -> dict[str, Any] | None:
+        if points.size == 0:
+            return None
+
+        points = np.asarray(points, dtype=np.float32)
+        if points.ndim != 2 or points.shape[1] < 3:
+            return None
+
+        finite = np.isfinite(points[:, 0]) & np.isfinite(points[:, 1]) & np.isfinite(points[:, 2])
+        z_mask = (points[:, 2] >= self.config.pointcloud_costmap_min_z) & (
+            points[:, 2] <= self.config.pointcloud_costmap_max_z
+        )
+        points = points[finite & z_mask]
+        if len(points) == 0:
+            return None
+
+        max_points = max(1, int(self.config.pointcloud_costmap_max_points))
+        if len(points) > max_points:
+            stride = int(np.ceil(len(points) / max_points))
+            points = points[::stride]
+
+        if self._last_robot_xy is not None:
+            center_x, center_y = self._last_robot_xy
+        else:
+            center_x = float((points[:, 0].min() + points[:, 0].max()) * 0.5)
+            center_y = float((points[:, 1].min() + points[:, 1].max()) * 0.5)
+
+        max_size_m = max(float(self.config.pointcloud_costmap_max_size_m), 1.0)
+        half_max = max_size_m * 0.5
+        in_window = (
+            (points[:, 0] >= center_x - half_max)
+            & (points[:, 0] <= center_x + half_max)
+            & (points[:, 1] >= center_y - half_max)
+            & (points[:, 1] <= center_y + half_max)
+        )
+        points = points[in_window]
+        if len(points) == 0:
+            return None
+
+        padding = max(float(self.config.pointcloud_costmap_padding_m), 0.0)
+        min_x = float(min(points[:, 0].min(), center_x) - padding)
+        max_x = float(max(points[:, 0].max(), center_x) + padding)
+        min_y = float(min(points[:, 1].min(), center_y) - padding)
+        max_y = float(max(points[:, 1].max(), center_y) + padding)
+
+        min_size_m = max(float(self.config.pointcloud_costmap_min_size_m), 1.0)
+        if max_x - min_x < min_size_m:
+            min_x = center_x - min_size_m * 0.5
+            max_x = center_x + min_size_m * 0.5
+        if max_y - min_y < min_size_m:
+            min_y = center_y - min_size_m * 0.5
+            max_y = center_y + min_size_m * 0.5
+
+        resolution = max(float(self.config.pointcloud_costmap_resolution), 0.02)
+        width = max(10, int(np.ceil((max_x - min_x) / resolution)))
+        height = max(10, int(np.ceil((max_y - min_y) / resolution)))
+        grid = np.full((height, width), -1, dtype=np.int8)
+
+        ix = ((points[:, 0] - min_x) / resolution).astype(np.int32)
+        iy = ((points[:, 1] - min_y) / resolution).astype(np.int32)
+        valid = (ix >= 0) & (ix < width) & (iy >= 0) & (iy < height)
+        ix = ix[valid]
+        iy = iy[valid]
+        if len(ix) == 0:
+            return None
+
+        radius = max(0, int(self.config.pointcloud_costmap_radius_cells))
+        if radius == 0:
+            grid[iy, ix] = 100
+        else:
+            for dy in range(-radius, radius + 1):
+                yy = np.clip(iy + dy, 0, height - 1)
+                for dx in range(-radius, radius + 1):
+                    xx = np.clip(ix + dx, 0, width - 1)
+                    grid[yy, xx] = 100
+
+        grid_data = self.costmap_encoder.encode_costmap(grid, force_full=True)
+        return {
+            "type": "costmap",
+            "grid": grid_data,
+            "origin": {"type": "vector", "c": [min_x, min_y, 0]},
+            "resolution": resolution,
+            "origin_theta": 0,
+        }
+
+    def _ensure_fallback_costmap(self, x: float, y: float) -> None:
+        if not self.config.fallback_costmap_enabled or self._has_real_costmap:
+            return
+        if "costmap" in self.vis_state:
+            return
+
+        resolution = max(float(self.config.fallback_costmap_resolution), 0.01)
+        size_m = max(
+            float(self.config.fallback_costmap_min_size_m),
+            float(self.config.fallback_costmap_margin_m) * 2.0,
+        )
+        cells = max(10, int(size_m / resolution))
+        grid = np.zeros((cells, cells), dtype=np.int8)
+        grid_data = self.costmap_encoder.encode_costmap(grid, force_full=True)
+        origin_x = x - (cells * resolution / 2.0)
+        origin_y = y - (cells * resolution / 2.0)
+
+        costmap_data = {
+            "type": "costmap",
+            "grid": grid_data,
+            "origin": {"type": "vector", "c": [origin_x, origin_y, 0]},
+            "resolution": resolution,
+            "origin_theta": 0,
+        }
         self.vis_state["costmap"] = costmap_data
         self._emit("costmap", costmap_data)
 
