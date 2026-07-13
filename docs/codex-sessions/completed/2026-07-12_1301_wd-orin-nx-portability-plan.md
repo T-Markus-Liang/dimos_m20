@@ -7,7 +7,7 @@
 - Project: dimos-orin-nx
 - Workspace: VM `/home/markus/work/dimos_wd_m20`
 - Task: create `wd/orin_nx` from WD M20 and plan portable integration of validated HE lightweight deployment work
-- Status: active - requested runtime scope implemented; final push pending
+- Status: completed - portable runtime foundation and generic sense delivered
 - Branch if relevant: `wd/orin_nx` from `feat/wd/m20` at `98713d97`
 
 ## User Request Summary
@@ -92,6 +92,10 @@ communication into reusable templates for other Orin NX robot platforms.
 - Verification: 35 focused tests pass, Ruff passes, registry consistency passes
   in CI mode, the HE profile produces only sensor and Rerun modules, and
   rendered systemd units pass `systemd-analyze verify`.
+- Committed and pushed the common sense and architecture closeout as
+  `5ecab38c feat(orin-nx): add profile-driven sense blueprint`. Local and
+  remote branch heads matched at
+  `5ecab38c367de8aa7c78da6b374b1ce9b69d94d9`.
 
 ## Decisions
 
@@ -112,7 +116,8 @@ communication into reusable templates for other Orin NX robot platforms.
 - Phase 2/3 common profile, sensor and command adapters are pushed.
 - Phase 4 storage admission, service templates, installer and profile motion
   gate are committed and pushed.
-- The user-requested common sense and architecture scope is complete.
+- The user-requested common sense and architecture scope is complete and
+  pushed to `origin/wd/orin_nx`.
 - Live hardware ROS validation, graph-level publisher checks, resource soak and
   visual shadow are deliberately outside this closeout scope.
 
