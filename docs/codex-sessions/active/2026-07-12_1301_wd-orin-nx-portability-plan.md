@@ -7,7 +7,7 @@
 - Project: dimos-orin-nx
 - Workspace: VM `/home/markus/work/dimos_wd_m20`
 - Task: create `wd/orin_nx` from WD M20 and plan portable integration of validated HE lightweight deployment work
-- Status: active - Phase 1-3 core pushed; Phase 4 runtime core implemented
+- Status: active - Phase 1-4 runtime core implemented and pushed
 - Branch if relevant: `wd/orin_nx` from `feat/wd/m20` at `98713d97`
 
 ## User Request Summary
@@ -73,6 +73,10 @@ communication into reusable templates for other Orin NX robot platforms.
   syntax passes, HE profile is accepted as motion-disabled, and rendered units
   pass `systemd-analyze verify`. VM-wide netplan permission and snapd key
   warnings are unrelated to the rendered units.
+- Committed and pushed the Orin runtime stage as
+  `bfc2838b feat(orin-nx): add fail-closed deployment runtime`. Local HEAD and
+  `origin/wd/orin_nx` both resolved to
+  `bfc2838bf0f95448c69d34c2109c924536325500`.
 
 ## Decisions
 
@@ -92,7 +96,7 @@ communication into reusable templates for other Orin NX robot platforms.
 - Phase 1 is committed and pushed.
 - Phase 2/3 common profile, sensor and command adapters are pushed.
 - Phase 4 storage admission, service templates, installer and profile motion
-  gate are implemented and ready for their stage commit and push.
+  gate are committed and pushed.
 - Generic sense composition, live ROS integration, graph-level publisher
   validation, resource soak collection and visual shadow extraction remain.
 
