@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>M20 True Simple Nav 架构调查报告</title>
+  <style>
+    :root { --ink:#172126; --muted:#59676c; --paper:#f5f3ed; --panel:#fffdf8; --line:#d5d8d2; --teal:#0f766e; --teal-soft:#d8f0eb; --blue:#23658a; --blue-soft:#dceef5; --amber:#9a5b12; --amber-soft:#f8ebd2; --red:#9f3f35; --red-soft:#f9dfdb; --shadow:0 12px 30px rgba(26,38,40,.08); }
+    * { box-sizing:border-box; } html { scroll-behavior:smooth; }
+    body { margin:0; color:var(--ink); background:var(--paper); font-family:"Avenir Next","Helvetica Neue","Noto Sans CJK SC",sans-serif; line-height:1.6; }
+    .shell { max-width:1220px; margin:0 auto; padding:28px 24px 72px; }
+    .hero { padding:40px 42px; border:1px solid #b9c9c3; border-radius:8px; background:#eaf2ee; box-shadow:var(--shadow); }
+    .eyebrow,.section-kicker { margin:0 0 10px; color:var(--teal); font-size:13px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; }
+    h1,h2,h3 { margin:0; line-height:1.2; letter-spacing:0; } h1 { max-width:850px; font-family:Georgia,"Noto Serif CJK SC",serif; font-size:clamp(34px,5vw,58px); } h2 { font-size:27px; margin-bottom:12px; } h3 { font-size:18px; margin-bottom:8px; }
+    .hero p { max-width:840px; margin:18px 0 0; color:#3f4e51; font-size:18px; }.lead { max-width:920px; margin:0; color:var(--muted); font-size:17px; }
+    .meta,nav { display:flex; flex-wrap:wrap; gap:8px; } .meta { margin-top:24px; }.tag { padding:4px 10px; border:1px solid #a9b9b3; border-radius:999px; background:rgba(255,255,255,.55); color:#34464a; font-size:13px; }
+    nav { gap:16px; padding:17px 4px; border-bottom:1px solid var(--line); } nav a { color:var(--teal); font-size:14px; font-weight:650; text-decoration:none; } nav a:hover { text-decoration:underline; }
+    section { margin-top:46px; }.grid { display:grid; gap:18px; margin-top:20px; }.two { grid-template-columns:repeat(2,minmax(0,1fr)); }.three { grid-template-columns:repeat(3,minmax(0,1fr)); }
+    .card { padding:22px; border:1px solid var(--line); border-radius:7px; background:var(--panel); box-shadow:0 4px 14px rgba(26,38,40,.035); }.card p:last-child { margin-bottom:0; }
+    .callout { margin-top:20px; padding:16px 18px; border-left:4px solid var(--amber); border-radius:0 6px 6px 0; background:var(--amber-soft); }.danger { border-left-color:var(--red); background:var(--red-soft); }.callout p { margin:0; }
+    .diagram { margin-top:22px; overflow-x:auto; border:1px solid var(--line); border-radius:7px; background:#fbfcf9; box-shadow:var(--shadow); }.diagram svg { display:block; min-width:980px; width:100%; height:auto; }.diagram text { font-family:"Avenir Next","Helvetica Neue","Noto Sans CJK SC",sans-serif; fill:var(--ink); }.diagram .small { fill:#516066; font-size:13px; }.diagram .title { font-size:16px; font-weight:700; }.node { stroke-width:1.5; }.external { fill:#f1f4f2; stroke:#9aaca3; }.mapping { fill:var(--teal-soft); stroke:var(--teal); }.planning { fill:var(--blue-soft); stroke:var(--blue); }.control { fill:var(--amber-soft); stroke:var(--amber); }.platform { fill:#e7eceb; stroke:#47575b; }.risk { fill:var(--red-soft); stroke:var(--red); }
+    table { width:100%; margin-top:20px; border-collapse:collapse; background:var(--panel); font-size:14px; } th,td { padding:13px 14px; border:1px solid var(--line); text-align:left; vertical-align:top; } th { background:#e8eeea; color:#344247; font-weight:700; }
+    code { padding:1px 5px; border-radius:3px; background:#edf0ec; color:#25424b; font-family:"SFMono-Regular",Consolas,monospace; font-size:.9em; }
+    .steps { margin:22px 0 0; padding:0; list-style:none; counter-reset:steps; }.steps li { position:relative; padding:0 0 18px 58px; counter-increment:steps; }.steps li::before { position:absolute; left:0; top:0; display:grid; place-items:center; width:34px; height:34px; border-radius:50%; background:var(--teal); color:white; content:counter(steps); font-weight:700; }.steps li::after { position:absolute; left:16px; top:36px; bottom:0; width:2px; background:#b7d8d0; content:""; }.steps li:last-child::after { display:none; }.steps strong { display:block; margin-bottom:3px; }
+    .pros li::marker { color:var(--teal); }.cons li::marker { color:var(--red); }.priority { display:grid; grid-template-columns:96px 1fr; gap:16px; padding:16px 0; border-top:1px solid var(--line); }.priority:first-child { border-top:0; }.priority-label { padding:3px 8px; border-radius:3px; background:var(--blue-soft); color:var(--blue); text-align:center; font-size:13px; font-weight:700; }.priority:nth-child(2) .priority-label { background:var(--teal-soft); color:var(--teal); }.priority:nth-child(3) .priority-label { background:var(--amber-soft); color:var(--amber); }.source-list { margin:14px 0 0; padding-left:22px; color:var(--muted); } footer { margin-top:48px; padding-top:18px; border-top:1px solid var(--line); color:var(--muted); font-size:13px; }
+    @media(max-width:760px){ .shell{padding:16px 14px 48px}.hero{padding:28px 24px}.two,.three{grid-template-columns:1fr}section{margin-top:34px}th,td{padding:10px} }
+  </style>
+</head>
+<body>
+<main class="shell">
+  <header class="hero">
+    <p class="eyebrow">Architecture Investigation Report</p>
+    <h1>M20 True Simple Nav<br>架构、控制与升级建议</h1>
+    <p>针对 DeepRobotics M20 当前“真简单导航”链路，梳理从 SLAM 点云到路径规划、局部跟踪、底盘速度命令的完整闭环，并明确当前速度控制能力和推荐升级路径。</p>
+    <div class="meta"><span class="tag">MeloLong/dimos</span><span class="tag">feat/wd/m20</span><span class="tag">8cdbbfa1</span><span class="tag">m20_true_simple_nav.py</span><span class="tag">Read-only source audit</span></div>
+  </header>
+  <nav aria-label="报告目录"><a href="#scope">范围与结论</a><a href="#architecture">当前架构</a><a href="#io">模块 I/O</a><a href="#workflow">工作流程</a><a href="#control">速度与控制</a><a href="#assessment">优缺点评估</a><a href="#upgrade">升级建议</a></nav>
+
+  <section id="scope">
+    <p class="section-kicker">01 / Scope</p><h2>先固定事实，再讨论架构</h2>
+    <p class="lead">远端 <code>MeloLong/dimos:feat/wd/m20</code> 的注册表将目标脚本注册为 <code>m20-true-simple-nav</code>。本报告只分析 <code>m20_true_simple_nav.py</code> 及其直接依赖，不混入其他 M20 导航蓝图。</p>
+    <div class="callout danger"><p><strong>CLI 名称差异：</strong>该远端提交没有 <code>m20-simple-nav</code> 注册项。若实机可以执行该命令，说明实机安装包、工作树或本地注册表与本报告基线不同；部署前应先核对 <code>which dimos</code>、<code>git rev-parse HEAD</code> 与 <code>dimos list</code>。</p></div>
+    <div class="grid three"><article class="card"><h3>规划范式</h3><p>高度代价栅格上的代价优先 8 邻域 A*。它会处理不安全目标点，并按障碍、偏离和卡住事件重规划。</p></article><article class="card"><h3>控制范式</h3><p>10 Hz rotate-then-drive 局部跟踪器。实际实例是固定巡航速度的 <code>PController</code>，不是独立轨迹控制器。</p></article><article class="card"><h3>核心判断</h3><p>当前结构可用于基础导航闭环，但还不是“路径规划 - 速度优化 - 轨迹跟踪”的模块化架构；速度优化是最有价值的升级切入点。</p></article></div>
+  </section>
+
+  <section id="architecture">
+    <p class="section-kicker">02 / Present Architecture</p><h2>当前端到端架构</h2>
+    <p class="lead">M20 的 SLAM/LIO 结果由外部桥接进入 DimOS。M20Connection 负责执行速度命令和视频/状态，不产生规划所需的 SLAM 点云或里程计。</p>
+    <div class="diagram" role="img" aria-label="M20 true simple navigation current architecture"><svg viewBox="0 0 1260 720"><defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 L10 5 L0 10z" fill="#64747a"/></marker><marker id="t" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 L10 5 L0 10z" fill="#0f766e"/></marker></defs>
+      <text x="46" y="42" class="title">感知、规划、控制与执行闭环</text>
+      <rect x="46" y="78" width="180" height="94" rx="8" class="node external"/><text x="136" y="112" text-anchor="middle" class="title">外部 M20 SLAM/LIO</text><text x="136" y="137" text-anchor="middle" class="small">slam_aligned_points</text><text x="136" y="157" text-anchor="middle" class="small">slam_odom</text>
+      <rect x="300" y="74" width="190" height="102" rx="8" class="node mapping"/><text x="395" y="110" text-anchor="middle" class="title">RayTracingVoxelMap</text><text x="395" y="135" text-anchor="middle" class="small">0.05 m voxel map</text><text x="395" y="155" text-anchor="middle" class="small">global_map / local_map</text><path d="M226 124H300" stroke="#0f766e" stroke-width="2" marker-end="url(#t)"/>
+      <rect x="566" y="74" width="176" height="102" rx="8" class="node mapping"/><text x="654" y="110" text-anchor="middle" class="title">CostMapper</text><text x="654" y="135" text-anchor="middle" class="small">HeightCost occupancy</text><text x="654" y="155" text-anchor="middle" class="small">global_costmap</text><path d="M490 124H566" stroke="#0f766e" stroke-width="2" marker-end="url(#t)"/>
+      <rect x="818" y="55" width="210" height="140" rx="8" class="node planning"/><text x="923" y="88" text-anchor="middle" class="title">ReplanningAStarPlanner</text><text x="923" y="113" text-anchor="middle" class="small">safe goal + gradient map</text><text x="923" y="133" text-anchor="middle" class="small">cost-aware 8-connected A*</text><text x="923" y="153" text-anchor="middle" class="small">smooth/resample: 0.1 m</text><text x="923" y="174" text-anchor="middle" class="small">replan supervision</text><path d="M742 124H818" stroke="#23658a" stroke-width="2" marker-end="url(#a)"/>
+      <rect x="1090" y="74" width="126" height="102" rx="8" class="node external"/><text x="1153" y="111" text-anchor="middle" class="title">Viewer</text><text x="1153" y="136" text-anchor="middle" class="small">goal request</text><text x="1153" y="156" text-anchor="middle" class="small">or click point</text><path d="M1090 125H1028" stroke="#64747a" stroke-width="2" marker-end="url(#a)"/>
+      <rect x="818" y="292" width="210" height="116" rx="8" class="node control"/><text x="923" y="326" text-anchor="middle" class="title">LocalPlanner</text><text x="923" y="351" text-anchor="middle" class="small">10 Hz obstacle check</text><text x="923" y="371" text-anchor="middle" class="small">rotate-then-drive P control</text><text x="923" y="391" text-anchor="middle" class="small">nav_cmd_vel</text><path d="M923 195V292" stroke="#23658a" stroke-width="2" marker-end="url(#a)"/>
+      <rect x="566" y="302" width="176" height="95" rx="8" class="node external"/><text x="654" y="336" text-anchor="middle" class="title">slam_odom</text><text x="654" y="361" text-anchor="middle" class="small">pose feedback</text><text x="654" y="381" text-anchor="middle" class="small">to planner + tracker</text><path d="M226 148C380 205,466 343,566 349" fill="none" stroke="#64747a" stroke-width="2" marker-end="url(#a)"/><path d="M742 349H818" stroke="#64747a" stroke-width="2" marker-end="url(#a)"/>
+      <rect x="300" y="486" width="190" height="100" rx="8" class="node control"/><text x="395" y="520" text-anchor="middle" class="title">MovementManager</text><text x="395" y="545" text-anchor="middle" class="small">nav / teleop mux</text><text x="395" y="565" text-anchor="middle" class="small">stop on teleop</text><path d="M818 350C676 411,585 497,490 534" fill="none" stroke="#9a5b12" stroke-width="2" marker-end="url(#a)"/>
+      <rect x="46" y="486" width="180" height="100" rx="8" class="node platform"/><text x="136" y="520" text-anchor="middle" class="title">M20Connection</text><text x="136" y="545" text-anchor="middle" class="small">20 Hz UDP command</text><text x="136" y="565" text-anchor="middle" class="small">0.4 s deadman</text><path d="M300 536H226" stroke="#64747a" stroke-width="2" marker-end="url(#a)"/>
+      <rect x="46" y="635" width="180" height="45" rx="8" class="node external"/><text x="136" y="663" text-anchor="middle" class="title">M20 physical motion</text><path d="M136 586V635" stroke="#64747a" stroke-width="2" marker-end="url(#a)"/><path d="M136 635C30 400,30 230,86 172" fill="none" stroke="#64747a" stroke-dasharray="7 6" stroke-width="2" marker-end="url(#a)"/><text x="41" y="394" class="small">motion changes SLAM state</text>
+    </svg></div>
+  </section>
+
+  <section id="io"><p class="section-kicker">03 / Module Interfaces</p><h2>大模块输入输出与职责边界</h2>
+    <table><thead><tr><th>模块</th><th>主要输入</th><th>主要输出</th><th>职责与边界</th></tr></thead><tbody>
+      <tr><td><strong>RayTracingVoxelMap</strong></td><td><code>slam_aligned_points</code><br><code>slam_odom</code></td><td><code>global_map</code><br><code>local_map</code><br><code>region_bounds</code></td><td>将已在 map 坐标系的 SLAM 点云体素化并进行射线清除。当前蓝图中 CostMapper 使用 <code>global_map</code>。</td></tr>
+      <tr><td><strong>CostMapper</strong></td><td><code>global_map</code></td><td><code>global_costmap</code></td><td>依据高度梯度、可跨越台阶和通行净空生成代价栅格；在原点周围清除 0.55 m 安全圆。</td></tr>
+      <tr><td><strong>ReplanningAStarPlanner</strong></td><td>odometry<br>global_costmap<br>goal_request / clicked_point<br>stop_movement</td><td>path<br>nav_cmd_vel<br>goal_reached</td><td>包含全局 A*、安全目标、路径平滑、重规划监督和局部跟踪器，是当前导航的核心聚合模块。</td></tr>
+      <tr><td><strong>MovementManager</strong></td><td>nav_cmd_vel<br>tele_cmd_vel<br>clicked_point</td><td>cmd_vel<br>stop_movement</td><td>导航与人工遥操作的互斥复用。人工输入会终止当前规划，冷却 1 秒后才重新放行导航命令。</td></tr>
+      <tr><td><strong>M20Connection</strong></td><td>cmd_vel</td><td>UDP axis command<br>video/status/battery</td><td>以 20 Hz 把 <code>Twist</code> 归一化后发送到底盘；0.4 秒命令超时归零。它不提供 SLAM 点云或里程计。</td></tr>
+    </tbody></table>
+  </section>
+
+  <section id="workflow"><p class="section-kicker">04 / Workflow</p><h2>一次导航任务如何运行</h2><ol class="steps">
+    <li><strong>接收目标与状态。</strong>Viewer 的 <code>goal_request</code> 或 <code>clicked_point</code> 进入 ReplanningAStarPlanner；外部 <code>slam_odom</code> 同时更新全局规划器和局部跟踪器的位姿。</li>
+    <li><strong>构建可通行代价图。</strong>全局点云转为高度代价栅格。当前配置为 0.05 m 网格、1.0 m 通行净空、0.15 m 可跨越高度、0.08 m 噪声忽略阈值和 1.5 平滑系数。</li>
+    <li><strong>修正不安全目标并做 A*。</strong>若目标在已知障碍中，规划器在 4 m 内寻找满足约 0.6 m 净空的替代点，随后在膨胀梯度图上进行代价优先 A* 搜索。</li>
+    <li><strong>几何后处理。</strong>A* 栅格路径经 <code>smooth_resample_path(..., 0.1)</code> 变为 0.1 m 间隔的平滑路径。</li>
+    <li><strong>局部闭环跟踪。</strong>LocalPlanner 每 100 ms 检查路径前方障碍，找最近路径点和前视点，必要时先原地转向，再向前行驶。</li>
+    <li><strong>复用并执行。</strong>导航速度经 MovementManager 进入 M20Connection；新障碍、明显偏离、卡住或人工遥操作会中止或触发重规划。</li>
+  </ol></section>
+
+  <section id="control"><p class="section-kicker">05 / Speed And Control</p><h2>速度控制是固定 P 跟踪，不是速度优化器</h2><p class="lead">路径平滑只改变几何形状，不生成按距离或时间参数化的速度轨迹。当前 LocalPlanner 内置 <code>PController</code>，其速度行为由固定常量决定。</p>
+    <div class="grid two"><article class="card"><h3>当前生效逻辑</h3><p><strong>LocalPlanner：</strong>10 Hz，固定速度 0.55 m/s，目标距离容差 0.2 m，朝向容差 0.35 rad。</p><p><strong>PController：</strong>大于 90 度航向误差时先原地转向；否则 <code>v = 0.55 * (1 - |yaw_error| / 90deg)</code>，角速度为 <code>0.5 * yaw_error</code>。</p><p><strong>最小值：</strong>线速度最低 0.2 m/s；M20 角速度最低 0.6 rad/s。</p></article><article class="card"><h3>当前缺失能力</h3><p>没有曲率限速、没有剩余距离制动曲线、没有线速度加速度限制、没有 jerk 限制、没有基于实测速度的闭环阻尼，也没有独立可替换的 SpeedOptimizer。</p><p>仓库中虽有 <code>PdController</code>，但此蓝图实际构造的是 <code>PController</code>，PD 的角加速度限制并未生效。</p></article></div>
+    <div class="callout danger"><p><strong>终点行为：</strong>距离小于 0.2 m 时，控制器直接停止平移并进入最终朝向调整；没有按制动距离递减的速度曲线。0.2 m/s 最小前进速度进一步削弱近终点细调能力，是 overshoot 与停靠误差的主要结构性风险。</p></div>
+  </section>
+
+  <section id="assessment"><p class="section-kicker">06 / Assessment</p><h2>优点与当前风险</h2><div class="grid two"><article class="card"><h3>优势</h3><ul class="pros"><li>感知到栅格、A* 到底盘命令形成完整闭环。</li><li>安全目标回退、路径偏离、前方障碍、卡住检测和重规划已具备基础工程保护。</li><li>高度代价建图可表达台阶和上方障碍，而不是简单 2D 激光占用。</li><li>路径在局部跟踪前已平滑并按 0.1 m 重采样。</li><li>底盘侧有 20 Hz 重发与 0.4 s deadman。</li></ul></article><article class="card"><h3>限制与风险</h3><ul class="cons"><li>路径平滑不等于速度优化；终点没有制动曲线。</li><li>最小前进速度 0.2 m/s 不利于低速靠近与精确停靠。</li><li>路径切换、障碍恢复和重规划时没有线速度加速度或 jerk 约束。</li><li>PController 不使用实测速度，无法显式补偿底盘延迟或滑移。</li><li>最终位置容差 0.2 m、朝向约 15 度，对精确到点任务偏宽。</li><li>M20 最小角速度 0.6 rad/s 可能使小角度修正偏激。</li></ul></article></div></section>
+
+  <section id="upgrade"><p class="section-kicker">07 / Recommended Upgrade</p><h2>升级为“路径 - 速度 - 跟踪 - 执行保护”四层</h2><p class="lead">不建议先替换 A*。当前最有性价比的方向是保留 CostMapper 和 A* 路径能力，把速度决策从 LocalPlanner 中拆出，并在底盘下发前增加独立的命令安全约束。</p>
+    <div class="diagram" role="img" aria-label="Recommended modular navigation architecture"><svg viewBox="0 0 1260 410"><defs><marker id="u" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 L10 5 L0 10z" fill="#0f766e"/></marker></defs>
+      <text x="46" y="42" class="title">目标架构：Path Planner - Speed Optimizer - Tracking Controller - Command Safety</text>
+      <rect x="46" y="112" width="190" height="128" rx="8" class="node mapping"/><text x="141" y="148" text-anchor="middle" class="title">Path Planner</text><text x="141" y="174" text-anchor="middle" class="small">CostMapper + safe goal</text><text x="141" y="196" text-anchor="middle" class="small">A* + path smoothing</text><text x="141" y="218" text-anchor="middle" class="small">geometric path</text><path d="M236 176H326" stroke="#0f766e" stroke-width="2" marker-end="url(#u)"/>
+      <rect x="326" y="92" width="230" height="168" rx="8" class="node planning"/><text x="441" y="128" text-anchor="middle" class="title">Speed Optimizer</text><text x="441" y="154" text-anchor="middle" class="small">curvature / obstacle / goal caps</text><text x="441" y="176" text-anchor="middle" class="small">accel feasibility and braking</text><text x="441" y="198" text-anchor="middle" class="small">jerk-limited v/a trajectory</text><text x="441" y="232" text-anchor="middle" class="small">time-parameterized trajectory</text><path d="M556 176H646" stroke="#0f766e" stroke-width="2" marker-end="url(#u)"/>
+      <rect x="646" y="112" width="190" height="128" rx="8" class="node control"/><text x="741" y="148" text-anchor="middle" class="title">Tracking Controller</text><text x="741" y="174" text-anchor="middle" class="small">pose + velocity feedback</text><text x="741" y="196" text-anchor="middle" class="small">trajectory tracking</text><text x="741" y="218" text-anchor="middle" class="small">desired Twist</text><path d="M836 176H926" stroke="#0f766e" stroke-width="2" marker-end="url(#u)"/>
+      <rect x="926" y="112" width="190" height="128" rx="8" class="node risk"/><text x="1021" y="148" text-anchor="middle" class="title">Command Safety</text><text x="1021" y="174" text-anchor="middle" class="small">speed / accel / jerk clamp</text><text x="1021" y="196" text-anchor="middle" class="small">deadman / watchdog</text><text x="1021" y="218" text-anchor="middle" class="small">safe cmd_vel</text><path d="M1116 176H1202" stroke="#0f766e" stroke-width="2" marker-end="url(#u)"/><text x="1210" y="182" class="title">M20</text>
+      <path d="M1217 235C1080 360,690 365,742 240" fill="none" stroke="#64747a" stroke-dasharray="7 6" stroke-width="2" marker-end="url(#u)"/><text x="864" y="365" class="small">SLAM pose and estimated velocity feedback</text>
+    </svg></div>
+    <div class="card" style="margin-top:20px"><div class="priority"><div class="priority-label">P0 short term</div><div><strong>增强现有 LocalPlanner。</strong>加入按剩余路径长度计算的终点减速上限 <code>v &lt;= sqrt(2 * a_brake * remaining_distance)</code>；近终点取消 0.2 m/s 最小前进速度；将线速度和角速度均通过加速度、角加速度限制器。保持 A* 和现有接口不变，风险最低。</div></div><div class="priority"><div class="priority-label">P1 modularize</div><div><strong>抽出独立 SpeedOptimizer。</strong>输入平滑 Path、当前状态、速度/加速度/jerk 上限和目标约束，输出带 <code>s, t, v, a</code> 的轨迹。曲率限速、终点制动、低速靠近和重规划切换都在这里完成。</div></div><div class="priority"><div class="priority-label">P2 robust control</div><div><strong>升级为真正的轨迹跟踪控制器。</strong>跟踪时间参数化轨迹而不是仅追逐几何前视点；接入实测体速度、延迟估计、横向误差和饱和反馈。底盘前保留独立 Command Safety Layer。</div></div></div>
+    <div class="callout"><p><strong>推荐顺序：</strong>先做 P0 并以实车制动测试验证终点误差，再抽出 P1。直接更换全局路径算法无法解决当前终点冲过、速度突变和低速修正能力不足的问题。</p></div>
+  </section>
+
+  <section><p class="section-kicker">08 / Verification</p><h2>升级后的验收指标</h2><div class="grid two"><article class="card"><h3>终点与动态性能</h3><ul><li>不同初始速度和距离下的最终位置、朝向误差。</li><li>终点前速度曲线是否连续，是否满足最大加速度和 jerk。</li><li>急弯、窄通道、障碍恢复后的速度峰值与横向偏差。</li><li>重规划切换是否产生速度跳变。</li></ul></article><article class="card"><h3>底盘与系统约束</h3><ul><li>从 <code>nav_cmd_vel</code> 到实际运动的延迟和跟踪误差。</li><li>20 Hz UDP、0.4 s deadman 与新增安全层的交互。</li><li>SLAM 位姿延迟或跳变时的安全降级行为。</li><li>CPU、重规划频率和地图更新频率是否满足嵌入式预算。</li></ul></article></div></section>
+  <section><p class="section-kicker">Source Evidence</p><h2>审计文件</h2><ul class="source-list"><li><code>dimos/robot/deeprobotics/m20/nav/m20_true_simple_nav.py</code></li><li><code>dimos/mapping/ray_tracing/module.py</code> 和 <code>dimos/mapping/costmapper.py</code></li><li><code>dimos/navigation/replanning_a_star/global_planner.py</code>、<code>local_planner.py</code>、<code>controllers.py</code>、<code>min_cost_astar.py</code></li><li><code>dimos/navigation/movement_manager/movement_manager.py</code></li><li><code>dimos/robot/deeprobotics/m20/connection.py</code></li></ul></section>
+  <footer>Generated from source inspection of MeloLong/dimos feat/wd/m20 at 8cdbbfa1. Current implementation facts and future architecture recommendations are explicitly separated.</footer>
+</main>
+</body>
+</html>
