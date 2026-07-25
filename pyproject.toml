@@ -669,4 +669,6 @@ ignore = [
     "dimos/robot/deeprobotics/m20/assets/meshes/*.STL",
     "misc/DimSim/scenes/apartment/objects/manifest.json",
     "misc/DimSim/src/engine.js",
+    "docs/capabilities/navigation/nav_stack_module_guide.md",
+    "docs/capabilities/navigation/nav_stack_module_guide copy.md",
 ]
