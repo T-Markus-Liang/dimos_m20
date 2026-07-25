@@ -55,6 +55,22 @@ then time-align and compare a recorded trajectory. For low-level Sim-to-Real
 validation, use the official SDK's authorized `JOINTS_DATA` / `JOINTS_CMD`
 chain.
 
+## Known Motion Limitation
+
+This repository deliberately keeps the official M20 ONNX unchanged. A direct
+VM MuJoCo check exposed an open behavior limitation: forward tracking is
+stable, but a `0.2 m/s` lateral command has little lateral response, maximum
+lateral command has backward coupling, and `+0.7` / `-0.7` yaw commands have
+materially asymmetric responses. Manual inverse wheel targets remain nearly
+mirror-symmetric, while the official ONNX does not produce mirror-symmetric
+wheel targets for signed yaw commands.
+
+Treat lateral and yaw tracking as unvalidated. Do not use them for autonomous
+navigation performance or safety acceptance. The limitation is exposed here;
+the official ONNX, MJCF, and controller mapping are intentionally unchanged
+until a comparison with the upstream runner and physical hardware establishes
+the correct policy-level remedy.
+
 ## Included Components
 
 | Component | Location | Purpose |
