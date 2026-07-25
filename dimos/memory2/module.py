@@ -380,9 +380,8 @@ class Recorder(MemoryModule):
             pose = await self._resolve_pose(name, msg, ts)
             if not pose and name not in self.config.poseless_streams:
                 logger.warning(
-                    "[%s] No tf available for frame '%s' at time %s (msg ts: %s), storing without pose",
+                    "[%s] No pose for time %s (msg ts: %s), storing without pose",
                     name,
-                    frame_id,
                     ts,
                     getattr(msg, "ts", None),
                 )
