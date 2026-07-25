@@ -35,7 +35,13 @@ from dimos.navigation.replanning_a_star.module import (
     ReplanningAStarPlanner,
     ReplanningAStarPlannerConfig,
 )
-from dimos.robot.deeprobotics.m20.blueprints.basic import m20, rerun
+from dimos.robot.deeprobotics.m20.blueprints.basic import (
+    _node_edges_on_surface,
+    _raw_path_for_rerun,
+    _smooth_path_for_rerun,
+    m20,
+    m20_rerun_blueprint,
+)
 from dimos.robot.deeprobotics.m20.mujoco_sim import (
     M20MujocoSimConfig,
     M20MujocoSimConnection,
@@ -45,6 +51,9 @@ from dimos.robot.deeprobotics.m20.nav.moving_obstacle import (
     M20MovingObstacleConfig,
 )
 from dimos.robot.deeprobotics.m20.tf import M20TF
+from dimos.visualization.rerun.bridge import RerunBridgeModule
+from dimos.visualization.rerun.websocket_server import RerunWebSocketServer
+from dimos.web.websocket_vis.websocket_vis_module import WebsocketVisModule
 
 voxel_size = 0.05
 m20_width_clearance = 0.45
@@ -105,6 +114,37 @@ _m20_slam_ray_tracer = RayTracingVoxelMap.blueprint(
     ]
 )
 
+_m20_sim_rerun = autoconnect(
+    RerunBridgeModule.blueprint(
+        blueprint=m20_rerun_blueprint,
+        memory_limit="512MB",
+        max_hz={
+            "world/color_image": 5.0,
+            "world/color_image_rear": 5.0,
+            "world/slam_aligned_points": 0.25,
+            "world/global_map": 0.1,
+            "world/local_map": 0.5,
+            "world/global_costmap": 0.1,
+        },
+        latest_only_entities=[
+            "world/color_image",
+            "world/color_image_rear",
+            "world/slam_aligned_points",
+            "world/local_map",
+            "world/global_map",
+            "world/global_costmap",
+        ],
+        use_message_timestamps=False,
+        visual_override={
+            "world/node_edges": _node_edges_on_surface,
+            "world/raw_path": _raw_path_for_rerun,
+            "world/path": _smooth_path_for_rerun,
+        },
+    ),
+    RerunWebSocketServer.blueprint(),
+    WebsocketVisModule.blueprint(),
+)
+
 # _m20_pointcloud_map_save = PointCloudMapSave.blueprint(
 #     translation_threshold_m=0.5,
 #     rotation_threshold_rad=math.radians(15.0),
@@ -147,7 +187,7 @@ _m20_sim_clearance = M20_MUJOCO_ENVELOPE["wall_clearance_m"]
 _m20_sim_height = M20_MUJOCO_ENVELOPE["robot_height"]
 
 m20_simple_nav_sim = autoconnect(
-    rerun,
+    _m20_sim_rerun,
     _m20_slam_ray_tracer,
     CostMapper.blueprint(
         config=HeightCostConfig(

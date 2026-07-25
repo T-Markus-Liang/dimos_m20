@@ -47,13 +47,15 @@ class M20MovingObstacleConfig(ModuleConfig):
     update_hz: float = Field(default=20.0, gt=0.0, le=60.0)
     initial_waypoint_index: int = Field(default=0, ge=0)
     z_m: float = 0.0
-    waypoints: list[tuple[float, float]]
+    waypoints: list[tuple[float, float]] = Field(default_factory=list)
     proximity_stop_distance_m: float = Field(default=0.9, gt=0.0, le=10.0)
     proximity_resume_distance_m: float = Field(default=1.1, gt=0.0, le=10.0)
     proximity_pause_s: float = Field(default=1.0, ge=0.0, le=60.0)
 
     @model_validator(mode="after")
     def validate_waypoints(self) -> M20MovingObstacleConfig:
+        if not self.enabled:
+            return self
         if len(self.waypoints) < 2:
             raise ValueError("moving obstacle requires at least two waypoints")
         if len(set(self.waypoints)) != len(self.waypoints):
