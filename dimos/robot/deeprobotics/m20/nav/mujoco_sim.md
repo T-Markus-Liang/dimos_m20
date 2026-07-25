@@ -1,5 +1,8 @@
 # M20 Navigation MuJoCo Test
 
+For installation, official asset provenance, controller contracts, and the
+full integration workflow, read [the M20 integration README](/dimos/robot/deeprobotics/m20/README.md).
+
 The official DeepRobotics M20 MuJoCo model and locomotion policy can exercise
 two M20 navigation chains without opening a MuJoCo window:
 
