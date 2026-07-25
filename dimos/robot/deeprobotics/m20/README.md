@@ -11,6 +11,13 @@ For runtime tuning, recording, replay, and the detailed sensor profile, read
 [the M20 MuJoCo runtime guide](/dimos/robot/deeprobotics/m20/nav/mujoco_sim.md)
 after completing this document.
 
+## Reading Order
+
+1. **First installation:** [Scope And Model Identity](#scope-and-model-identity), [Quick Start](#quick-start), and [Prerequisites](#prerequisites).
+2. **Integration work:** [Included Components](#included-components), [Runtime Architecture](#runtime-architecture), [Model And Policy Contract](#model-and-policy-contract), and [Configuration](#configuration).
+3. **Before relying on results:** [Verification Checklist](#verification-checklist), [Control-Fidelity Review](#control-fidelity-review), [Known Motion Limitation](#known-motion-limitation), and [Validation Summary And Roadmap](#validation-summary-and-roadmap).
+4. **Operations and maintenance:** [Recording And Replay](#recording-and-replay), [Troubleshooting](#troubleshooting), and [Updating Official Assets](#updating-official-assets).
+
 
 ## Scope And Model Identity
 
