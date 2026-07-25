@@ -11,6 +11,9 @@ For runtime tuning, recording, replay, and the detailed sensor profile, read
 [the M20 MuJoCo runtime guide](/dimos/robot/deeprobotics/m20/nav/mujoco_sim.md)
 after completing this document.
 
+See [the M20 MuJoCo test matrix](/dimos/robot/deeprobotics/m20/M20_MUJOCO_TEST_MATRIX.md)
+for completed tests, exposed limitations, and the optimization roadmap.
+
 ## Scope And Model Identity
 
 The assets come from the official

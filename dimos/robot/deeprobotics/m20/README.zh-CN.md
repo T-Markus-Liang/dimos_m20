@@ -8,6 +8,9 @@
 完成本文后，运行参数调优、录制、回放和完整传感器配置请继续阅读
 [M20 MuJoCo 运行指南](/dimos/robot/deeprobotics/m20/nav/mujoco_sim.md)。
 
+已完成测试、已暴露限制与后续优化方向见
+[M20 MuJoCo 测试矩阵](/dimos/robot/deeprobotics/m20/M20_MUJOCO_TEST_MATRIX.md)。
+
 ## 范围与型号确认
 
 导入的资产来自官方
