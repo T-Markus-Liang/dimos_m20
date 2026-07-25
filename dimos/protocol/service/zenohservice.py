@@ -36,6 +36,7 @@ class ZenohConfig(BaseConfig):
     # global_config.zenoh_iface. Needed when auto-select picks the wrong
     # interface (e.g. docker0) and peers fail to discover each other.
     multicast_iface: str | None = None
+
     @property
     def session_key(self) -> str:
         return (
