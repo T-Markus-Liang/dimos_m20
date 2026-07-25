@@ -11,8 +11,6 @@ For runtime tuning, recording, replay, and the detailed sensor profile, read
 [the M20 MuJoCo runtime guide](/dimos/robot/deeprobotics/m20/nav/mujoco_sim.md)
 after completing this document.
 
-See [the M20 MuJoCo test matrix](/dimos/robot/deeprobotics/m20/M20_MUJOCO_TEST_MATRIX.md)
-for completed tests, exposed limitations, and the optimization roadmap.
 
 ## Scope And Model Identity
 
@@ -73,6 +71,30 @@ navigation performance or safety acceptance. The limitation is exposed here;
 the official ONNX, MJCF, and controller mapping are intentionally unchanged
 until a comparison with the upstream runner and physical hardware establishes
 the correct policy-level remedy.
+
+## Validation Summary And Roadmap
+
+| Area | Result | Notes |
+| --- | --- | --- |
+| Official source and policy | Pass | BSD-3-Clause source audited; vendored ONNX is byte-identical to upstream and exposes `obs [1,57] -> actions [1,16]` |
+| Model and controller contract | Pass | `nq=23`, `nv=22`, `nu=16`; joint tree, inertia, limits, torque ranges, mapping, PD gains, and 20 ms policy cadence checked against the official runner |
+| Rendering and synthetic sensors | Pass | Four M20 cameras, RGB render, nonempty point cloud, and no robot self-scan with groups `(0, 1)` |
+| DimOS integration | Pass | Focused suite: 36 tests; obstacle suite: 15 tests plus explicit MuJoCo check; simple-nav and DAN blueprints completed bounded starts |
+| Packaging and docs | Pass | Wheel contains 21 M20 assets; pre-commit, LFS, large-file, and doclinks checks passed |
+| Standstill and forward | Pass | Zero command remains upright; `[0.2,0,0]` for 3 s moves `+0.4884 m` forward with `-0.0018 m` lateral drift |
+| Lateral and yaw tracking | Open | Small lateral command has little lateral response; maximum lateral couples backward motion; signed yaw is materially asymmetric |
+| Physical robot policy | Unverified | Published real deployment loads the same upstream `policy/policy.onnx`; the current robot was unreachable for read-only hash verification |
+
+Current acceptance is limited to model loading, forward-dominant motion,
+synthetic sensors, mapping inputs, navigation wiring, and process lifecycle.
+Do not accept lateral/yaw tracking, autonomous-navigation performance, or
+safety clearance from this simulation.
+
+The next steps are: reproduce the signed-command matrix in the official runner;
+collect matched physical M20 joint/IMU/odometry/video data and policy hash; then
+request a corrected policy or retrain with balanced signed-yaw/lateral tracking
+and left/right symmetry augmentation. Do not change joint signs or gains until
+that comparison shows a DimOS-specific mismatch.
 
 ## Included Components
 
